@@ -8,7 +8,7 @@ Where the plugin stands and what comes next. Keep this file up to date when a fe
 
 ## Status
 
-- Current version: **2.4.0** (on GitHub `main`; not yet submitted to WordPress.org).
+- Current version: **2.4.1** (on GitHub `main`; not yet submitted to WordPress.org).
 - Releases: see [README.md](README.md#releasing). Deployment to WordPress.org runs from the Release workflow once the plugin is approved.
 
 ## Shipped

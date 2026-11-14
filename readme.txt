@@ -5,7 +5,7 @@ Tags: events, calendar, newsletter, instagram, telegram
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.4.0
+Stable tag: 2.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -244,6 +244,9 @@ No data about visitors of your site is sent. [Terms of Use](https://help.instagr
 **PayPal (donations).** The admin pages contain a donation link to PayPal (paypal.com), provided by PayPal (Europe) S.à r.l. et Cie, S.C.A. It only opens when an administrator clicks it; the plugin sends no data to PayPal and PayPal does not report back to your site. [User Agreement](https://www.paypal.com/legalhub/paypal/useragreement-full), [Privacy Statement](https://www.paypal.com/myaccount/privacy/privacyhub)
 
 == Changelog ==
+
+= 2.4.1 =
+* Fix: the settings page "Story images" works on phones and narrow windows again (settings and preview one below the other).
 
 = 2.4.0 =
 * Story images: more freedom in the look without a layout editor. Ready looks (Website, Classic, Paper, Night, Sunset, Mint, Poster), the first one from the colours of your theme or Breakdance.

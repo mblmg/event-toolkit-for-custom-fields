@@ -1188,12 +1188,13 @@
 	color: #50575e;
 }
 
-/* The preview stays in view while the settings scroll. */
-.etcf-layout--stories {
-	grid-template-columns: minmax(0, 1fr) minmax(340px, 520px);
-}
-
+/* The preview stays in view while the settings scroll. Only on wide screens:
+   below 1101px the layout has one column (see "layout" above). */
 @media (min-width: 1101px) {
+	.etcf-layout--stories {
+		grid-template-columns: minmax(0, 1fr) minmax(340px, 520px);
+	}
+
 	.etcf-layout--stories .etcf-aside {
 		position: sticky;
 		top: 46px;
