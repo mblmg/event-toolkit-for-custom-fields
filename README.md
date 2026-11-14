@@ -35,7 +35,7 @@ includes/social/                           Mastodon and Bluesky (etcf_so_setting
 includes/newsletter/                       direct sending through Brevo or Emailit (etcf_nl_settings)
 includes/class-status.php                  cancelled / postponed events, one-time notices
 includes/class-qr.php                      QR encoder (SVG, PNG, cache in uploads/event-toolkit/qr)
-assets/                                    share script, admin and website styles
+assets/                                    share script, story design script (looks, picture, live preview), admin and website styles
 includes/class-admin.php                   admin menu "Event Toolkit": overview and one page per area
 includes/class-abilities.php               abilities (WordPress Abilities API) for AI agents / MCP
 includes/shortcode.php                     [etcf_calendar_link]

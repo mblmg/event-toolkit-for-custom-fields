@@ -56,6 +56,7 @@ class ETCF_Admin
         add_action('admin_post_etcf_nl_check', [self::class, 'handle_nl_check']);
         add_action('admin_post_etcf_nl_test', [self::class, 'handle_nl_test']);
         add_action('admin_post_etcf_so_post_now', [self::class, 'handle_so_post_now']);
+        add_action('admin_post_etcf_sharepic_preview', [self::class, 'handle_story_preview']);
         add_action('admin_enqueue_scripts', function () {
             if (self::current_tab() === '') {
                 return;
@@ -67,6 +68,29 @@ class ETCF_Admin
             };
             wp_enqueue_script('etcf-share', plugins_url('assets/share.js', ETCF_FILE), [], $version('assets/share.js'), true);
             wp_enqueue_style('etcf-admin', plugins_url('assets/admin.css', ETCF_FILE), [], $version('assets/admin.css'));
+            if (self::current_tab() === 'stories') {
+                wp_enqueue_media();
+                wp_enqueue_script('etcf-story-design', plugins_url('assets/story-design.js', ETCF_FILE), [], $version('assets/story-design.js'), true);
+                wp_localize_script('etcf-story-design', 'etcfStoryDesign', [
+                    'url'     => admin_url('admin-post.php'),
+                    'nonce'   => wp_create_nonce('etcf_sharepic_preview'),
+                    'presets' => ETCF_Sharepic::presets(),
+                    'i18n'    => [
+                        'choose'  => __('Choose picture', 'event-toolkit-for-custom-fields'),
+                        'use'     => __('Use as background', 'event-toolkit-for-custom-fields'),
+                        'light'   => __('Images', 'event-toolkit-for-custom-fields'),
+                        'dark'    => __('"Today" images', 'event-toolkit-for-custom-fields'),
+                        'text'    => __('Text', 'event-toolkit-for-custom-fields'),
+                        'muted'   => __('Info lines', 'event-toolkit-for-custom-fields'),
+                        'accent'  => __('Web address', 'event-toolkit-for-custom-fields'),
+                        'good'    => __('Contrast checked: all texts are easy to read.', 'event-toolkit-for-custom-fields'),
+                        /* translators: %s: contrast ratio that should be reached, e.g. "4.5 : 1" */
+                        'weak'    => __('hard to read in places, aim for %s', 'event-toolkit-for-custom-fields'),
+                        'hint'    => __('Increase the veil, choose a calmer picture or colours with more contrast.', 'event-toolkit-for-custom-fields'),
+                        'failed'  => __('The preview could not be rendered.', 'event-toolkit-for-custom-fields'),
+                    ],
+                ]);
+            }
         });
         add_action('admin_notices', [self::class, 'instagram_token_notice']);
         add_action('wp_dashboard_setup', [self::class, 'dashboard_widget']);
@@ -247,7 +271,8 @@ class ETCF_Admin
                 [__('Newsletter feed', 'event-toolkit-for-custom-fields'), '', ['digest_feed_enabled', 'digest_feed_slug', 'digest_feed_only_new']],
             ],
             'share'    => [
-                [__('Story images', 'event-toolkit-for-custom-fields'), '', ['sharepic_paper', 'sharepic_ink', 'sharepic_accent', 'sharepic_footer', 'sharepic_fonts', 'sharepic_heading_font', 'sharepic_heading_weight', 'sharepic_text_font']],
+                [__('Colours and background', 'event-toolkit-for-custom-fields'), __('Start from a look and change what you like. The preview shows your changes before you save them.', 'event-toolkit-for-custom-fields'), ['sharepic_bg', 'sharepic_paper', 'sharepic_paper2', 'sharepic_bg_image', 'sharepic_veil', 'sharepic_ink', 'sharepic_accent', 'sharepic_footer']],
+                [__('Fonts', 'event-toolkit-for-custom-fields'), '', ['sharepic_fonts', 'sharepic_heading_font', 'sharepic_heading_weight', 'sharepic_heading_caps', 'sharepic_text_font']],
                 [__('Reminder mail', 'event-toolkit-for-custom-fields'), '', ['share_reminder', 'share_reminder_to']],
             ],
         ];
@@ -297,13 +322,18 @@ class ETCF_Admin
             'digest_feed_slug'    => [__('Feed file name', 'event-toolkit-for-custom-fields'), __('Without .xml.', 'event-toolkit-for-custom-fields'), 'text'],
             'digest_feed_only_new' => [__('Only with news', 'event-toolkit-for-custom-fields'), __('Weeks in which no event was added stay empty in the feed, so no newsletter goes out. Fewer mails, and each one has something new.', 'event-toolkit-for-custom-fields'), 'check', __('Send the newsletter only when an event was added during the past week', 'event-toolkit-for-custom-fields')],
 
-            'sharepic_paper'    => [__('Background', 'event-toolkit-for-custom-fields'), __('Light colour of the story images. "Today" images swap background and text colour.', 'event-toolkit-for-custom-fields'), 'color'],
+            'sharepic_bg'       => [__('Background', 'event-toolkit-for-custom-fields'), '', 'choice'],
+            'sharepic_paper'    => [__('Background colour', 'event-toolkit-for-custom-fields'), __('"Today" images swap background and text colour, so they look different from the others.', 'event-toolkit-for-custom-fields'), 'color'],
+            'sharepic_paper2'   => [__('Second colour', 'event-toolkit-for-custom-fields'), __('The gradient runs from the background colour at the top to this colour at the bottom.', 'event-toolkit-for-custom-fields'), 'color'],
+            'sharepic_bg_image' => [__('Picture', 'event-toolkit-for-custom-fields'), __('Calm pictures work best: a texture, paper, a blurred photo of your venue. Portrait format, at least 1080 × 1920 pixels.', 'event-toolkit-for-custom-fields'), 'media'],
+            'sharepic_veil'     => [__('Veil', 'event-toolkit-for-custom-fields'), __('How much of the background colour lies over the picture. More veil, easier to read.', 'event-toolkit-for-custom-fields'), 'range'],
             'sharepic_ink'      => [__('Text', 'event-toolkit-for-custom-fields'), '', 'color'],
             'sharepic_accent'   => [__('Accent', 'event-toolkit-for-custom-fields'), __('Only used for the web address at the bottom.', 'event-toolkit-for-custom-fields'), 'color'],
             'sharepic_footer'   => [__('Bottom line', 'event-toolkit-for-custom-fields'), __('Usually your web address. Empty = the address of the programme page.', 'event-toolkit-for-custom-fields'), 'text'],
             'sharepic_fonts'    => [__('Fonts', 'event-toolkit-for-custom-fields'), '', 'choice'],
             'sharepic_heading_font'   => [__('Font for headings', 'event-toolkit-for-custom-fields'), '', 'font'],
             'sharepic_heading_weight' => [__('Weight of headings', 'event-toolkit-for-custom-fields'), '', 'choice'],
+            'sharepic_heading_caps'   => [__('Capitals', 'event-toolkit-for-custom-fields'), __('With a little extra letter spacing, as capitals need it.', 'event-toolkit-for-custom-fields'), 'check', __('Set headings and titles in capitals', 'event-toolkit-for-custom-fields')],
             'sharepic_text_font'      => [__('Font for text', 'event-toolkit-for-custom-fields'), __('Empty = the font detected on the website. If the theme does not ship the font as .ttf or .otf file, it is downloaded once from Google Fonts. Fonts that are not available there are replaced by a neutral standard font.', 'event-toolkit-for-custom-fields'), 'font'],
             'share_reminder'    => [__('Reminder mail', 'event-toolkit-for-custom-fields'), __('At the time of the weekly preview, a mail with the text to share and a link to this page.', 'event-toolkit-for-custom-fields'), 'check', __('Send a reminder to share the weekly preview', 'event-toolkit-for-custom-fields')],
             'share_reminder_to' => [__('Reminder to', 'event-toolkit-for-custom-fields'), '', 'email'],
@@ -361,10 +391,10 @@ class ETCF_Admin
                     self::render_newsletter();
                     break;
                 case 'stories':
-                    echo '<div class="etcf-layout"><div class="etcf-main">';
+                    echo '<div class="etcf-layout etcf-layout--stories"><div class="etcf-main">';
                     self::render_core_form('share');
                     echo '</div><aside class="etcf-aside">';
-                    self::panel([self::class, 'render_story_sample']);
+                    self::panel([self::class, 'render_story_preview']);
                     echo '</aside></div>';
                     break;
                 default:
@@ -635,6 +665,9 @@ class ETCF_Admin
                 echo '<p class="etcf-panel-note">' . esc_html($description) . '</p>';
             }
             echo '<table class="form-table" role="presentation">';
+            if (in_array('sharepic_bg', $group_keys, true)) {
+                self::render_presets();
+            }
             foreach (array_intersect($group_keys, $keys) as $key) {
                 self::render_field($key, $s);
             }
@@ -656,7 +689,9 @@ class ETCF_Admin
         $extra = $fields[$key][3] ?? '';
         $id    = 'etcf-' . $key;
         $field = $name . '[' . $key . ']';
-        echo '<tr><th scope="row"><label for="' . esc_attr($id) . '">' . esc_html($label) . '</label></th><td>';
+        // Rows that only matter for one kind of background (shown and hidden by story-design.js).
+        $only = ['sharepic_paper2' => 'gradient', 'sharepic_bg_image' => 'image', 'sharepic_veil' => 'image'][$key] ?? '';
+        echo '<tr' . ($only !== '' ? ' data-etcf-bg="' . esc_attr($only) . '"' : '') . '><th scope="row"><label for="' . esc_attr($id) . '">' . esc_html($label) . '</label></th><td>';
         switch ($type) {
             case 'check':
                 echo '<label><input type="checkbox" id="' . esc_attr($id) . '" name="' . esc_attr($field) . '" value="1" ' . checked(!empty($s[$key]), true, false) . '> ' . esc_html($extra) . '</label>';
@@ -693,6 +728,19 @@ class ETCF_Admin
                 break;
             case 'color':
                 echo '<input type="color" id="' . esc_attr($id) . '" name="' . esc_attr($field) . '" value="' . esc_attr($s[$key]) . '">';
+                break;
+            case 'media':
+                $image = (int) $s[$key];
+                $thumb = $image ? wp_get_attachment_image_url($image, 'medium') : '';
+                echo '<div class="etcf-media">';
+                echo '<input type="hidden" id="' . esc_attr($id) . '" name="' . esc_attr($field) . '" value="' . esc_attr($thumb ? (string) $image : '0') . '">';
+                echo '<img class="etcf-media-thumb" src="' . esc_url($thumb ?: '') . '" alt=""' . ($thumb ? '' : ' hidden') . '>';
+                echo '<button type="button" class="button etcf-media-choose">' . esc_html__('Choose picture', 'event-toolkit-for-custom-fields') . '</button> ';
+                echo '<button type="button" class="button-link etcf-media-remove"' . ($thumb ? '' : ' hidden') . '>' . esc_html__('Remove', 'event-toolkit-for-custom-fields') . '</button>';
+                echo '</div>';
+                break;
+            case 'range':
+                echo '<input type="range" min="0" max="95" step="5" id="' . esc_attr($id) . '" name="' . esc_attr($field) . '" value="' . esc_attr($s[$key]) . '"> <output for="' . esc_attr($id) . '">' . esc_html((int) $s[$key] . ' %') . '</output>';
                 break;
             default:
                 $input = ['number' => 'number', 'url' => 'url', 'email' => 'email'][$type] ?? 'text';
@@ -1126,22 +1174,109 @@ class ETCF_Admin
         echo '</div>';
     }
 
-    /** A sample story image on the settings page of the images. */
-    private static function render_story_sample(): void
+    /** Buttons with ready looks above the colour settings. */
+    private static function render_presets(): void
     {
-        if (!ETCF_Settings::is_configured() || !ETCF_Sharepic::available()) {
-            return;
+        echo '<tr><th scope="row">' . esc_html__('Looks', 'event-toolkit-for-custom-fields') . '</th><td><div class="etcf-presets">';
+        foreach (ETCF_Sharepic::presets() as $id => $preset) {
+            $v      = $preset['values'];
+            $bottom = ($v['sharepic_bg'] ?? '') === 'gradient' ? $v['sharepic_paper2'] : $v['sharepic_paper'];
+            $style  = sprintf('--etcf-p1:%s;--etcf-p2:%s;--etcf-ink:%s;--etcf-accent:%s', $v['sharepic_paper'], $bottom, $v['sharepic_ink'], $v['sharepic_accent']);
+            echo '<button type="button" class="etcf-preset" data-preset="' . esc_attr($id) . '" style="' . esc_attr($style) . '">';
+            echo '<span class="etcf-preset-face' . (!empty($v['sharepic_heading_caps']) ? ' is-caps' : '') . '" aria-hidden="true">Aa<i></i></span>';
+            echo '<span class="etcf-preset-name">' . esc_html($preset['label']) . '</span></button>';
         }
-        $now = new DateTimeImmutable('now', wp_timezone());
-        foreach (ETCF_Endpoints::feed_events() as $e) {
-            if ($e->end > $now && !$e->is_off()) {
-                $url = ETCF_Share::image_url(['type' => 'event', 'variant' => 'tomorrow', 'id' => $e->id]);
-                echo '<h2>' . esc_html__('Example', 'event-toolkit-for-custom-fields') . '</h2>';
-                echo '<p class="etcf-story-sample"><img src="' . esc_url($url) . '" alt="" width="270" height="480"></p>';
-                echo '<p><a href="' . esc_url(self::url('share')) . '">' . esc_html__('All images on the share page', 'event-toolkit-for-custom-fields') . '</a></p>';
-                return;
+        echo '</div><p class="description">' . esc_html__('A look sets colours, background and capitals. Your picture, fonts and bottom line stay.', 'event-toolkit-for-custom-fields') . '</p></td></tr>';
+    }
+
+    /** Sample events for the preview: the next event on its own, the next days as list. */
+    private static function preview_specs(): array
+    {
+        $now    = new DateTimeImmutable('now', wp_timezone());
+        $events = array_values(array_filter(ETCF_Endpoints::feed_events(), function (ETCF_Event $e) use ($now) {
+            return $e->end > $now;
+        }));
+        if (!$events) {
+            return [];
+        }
+        $single = $events[0];
+        foreach ($events as $e) {
+            if (!$e->is_off() && get_post_thumbnail_id($e->id)) {
+                $single = $e; // An event with a picture shows the look best.
+                break;
             }
         }
+        $ids = array_map(function (ETCF_Event $e) {
+            return $e->id;
+        }, array_slice($events, 0, ETCF_Sharepic::ROWS));
+        return [
+            'tomorrow' => ['type' => 'event', 'variant' => 'tomorrow', 'id' => $single->id],
+            'today'    => ['type' => 'event', 'variant' => 'today', 'id' => $single->id],
+            'week'     => ['type' => 'list', 'variant' => 'week', 'ids' => $ids, 'page' => 1, 'pages' => 1],
+        ];
+    }
+
+    /** Live preview of the story images next to their settings. */
+    private static function render_story_preview(): void
+    {
+        if (!ETCF_Settings::is_configured()) {
+            return;
+        }
+        if (!ETCF_Sharepic::available()) {
+            echo '<p>' . esc_html(ETCF_Sharepic::problem()) . '</p>';
+            return;
+        }
+        $specs = self::preview_specs();
+        echo '<h2>' . esc_html__('Preview', 'event-toolkit-for-custom-fields') . '</h2>';
+        if (!$specs) {
+            echo '<p>' . esc_html__('The preview needs an upcoming event.', 'event-toolkit-for-custom-fields') . '</p>';
+            return;
+        }
+        echo '<div class="etcf-story-preview">';
+        $labels = [
+            'tomorrow' => __('One event', 'event-toolkit-for-custom-fields'),
+            'today'    => __('On the day', 'event-toolkit-for-custom-fields'),
+            'week'     => __('Weekly preview', 'event-toolkit-for-custom-fields'),
+        ];
+        foreach ($specs as $key => $spec) {
+            echo '<figure><img data-frame="' . esc_attr($key) . '" src="' . esc_url(ETCF_Share::image_url($spec)) . '" alt="" width="270" height="480"><figcaption>' . esc_html($labels[$key]) . '</figcaption></figure>';
+        }
+        echo '</div>';
+        echo '<div class="etcf-contrast" aria-live="polite"></div>';
+        echo '<p class="etcf-preview-state" hidden>' . esc_html__('Preview of unsaved changes. Save to use them.', 'event-toolkit-for-custom-fields') . '</p>';
+        echo '<p><a href="' . esc_url(self::url('share')) . '">' . esc_html__('All images on the share page', 'event-toolkit-for-custom-fields') . '</a></p>';
+    }
+
+    /**
+     * Renders one preview frame with the unsaved values of the form. Not cached and not saved.
+     * Sends the contrast check as header X-ETCF-Contrast (JSON).
+     */
+    public static function handle_story_preview(): void
+    {
+        if (!current_user_can('manage_options')) {
+            wp_die(esc_html__('Not allowed.', 'event-toolkit-for-custom-fields'), '', ['response' => 403]);
+        }
+        check_admin_referer('etcf_sharepic_preview');
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized field by field in ETCF_Settings::override().
+        $input = isset($_POST[ETCF_Settings::OPTION]) && is_array($_POST[ETCF_Settings::OPTION]) ? wp_unslash($_POST[ETCF_Settings::OPTION]) : [];
+        ETCF_Settings::override('share', $input);
+        $frame = isset($_POST['frame']) ? sanitize_key(wp_unslash($_POST['frame'])) : '';
+        $specs = self::preview_specs();
+        if (!isset($specs[$frame])) {
+            wp_die(esc_html__('Unknown image.', 'event-toolkit-for-custom-fields'), '', ['response' => 404]);
+        }
+        $image = ETCF_Sharepic::render($specs[$frame]);
+        if (is_wp_error($image)) {
+            wp_die(esc_html($image->get_error_message()), '', ['response' => 404]);
+        }
+        nocache_headers();
+        header('Content-Type: image/jpeg');
+        if ($frame === 'tomorrow') {
+            header('X-ETCF-Contrast: ' . wp_json_encode(ETCF_Sharepic::contrast()));
+        }
+        imagejpeg($image, null, 80);
+        imagedestroy($image);
+        exit;
     }
 
     /* ------------------------------------------------------------------ Instagram */

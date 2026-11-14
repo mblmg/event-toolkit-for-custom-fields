@@ -5,7 +5,7 @@ Tags: events, calendar, newsletter, instagram, telegram
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.3.0
+Stable tag: 2.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,7 +35,7 @@ Once a week, a preview of what is coming up: the events of the next days, plus t
 
 **Instagram stories**
 
-* Story images (1080 × 1920) in the look of your website: its fonts, your colours, the event picture as a polaroid
+* Story images (1080 × 1920) in the look of your website: its fonts, your colours, the event picture as a polaroid. Ready looks (one of them from your website's colours), a colour, a gradient or your own picture as background, headings in capitals, and a live preview that checks whether all texts stay readable
 * Posted automatically through the official Instagram API, free of charge: the weekly overview, and every event the day before and on the day
 * Built not to overwhelm followers: no extra story for tomorrow on the day of the weekly overview, and many events on one day share one story
 
@@ -150,6 +150,10 @@ Other tokens work as well: those of older apps with "API setup with Instagram lo
 
 No. Instagram does not allow link stickers in stories posted through the API. The images show your web address instead (bottom line on the page "Share").
 
+= How do I change the look of the story images? =
+
+Under Event Toolkit → Story images. Click one of the looks (the first uses the colours of your website), then change what you like: one colour, a gradient or a picture of your media library as background, text and accent colour, fonts, headings in capitals. The preview next to the settings shows your changes before you save them, as single event, "Today" image and weekly preview. It also measures the contrast of all texts against the background (WCAG: 4.5 : 1 for text, 3 : 1 for the small grey lines and the web address) and says where they would be hard to read. On a picture, raise the veil until the warning goes away. The small grey lines and the web address are adjusted automatically if they would get too weak.
+
 = Which fonts do the story images use? =
 
 The main fonts of your website: the plugin reads them from Breakdance or from the theme (theme.json). Image rendering needs TrueType or OpenType files, while websites usually load WOFF2. If the theme does not ship a .ttf or .otf, the plugin downloads the font once from Google Fonts. The plugin ships no fonts of its own: without the website's fonts it uses a neutral font that is already on the server, DM Sans from the default theme Twenty Twenty-Two or a common system font (DejaVu Sans, Liberation Sans, Noto Sans, FreeSans, Arial). You can also enter other fonts under Event Toolkit → Story images.
@@ -194,6 +198,7 @@ The first three only return what visitors can see on the website anyway. Posting
 * Filter `etcf_tg_today_message` ($message, $events): change the "Today" message.
 * Filter `etcf_share_text` ($text): change the texts on the page "Share".
 * Filter `etcf_sharepic_fonts` ($files): font files of the story images (`display`, `text`, `bold`).
+* Filter `etcf_sharepic_presets` ($presets): the looks on the page "Story images" (`label` and `values` with the settings `sharepic_bg`, `sharepic_paper`, `sharepic_paper2`, `sharepic_ink`, `sharepic_accent`, `sharepic_heading_caps`).
 * Filter `etcf_site_fonts` ($fonts): the detected fonts of the website (`heading`, `text`).
 * Filter `etcf_ig_plan` ($items, $now): change the stories planned for a day.
 * Filter `etcf_hide_past_calendar_links` ($hide, $event): return false to keep the calendar links of events that are over.
@@ -224,7 +229,7 @@ No data about visitors of your site is sent. [Terms of Service](https://telegram
 
 No data about visitors of your site is sent. [Terms of Use](https://help.instagram.com/581066165581870), [Platform Terms](https://developers.facebook.com/terms/), [Privacy Policy](https://privacycenter.instagram.com/policy)
 
-**Google Fonts (optional).** Only when the story images use the fonts of your website and the theme does not ship them as .ttf or .otf file, the plugin downloads these font files once from Google Fonts (fonts.googleapis.com, fonts.gstatic.com), provided by Google LLC, and keeps them in the uploads folder. Only the font name and weight are sent. Choose "Bundled fonts" on the page "Share" to avoid this. [Privacy Policy](https://policies.google.com/privacy), [Google Fonts FAQ](https://developers.google.com/fonts/faq/privacy)
+**Google Fonts (optional).** Only when the story images use the fonts of your website and the theme does not ship them as .ttf or .otf file, the plugin downloads these font files once from Google Fonts (fonts.googleapis.com, fonts.gstatic.com), provided by Google LLC, and keeps them in the uploads folder. Only the font name and weight are sent. Choose "Neutral standard font" under Event Toolkit → Story images to avoid this. [Privacy Policy](https://policies.google.com/privacy), [Google Fonts FAQ](https://developers.google.com/fonts/faq/privacy)
 
 **Mastodon (optional).** Only when you enter a server and an access token and switch it on, the plugin connects to that Mastodon server: at the time of the weekly preview, on event days (if switched on), for a cancellation notice, or when an administrator clicks "Post the weekly preview now" or "Check connection". It sends the post text (event titles, dates, times and links to your site) and the story images. The terms and privacy policy of the server you use apply; see its "About" page.
 
@@ -239,6 +244,13 @@ No data about visitors of your site is sent. [Terms of Use](https://help.instagr
 **PayPal (donations).** The admin pages contain a donation link to PayPal (paypal.com), provided by PayPal (Europe) S.à r.l. et Cie, S.C.A. It only opens when an administrator clicks it; the plugin sends no data to PayPal and PayPal does not report back to your site. [User Agreement](https://www.paypal.com/legalhub/paypal/useragreement-full), [Privacy Statement](https://www.paypal.com/myaccount/privacy/privacyhub)
 
 == Changelog ==
+
+= 2.4.0 =
+* Story images: more freedom in the look without a layout editor. Ready looks (Website, Classic, Paper, Night, Sunset, Mint, Poster), the first one from the colours of your theme or Breakdance.
+* Story images: background in one colour, as gradient or a picture from the media library with an adjustable veil.
+* Story images: headings and titles in capitals, with the letter spacing capitals need.
+* Story images: live preview of unsaved settings (single event, "Today", weekly preview) with a contrast check of all texts. Grey info lines and the web address are adjusted automatically if they would get too weak.
+* Story images: shadows of the polaroids now also fall correctly on gradients and pictures; titles on the polaroids stay dark with light text colours.
 
 = 2.3.0 =
 * All names the plugin uses now start with "etcf": settings, schedules, hooks, filters, shortcodes, abilities, CSS classes and the event IDs in calendar files.

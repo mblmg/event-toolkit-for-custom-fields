@@ -63,12 +63,17 @@ class ETCF_Settings
             ],
             'share' => [
                 'sharepic_paper'    => 'color',
+                'sharepic_bg'       => 'choice',
+                'sharepic_paper2'   => 'color',
+                'sharepic_bg_image' => 'int',
+                'sharepic_veil'     => 'int',
                 'sharepic_ink'      => 'color',
                 'sharepic_accent'   => 'color',
                 'sharepic_footer'   => 'text',
                 'sharepic_fonts'    => 'choice',
                 'sharepic_heading_font'   => 'text',
                 'sharepic_heading_weight' => 'choice',
+                'sharepic_heading_caps'   => 'check',
                 'sharepic_text_font'      => 'text',
                 'share_reminder'    => 'check',
                 'share_reminder_to' => 'email',
@@ -120,12 +125,17 @@ class ETCF_Settings
             'digest_feed_only_new' => 0,
 
             'sharepic_paper'    => '#ffffff',
+            'sharepic_bg'       => 'solid', // 'solid', 'gradient' (paper → paper2) or 'image'.
+            'sharepic_paper2'   => '#e9e4dc',
+            'sharepic_bg_image' => 0, // Attachment ID.
+            'sharepic_veil'     => 70, // Percent of the background colour over the image.
             'sharepic_ink'      => '#1e1e1e',
             'sharepic_accent'   => '#3858e9',
             'sharepic_footer'   => '', // Empty = address of the programme page.
             'sharepic_fonts'    => 'site', // 'site' = fonts of the website, 'standard' = a neutral font already on the server.
             'sharepic_heading_font'   => '', // Empty = detected.
             'sharepic_heading_weight' => 0, // 0 = as on the website.
+            'sharepic_heading_caps'   => 0,
             'sharepic_text_font'      => '',
             'share_reminder'    => 0,
             'share_reminder_to' => get_option('admin_email'),
@@ -139,10 +149,31 @@ class ETCF_Settings
         return (isset($parts[1]) && strlen($parts[1]) === 2) ? strtoupper($parts[1]) : '';
     }
 
+    /** Unsaved values for a preview (see override()). */
+    private static $override = [];
+
     public static function all(): array
     {
         $saved = get_option(self::OPTION, []);
-        return wp_parse_args(is_array($saved) ? $saved : [], self::defaults());
+        return array_merge(wp_parse_args(is_array($saved) ? $saved : [], self::defaults()), self::$override);
+    }
+
+    /**
+     * Uses unsaved values of one tab for the rest of the request, e.g. to preview story images
+     * while the form is being edited. The values are sanitized like on saving; nothing is stored.
+     */
+    public static function override(string $tab, array $input): void
+    {
+        $types = self::tabs()[$tab] ?? [];
+        $out   = [];
+        foreach ($types as $key => $type) {
+            if ($type === 'check') {
+                $out[$key] = empty($input[$key]) ? 0 : 1;
+            } elseif (array_key_exists($key, $input)) {
+                $out[$key] = self::clean($key, $type, $input[$key]);
+            }
+        }
+        self::$override = $out;
     }
 
     /** @return mixed */
@@ -200,7 +231,7 @@ class ETCF_Settings
                 return implode(', ', $parts);
             case 'int':
                 $min = ['default_duration' => 15, 'digest_days_ahead' => 1][$key] ?? 0;
-                $max = ['digest_days_ahead' => 31][$key] ?? PHP_INT_MAX;
+                $max = ['digest_days_ahead' => 31, 'sharepic_veil' => 95][$key] ?? PHP_INT_MAX;
                 return min($max, max($min, absint($value)));
             case 'slug':
                 return sanitize_title($value) ?: self::defaults()[$key];
@@ -234,6 +265,11 @@ class ETCF_Settings
     public static function choices(): array
     {
         return [
+            'sharepic_bg'             => [
+                'solid'    => __('One colour', 'event-toolkit-for-custom-fields'),
+                'gradient' => __('Gradient', 'event-toolkit-for-custom-fields'),
+                'image'    => __('Picture', 'event-toolkit-for-custom-fields'),
+            ],
             'sharepic_fonts'          => [
                 'site'    => __('Fonts of the website', 'event-toolkit-for-custom-fields'),
                 'standard' => __('Neutral standard font (from WordPress or the server)', 'event-toolkit-for-custom-fields'),

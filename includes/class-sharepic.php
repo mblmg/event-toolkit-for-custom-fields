@@ -28,7 +28,9 @@ class ETCF_Sharepic
     const MAX_SINGLE = 3;
     const DIR = 'event-toolkit/stories';
     /** Raise when the layout changes, so cached images are rendered again. */
-    const DESIGN = 3;
+    const DESIGN = 4;
+    /** Letter spacing of headings in capitals, in em. Capitals need air between them. */
+    const CAPS_TRACKING = 0.04;
 
     /** Rendering needs GD with FreeType and JPEG support. */
     public static function available(): bool
@@ -222,30 +224,343 @@ class ETCF_Sharepic
         if ($footer === '') {
             $footer = preg_replace('#^https?://(www\.)?#', '', untrailingslashit(ETCF_Digest::program_url()));
         }
+        $bg    = (string) ETCF_Settings::get('sharepic_bg');
+        $image = (int) ETCF_Settings::get('sharepic_bg_image');
+        if ($bg === 'image' && self::image_file($image) === '') {
+            $bg = 'solid'; // The picture was deleted: fall back to the colour.
+        }
         return [
             'paper'  => (string) ETCF_Settings::get('sharepic_paper'),
             'ink'    => (string) ETCF_Settings::get('sharepic_ink'),
             'accent' => (string) ETCF_Settings::get('sharepic_accent'),
             'footer' => $footer,
+            'bg'     => in_array($bg, ['solid', 'gradient', 'image'], true) ? $bg : 'solid',
+            'paper2' => (string) ETCF_Settings::get('sharepic_paper2'),
+            'image'  => $bg === 'image' ? $image : 0,
+            'veil'   => (int) ETCF_Settings::get('sharepic_veil'),
+            'caps'   => (bool) ETCF_Settings::get('sharepic_heading_caps'),
         ];
+    }
+
+    /**
+     * Ready looks for the settings page. Each sets the colours, the background and the case of the
+     * headings; the picture, fonts and bottom line stay as they are. "Website" uses the colours
+     * of the theme or Breakdance, if they can be found. Filter: etcf_sharepic_presets.
+     *
+     * @return array<string, array{label: string, values: array}>
+     */
+    public static function presets(): array
+    {
+        $look = function (string $label, string $bg, string $paper, string $paper2, string $ink, string $accent, int $caps): array {
+            return ['label' => $label, 'values' => [
+                'sharepic_bg' => $bg, 'sharepic_paper' => $paper, 'sharepic_paper2' => $paper2,
+                'sharepic_ink' => $ink, 'sharepic_accent' => $accent, 'sharepic_heading_caps' => $caps,
+            ]];
+        };
+        $presets = [];
+        $site    = self::site_colours();
+        if ($site) {
+            $presets['website'] = $look(__('Website', 'event-toolkit-for-custom-fields'), 'solid', $site['paper'], $site['paper2'], $site['ink'], $site['accent'], 0);
+        }
+        $presets += [
+            'classic' => $look(__('Classic', 'event-toolkit-for-custom-fields'), 'solid', '#ffffff', '#e9e4dc', '#1e1e1e', '#3858e9', 0),
+            'paper'   => $look(__('Paper', 'event-toolkit-for-custom-fields'), 'solid', '#f4efe6', '#e6dccb', '#2b2622', '#b4441a', 0),
+            'night'   => $look(__('Night', 'event-toolkit-for-custom-fields'), 'gradient', '#15171f', '#2b3150', '#f3efe6', '#f5b942', 1),
+            'sunset'  => $look(__('Sunset', 'event-toolkit-for-custom-fields'), 'gradient', '#ffe3c4', '#ff9a8b', '#2d1b2e', '#a4137f', 0),
+            'mint'    => $look(__('Mint', 'event-toolkit-for-custom-fields'), 'gradient', '#eaf6f1', '#b5ddd0', '#0f3d3e', '#0f766e', 0),
+            'poster'  => $look(__('Poster', 'event-toolkit-for-custom-fields'), 'solid', '#ffde59', '#ffc93c', '#111111', '#111111', 1),
+        ];
+        return (array) apply_filters('etcf_sharepic_presets', $presets);
+    }
+
+    /**
+     * Colours of the website (theme.json palette, Breakdance global colours): the lightest as
+     * background, the darkest as text, the most colourful readable one as accent.
+     *
+     * @return array{paper: string, paper2: string, ink: string, accent: string}|null
+     */
+    public static function site_colours(): ?array
+    {
+        $hexes = [];
+        if (function_exists('wp_get_global_settings')) {
+            // The theme's and the user's colours; WordPress' default palette says nothing about the site.
+            $palette = (array) wp_get_global_settings(['color', 'palette']);
+            foreach (['custom', 'theme'] as $origin) {
+                foreach ((array) ($palette[$origin] ?? []) as $entry) {
+                    $hexes[] = is_array($entry) ? (string) ($entry['color'] ?? '') : '';
+                }
+            }
+        }
+        $css = trailingslashit(wp_upload_dir()['basedir']) . 'breakdance/css/global-settings.css';
+        if (is_readable($css) && preg_match_all('/--bde-[a-z0-9-]*colou?r[a-z0-9-]*\s*:\s*(#[0-9a-f]{3,6})\b/i', (string) file_get_contents($css), $m)) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- local file.
+            $hexes = array_merge($hexes, $m[1]);
+        }
+        $colours = [];
+        foreach ($hexes as $hex) {
+            $hex = sanitize_hex_color(strtolower(trim($hex)));
+            if ($hex && strlen($hex) === 4) {
+                $hex = '#' . $hex[1] . $hex[1] . $hex[2] . $hex[2] . $hex[3] . $hex[3];
+            }
+            if ($hex) {
+                $colours[$hex] = self::rgb($hex);
+            }
+        }
+        if (count($colours) < 2) {
+            return null;
+        }
+        $white = [255, 255, 255];
+        uasort($colours, function ($a, $b) use ($white) {
+            return self::ratio($a, $white) <=> self::ratio($b, $white); // Lightest first.
+        });
+        $hex   = array_keys($colours);
+        $paper = $hex[0];
+        $ink   = end($hex);
+        if (self::ratio($colours[$paper], $colours[$ink]) < 4.5) {
+            return null; // No light and dark pair: not usable as a look.
+        }
+        $accent = $ink;
+        $best   = -1.0;
+        foreach ($colours as $h => $c) {
+            $sat = (max($c) - min($c)) / 255;
+            if ($sat > $best && self::ratio($c, $colours[$paper]) >= 3) {
+                $best   = $sat;
+                $accent = $h;
+            }
+        }
+        $paper2 = $hex[1] !== $ink && self::ratio($colours[$hex[1]], $colours[$ink]) >= 4.5 ? $hex[1] : $paper;
+        return ['paper' => $paper, 'paper2' => $paper2, 'ink' => $ink, 'accent' => $accent];
+    }
+
+    /**
+     * Renders a frame without saving it, for the preview of unsaved settings.
+     *
+     * @return resource|GdImage|WP_Error
+     */
+    public static function render(array $spec)
+    {
+        $spec = self::clean_spec($spec);
+        if (!$spec || !self::available()) {
+            return new WP_Error('etcf_sharepic', $spec ? self::problem() : __('Unknown image.', 'event-toolkit-for-custom-fields'));
+        }
+        $events = self::events($spec);
+        if (!$events) {
+            return new WP_Error('etcf_sharepic_event', __('The event was not found or has no valid date.', 'event-toolkit-for-custom-fields'));
+        }
+        return $spec['type'] === 'event' ? self::render_event($events[0], $spec['variant']) : self::render_list($events, $spec);
+    }
+
+    /** File of the background picture, '' if there is none. */
+    private static function image_file(int $id): string
+    {
+        $file = $id && wp_attachment_is_image($id) ? get_attached_file($id) : '';
+        return $file && is_readable($file) ? $file : '';
+    }
+
+    /** Headings in capitals? */
+    private static function caps(): bool
+    {
+        return self::style()['caps'];
+    }
+
+    /** A heading as it is set: in capitals if chosen. */
+    private static function heading(string $text): string
+    {
+        return self::caps() ? mb_strtoupper($text, 'UTF-8') : $text;
+    }
+
+    /** Letter spacing of headings in em. */
+    private static function track(): float
+    {
+        return self::caps() ? self::CAPS_TRACKING : 0.0;
     }
 
     /** Colours of a frame. "today" is dark, everything else light, so the two reminders look different. */
     private static function palette(bool $dark): array
     {
-        $s     = self::style();
-        $bg    = self::rgb($dark ? $s['ink'] : $s['paper']);
-        $fg    = self::rgb($dark ? $s['paper'] : $s['ink']);
+        $s        = self::style();
+        $backdrop = self::backdrop($dark);
+        // On a gradient or picture, colours derived from the background use its average.
+        $bg       = $backdrop['average'];
+        $fg       = self::rgb($dark ? $s['paper'] : $s['ink']);
+        $white    = [255, 255, 255];
+        $paper_ink = self::ratio(self::rgb($s['ink']), $white) >= self::ratio(self::rgb($s['paper']), $white) ? self::rgb($s['ink']) : self::rgb($s['paper']);
         return [
+            'backdrop' => $backdrop['image'],
             'bg'     => $bg,
             'fg'     => $fg,
-            'muted'  => self::mix($bg, $fg, $dark ? 0.68 : 0.64),
-            'accent' => $dark ? self::mix(self::rgb($s['accent']), [255, 255, 255], 0.18) : self::rgb($s['accent']),
-            'shadow' => self::mix($bg, [0, 0, 0], $dark ? 0.55 : 0.22),
+            // Grey lines and the web address stay readable: pushed towards the text colour
+            // until they reach 3.5 : 1 on the lightest and the darkest spot of the background.
+            'muted'  => self::readable(self::mix($bg, $fg, $dark ? 0.68 : 0.64), $backdrop['extremes'], $fg),
+            'accent' => self::readable($dark ? self::mix(self::rgb($s['accent']), [255, 255, 255], 0.18) : self::rgb($s['accent']), $backdrop['extremes'], $fg),
+            // Multiplied onto the background (see place()), so it works on gradients and pictures too.
+            'shadow' => self::mix([255, 255, 255], [0, 0, 0], $dark ? 0.55 : 0.22),
             'white'  => [255, 255, 255],
-            'ink'    => self::rgb($s['ink']),
-            'blank'  => self::mix([255, 255, 255], self::rgb($s['ink']), 0.07),
+            // Captions on the white polaroid strip: the darker of text and background colour,
+            // so dark looks (light text on a dark background) stay readable there too.
+            'ink'    => $paper_ink,
+            'blank'  => self::mix([255, 255, 255], $paper_ink, 0.07),
         ];
+    }
+
+    /**
+     * The background of a frame, rendered once per request: one colour, a gradient or a picture
+     * under a veil of the background colour. "Today" frames use the text colour instead
+     * of the background colour, so they stay dark.
+     *
+     * @return array{image: resource|GdImage|null, average: int[]}
+     */
+    private static function backdrop(bool $dark): array
+    {
+        static $cache = [];
+        $s   = self::style();
+        $key = md5((string) wp_json_encode([$s, $dark]));
+        if (isset($cache[$key])) {
+            return $cache[$key];
+        }
+        $base = self::rgb($dark ? $s['ink'] : $s['paper']);
+        $out  = ['image' => null, 'average' => $base, 'extremes' => [$base]];
+
+        if ($s['bg'] === 'gradient') {
+            // Light frames: background colour → second colour. Dark frames: the text colour
+            // with a tint of the second colour. Drawn small and scaled up: smooth and fast.
+            $to   = $dark ? self::mix($base, self::rgb($s['paper2']), 0.3) : self::rgb($s['paper2']);
+            $sw   = 36;
+            $sh   = 64;
+            $tiny = imagecreatetruecolor($sw, $sh);
+            for ($y = 0; $y < $sh; $y++) {
+                for ($x = 0; $x < $sw; $x++) {
+                    // Diagonal, mostly from top to bottom.
+                    $t = min(1, max(0, 0.25 * $x / ($sw - 1) + 0.75 * $y / ($sh - 1)));
+                    $t = $t * $t * (3 - 2 * $t); // Ease in and out.
+                    imagesetpixel($tiny, $x, $y, self::color($tiny, self::mix($base, $to, $t)));
+                }
+            }
+            $im = imagecreatetruecolor(self::W, self::H);
+            imagecopyresampled($im, $tiny, 0, 0, 0, 0, self::W, self::H, $sw, $sh);
+            imagedestroy($tiny);
+            $out['image'] = $im;
+        } elseif ($s['bg'] === 'image') {
+            $src = @imagecreatefromstring((string) file_get_contents(self::image_file($s['image']))); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- local file.
+            if ($src) {
+                // Cover: fill the frame, cut off what sticks out (centred).
+                $w     = imagesx($src);
+                $h     = imagesy($src);
+                $scale = max(self::W / $w, self::H / $h);
+                $cw    = (int) round(self::W / $scale);
+                $ch    = (int) round(self::H / $scale);
+                $im    = imagecreatetruecolor(self::W, self::H);
+                imagecopyresampled($im, $src, 0, 0, (int) (($w - $cw) / 2), (int) (($h - $ch) / 2), self::W, self::H, $cw, $ch);
+                imagedestroy($src);
+                // The veil: the background colour over the picture, so the text stays readable.
+                $alpha = (int) round(127 * (1 - max(0, min(95, $s['veil'])) / 100));
+                imagealphablending($im, true);
+                imagefilledrectangle($im, 0, 0, self::W, self::H, imagecolorallocatealpha($im, $base[0], $base[1], $base[2], $alpha));
+                $out['image'] = $im;
+            }
+        }
+        if ($out['image']) {
+            $one = imagecreatetruecolor(1, 1);
+            imagecopyresampled($one, $out['image'], 0, 0, 0, 0, 1, 1, self::W, self::H);
+            $c = imagecolorat($one, 0, 0);
+            imagedestroy($one);
+            $out['average'] = [($c >> 16) & 255, ($c >> 8) & 255, $c & 255];
+            $out['extremes'] = self::extremes($out['image']);
+        }
+        return $cache[$key] = $out;
+    }
+
+    /**
+     * Lightest and darkest spot of a background, in cells of 40 × 40 px.
+     *
+     * @param resource|GdImage $im
+     * @return int[][]
+     */
+    private static function extremes($im): array
+    {
+        $cells = self::cells($im);
+        $white = [255, 255, 255];
+        usort($cells, function ($a, $b) use ($white) {
+            return self::ratio($a, $white) <=> self::ratio($b, $white);
+        });
+        return [$cells[0], end($cells)];
+    }
+
+    /**
+     * The background in cells of 40 × 40 px.
+     *
+     * @param resource|GdImage $im
+     * @return int[][]
+     */
+    private static function cells($im): array
+    {
+        $gw    = (int) (self::W / 40);
+        $gh    = (int) (self::H / 40);
+        $grid  = imagecreatetruecolor($gw, $gh);
+        imagecopyresampled($grid, $im, 0, 0, 0, 0, $gw, $gh, self::W, self::H);
+        $cells = [];
+        for ($y = 0; $y < $gh; $y++) {
+            for ($x = 0; $x < $gw; $x++) {
+                $c       = imagecolorat($grid, $x, $y);
+                $cells[] = [($c >> 16) & 255, ($c >> 8) & 255, $c & 255];
+            }
+        }
+        imagedestroy($grid);
+        return $cells;
+    }
+
+    /**
+     * How readable the text is on the background, as WCAG contrast ratios (1–21), for light
+     * and dark ("Today") frames. On gradients and pictures the weakest spot counts.
+     * Text should reach 4.5, the grey info lines and the web address 3.
+     *
+     * @return array{light: array{text: float, muted: float, accent: float}, dark: array{text: float, muted: float, accent: float}}
+     */
+    public static function contrast(): array
+    {
+        $out = [];
+        foreach (['light' => false, 'dark' => true] as $name => $dark) {
+            $p     = self::palette($dark);
+            // The weakest cell decides.
+            $cells = $p['backdrop'] ? self::cells($p['backdrop']) : [$p['bg']];
+            $worst = function (array $fg) use ($cells): float {
+                $min = 21.0;
+                foreach ($cells as $cell) {
+                    $min = min($min, self::ratio($fg, $cell));
+                }
+                return round($min, 1);
+            };
+            $out[$name] = ['text' => $worst($p['fg']), 'muted' => $worst($p['muted']), 'accent' => $worst($p['accent'])];
+        }
+        return $out;
+    }
+
+    /** $c, mixed towards $fg in small steps until it reaches 3.5 : 1 on every colour of $bgs. */
+    private static function readable(array $c, array $bgs, array $fg): array
+    {
+        $weakest = function (array $c) use ($bgs): float {
+            return min(array_map(function ($bg) use ($c) {
+                return self::ratio($c, $bg);
+            }, $bgs));
+        };
+        for ($t = 0.1; $t <= 1 && $weakest($c) < 3.5; $t += 0.1) {
+            $c = self::mix($c, $fg, $t);
+        }
+        return $c;
+    }
+
+    /** WCAG contrast ratio of two colours. */
+    private static function ratio(array $a, array $b): float
+    {
+        $lum = function (array $c): float {
+            $l = array_map(function ($v) {
+                $v /= 255;
+                return $v <= 0.03928 ? $v / 12.92 : (($v + 0.055) / 1.055) ** 2.4;
+            }, $c);
+            return 0.2126 * $l[0] + 0.7152 * $l[1] + 0.0722 * $l[2];
+        };
+        $x = $lum($a);
+        $y = $lum($b);
+        return (max($x, $y) + 0.05) / (min($x, $y) + 0.05);
     }
 
     private static function rgb(string $hex): array
@@ -283,20 +598,48 @@ class ETCF_Sharepic
         return $px * 0.75;
     }
 
-    private static function width(string $font, float $px, string $text): int
+    /** Width of a text; with letter spacing ($track in em) the sum of the advances. */
+    private static function width(string $font, float $px, string $text, float $track = 0.0): int
     {
+        if ($track > 0) {
+            $w     = 0.0;
+            $chars = self::chars($text);
+            foreach ($chars as $c) {
+                $w += self::advance($font, $px, $c);
+            }
+            return (int) round($w + $track * $px * max(0, count($chars) - 1));
+        }
         $box = imagettfbbox(self::pt($px), 0, $font, $text);
         return $box ? (int) ($box[2] - $box[0]) : 0;
     }
 
+    /** @return string[] */
+    private static function chars(string $text): array
+    {
+        return preg_split('//u', $text, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+    }
+
+    /** Advance width of one character: "HcH" minus "HH" cancels the side bearings of the H. */
+    private static function advance(string $font, float $px, string $c): float
+    {
+        static $cache = [];
+        $key = $font . '|' . $px . '|' . $c;
+        if (!isset($cache[$key])) {
+            $hh  = imagettfbbox(self::pt($px), 0, $font, 'HH');
+            $hch = imagettfbbox(self::pt($px), 0, $font, 'H' . $c . 'H');
+            $cache[$key] = ($hch && $hh) ? (float) (($hch[2] - $hch[0]) - ($hh[2] - $hh[0])) : 0.0;
+        }
+        return $cache[$key];
+    }
+
     /** Splits text into lines that fit $max pixels. Words longer than a line are kept whole. */
-    private static function wrap(string $font, float $px, string $text, int $max): array
+    private static function wrap(string $font, float $px, string $text, int $max, float $track = 0.0): array
     {
         $lines = [];
         $line  = '';
         foreach (preg_split('/\s+/u', trim($text)) as $word) {
             $try = $line === '' ? $word : $line . ' ' . $word;
-            if ($line !== '' && self::width($font, $px, $try) > $max) {
+            if ($line !== '' && self::width($font, $px, $try, $track) > $max) {
                 $lines[] = $line;
                 $line    = $word;
             } else {
@@ -315,13 +658,13 @@ class ETCF_Sharepic
      *
      * @return array{0: float, 1: string[]}
      */
-    private static function fit(string $font, string $text, int $width, float $max_px, float $min_px, int $max_lines): array
+    private static function fit(string $font, string $text, int $width, float $max_px, float $min_px, int $max_lines, float $track = 0.0): array
     {
         for ($px = $max_px; $px >= $min_px; $px -= 2) {
-            $lines = self::wrap($font, $px, $text, $width);
+            $lines = self::wrap($font, $px, $text, $width, $track);
             $wide  = false;
             foreach ($lines as $line) {
-                if (self::width($font, $px, $line) > $width) {
+                if (self::width($font, $px, $line, $track) > $width) {
                     $wide = true;
                     break;
                 }
@@ -330,9 +673,9 @@ class ETCF_Sharepic
                 return [$px, $lines];
             }
         }
-        $lines = array_slice(self::wrap($font, $min_px, $text, $width), 0, $max_lines);
+        $lines = array_slice(self::wrap($font, $min_px, $text, $width, $track), 0, $max_lines);
         $last  = $lines[$max_lines - 1] ?? '';
-        while ($last !== '' && self::width($font, $min_px, $last . '…') > $width) {
+        while ($last !== '' && self::width($font, $min_px, $last . '…', $track) > $width) {
             $last = mb_substr($last, 0, -1);
         }
         $lines[count($lines) - 1] = rtrim($last) . '…';
@@ -378,7 +721,7 @@ class ETCF_Sharepic
      *
      * @param resource|GdImage $im
      */
-    private static function lines($im, string $font, float $px, float $leading, int $x, int $y, array $rgb, array $lines, string $align = 'left', int $width = 0): int
+    private static function lines($im, string $font, float $px, float $leading, int $x, int $y, array $rgb, array $lines, string $align = 'left', int $width = 0, float $track = 0.0): int
     {
         $color = self::color($im, $rgb);
         $step  = (int) round($px * $leading);
@@ -386,10 +729,19 @@ class ETCF_Sharepic
         foreach ($lines as $line) {
             $lx = $x;
             if ($align !== 'left') {
-                $w  = self::width($font, $px, $line);
+                $w  = self::width($font, $px, $line, $track);
                 $lx = $align === 'center' ? $x + (int) (($width - $w) / 2) : $x + $width - $w;
             }
-            imagettftext($im, self::pt($px), 0, $lx, $base, $color, $font, $line);
+            if ($track > 0) {
+                // Letter by letter, with extra space after each.
+                $cx = (float) $lx;
+                foreach (self::chars($line) as $c) {
+                    imagettftext($im, self::pt($px), 0, (int) round($cx), $base, $color, $font, $c);
+                    $cx += self::advance($font, $px, $c) + $track * $px;
+                }
+            } else {
+                imagettftext($im, self::pt($px), 0, $lx, $base, $color, $font, $line);
+            }
             $base += $step;
         }
         return $y + $step * count($lines);
@@ -409,9 +761,10 @@ class ETCF_Sharepic
      */
     private static function big_word($im, string $variant, array $p, string $word = ''): int
     {
-        $font = self::fonts()['display'];
-        [$px, $lines] = self::fit($font, $word !== '' ? $word : self::word($variant), self::W - 2 * self::MARGIN, 200, 120, 1);
-        return self::lines($im, $font, $px, 0.98, self::MARGIN - 6, self::TOP + (int) ((200 - $px) * 0.8), $p['fg'], $lines);
+        $font  = self::fonts()['display'];
+        $track = self::track();
+        [$px, $lines] = self::fit($font, self::heading($word !== '' ? $word : self::word($variant)), self::W - 2 * self::MARGIN, 200, 120, 1, $track);
+        return self::lines($im, $font, $px, 0.98, self::MARGIN - 6, self::TOP + (int) ((200 - $px) * 0.8), $p['fg'], $lines, 'left', 0, $track);
     }
 
     /** "Wednesday, October 29" */
@@ -452,7 +805,11 @@ class ETCF_Sharepic
     {
         $im = imagecreatetruecolor(self::W, self::H);
         imagealphablending($im, true);
-        imagefilledrectangle($im, 0, 0, self::W, self::H, self::color($im, $p['bg']));
+        if ($p['backdrop']) {
+            imagecopy($im, $p['backdrop'], 0, 0, 0, 0, self::W, self::H);
+        } else {
+            imagefilledrectangle($im, 0, 0, self::W, self::H, self::color($im, $p['bg']));
+        }
         return $im;
     }
 
@@ -542,9 +899,10 @@ class ETCF_Sharepic
         $h   = imagesy($pol);
         $pad = $blur * 3;
 
-        // Shadow: the silhouette in the shadow colour on a patch of background, blurred at low resolution.
+        // Shadow: the silhouette in grey on white, blurred at low resolution, then multiplied
+        // onto the canvas. White leaves the background as it is, so this works on any background.
         $patch = imagecreatetruecolor($w + 2 * $pad, $h + 2 * $pad);
-        imagefilledrectangle($patch, 0, 0, imagesx($patch), imagesy($patch), self::color($patch, $p['bg']));
+        imagefilledrectangle($patch, 0, 0, imagesx($patch), imagesy($patch), self::color($patch, [255, 255, 255]));
         $sil = imagecreatetruecolor($w, $h);
         imagealphablending($sil, false);
         imagesavealpha($sil, true);
@@ -564,7 +922,11 @@ class ETCF_Sharepic
         imagecopyresampled($patch, $small, 0, 0, 0, 0, imagesx($patch), imagesy($patch), imagesx($small), imagesy($small));
         imagedestroy($small);
 
-        imagecopy($canvas, $patch, $x - $pad, $y - $pad + $drop, 0, 0, imagesx($patch), imagesy($patch));
+        if (defined('IMG_EFFECT_MULTIPLY')) {
+            imagelayereffect($canvas, IMG_EFFECT_MULTIPLY);
+            imagecopy($canvas, $patch, $x - $pad, $y - $pad + $drop, 0, 0, imagesx($patch), imagesy($patch));
+            imagelayereffect($canvas, IMG_EFFECT_ALPHABLEND);
+        } // Very old GD without multiply: no shadow rather than a light patch.
         imagedestroy($patch);
 
         imagealphablending($canvas, true);
@@ -633,17 +995,19 @@ class ETCF_Sharepic
         $bottom  = ($venue !== '' ? $venue_y : self::BOTTOM - 29) - 44;
         $top     = $y + 56;
         $max     = 720;
-        [$tpx, $tlines] = self::fit($f['display'], $title, $max - 2 * 28, 60, 40, 3);
+        $track   = self::track();
+        $title   = self::heading($title);
+        [$tpx, $tlines] = self::fit($f['display'], $title, $max - 2 * 28, 60, 40, 3, $track);
         $strip  = 34 + (int) round($tpx * 1.08) * count($tlines) + 40;
         // Rotation by ~2.4° makes the image about 4 % of its width taller.
         $avail  = (int) floor(($bottom - $top - $frame - $strip - 6) / 1.042);
         $photo  = max(380, min($max, $avail));
         if ($photo < $max) {
-            [$tpx, $tlines] = self::fit($f['display'], $title, $photo - 56, $tpx, 34, 3);
+            [$tpx, $tlines] = self::fit($f['display'], $title, $photo - 56, $tpx, 34, 3, $track);
         }
 
-        $caption = function ($pim, int $s, int $x, int $sy, int $w, array $pp) use ($f, $tpx, $tlines) {
-            self::lines($pim, $f['display'], $tpx * $s, 1.08, $x + 28 * $s, $sy + 30 * $s, $pp['ink'], $tlines);
+        $caption = function ($pim, int $s, int $x, int $sy, int $w, array $pp) use ($f, $tpx, $tlines, $track) {
+            self::lines($pim, $f['display'], $tpx * $s, 1.08, $x + 28 * $s, $sy + 30 * $s, $pp['ink'], $tlines, 'left', 0, $track);
         };
         $angle = $today ? 2.2 : -2.4;
         $pol   = self::polaroid($e, $photo, $frame, $strip, $angle, $p, $caption);
@@ -680,9 +1044,9 @@ class ETCF_Sharepic
             [$dpx, $dlines] = self::fit_short($f['text'], self::long_date($events[0]), $width, 42, 34, 30);
             $y = self::lines($im, $f['text'], $dpx, 1.3, self::MARGIN, $y + 18, $p['fg'], $dlines);
         } else {
-            $heading = $variant === 'week' ? ETCF_Digest::heading_week() : ETCF_Digest::heading_new();
-            [$hpx, $hlines] = self::fit($f['display'], $heading, $width, 104, 64, 3);
-            $y = self::lines($im, $f['display'], $hpx, 1.02, self::MARGIN - 4, self::TOP, $p['fg'], $hlines);
+            $heading = self::heading($variant === 'week' ? ETCF_Digest::heading_week() : ETCF_Digest::heading_new());
+            [$hpx, $hlines] = self::fit($f['display'], $heading, $width, 104, 64, 3, self::track());
+            $y = self::lines($im, $f['display'], $hpx, 1.02, self::MARGIN - 4, self::TOP, $p['fg'], $hlines, 'left', 0, self::track());
         }
 
         // Rows: small polaroid, date and time, title.
@@ -706,11 +1070,11 @@ class ETCF_Sharepic
 
             $when  = $day ? ETCF_Digest::time($e) : self::short_date($e) . ', ' . self::start_time($e);
             [$wpx, $wlines] = self::fit($f['text'], $when, $text_w, 32 + 4 * $grow, 24, 2);
-            [$tpx, $tlines] = self::fit($f['display'], ETCF_Digest::title($e), $text_w, 50 + 10 * $grow, 36, 3);
+            [$tpx, $tlines] = self::fit($f['display'], self::heading(ETCF_Digest::title($e)), $text_w, 50 + 10 * $grow, 36, 3, self::track());
             $block = (int) round($wpx * 1.4) * count($wlines) + (int) round($tpx * 1.08) * count($tlines);
             $ty    = $y + (int) max(0, ($ph - $block) / 2) - 6;
             $ty    = self::lines($im, $f['text'], $wpx, 1.4, $text_x, $ty, $p['muted'], $wlines);
-            self::lines($im, $f['display'], $tpx, 1.08, $text_x, $ty, $p['fg'], $tlines);
+            self::lines($im, $f['display'], $tpx, 1.08, $text_x, $ty, $p['fg'], $tlines, 'left', 0, self::track());
             $y += $row;
         }
 

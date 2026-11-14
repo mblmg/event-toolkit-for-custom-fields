@@ -8,10 +8,19 @@ Where the plugin stands and what comes next. Keep this file up to date when a fe
 
 ## Status
 
-- Current version: **2.2.0** (on GitHub `main`; not yet submitted to WordPress.org).
+- Current version: **2.4.0** (on GitHub `main`; not yet submitted to WordPress.org).
 - Releases: see [README.md](README.md#releasing). Deployment to WordPress.org runs from the Release workflow once the plugin is approved.
 
 ## Shipped
+
+**2.4.0**
+- Story image design without a layout editor: looks (presets, one from the theme / Breakdance colours), background as colour, gradient or picture with veil, headings in capitals (tracking 0.04 em, drawn letter by letter with real advance widths).
+- Live preview of unsaved settings on the page "Story images" (admin-post `etcf_sharepic_preview`, settings overridden per request with `ETCF_Settings::override()`, nothing cached) and a WCAG contrast check: weakest 40 px cell of the background against text (4.5), info lines and web address (3). Info lines and web address are pushed towards the text colour until 3.5 : 1 on the lightest and the darkest spot of the background. A script renders every look and checks text ≥ 4.5 and small lines ≥ 3 (all pass).
+- Shadows multiplied onto the canvas, so they work on any background.
+- Decided against a layout editor: the layout stays fixed and tuned for Instagram's safe zones; what changes is colour, background and type.
+
+**2.3.0**
+- Prefix `etcf` everywhere, translations from translate.wordpress.org, donations tab, Instagram through the Facebook Page, calendar links hidden after the event, Telegram "Today" with sound optional.
 
 **2.2.0**
 - Cancelled and postponed events from a status field: schema.org `eventStatus`, iCalendar `STATUS` and `SEQUENCE`, title prefix in calendars and all texts, story images say "Cancelled" with a grey picture, no reminder stories; one notice on Telegram, Mastodon and Bluesky (action `etcf_status_notice`).
