@@ -333,8 +333,8 @@ class ETCF_Admin
             'sharepic_fonts'    => [__('Fonts', 'event-toolkit-for-custom-fields'), '', 'choice'],
             'sharepic_heading_font'   => [__('Font for headings', 'event-toolkit-for-custom-fields'), '', 'font'],
             'sharepic_heading_weight' => [__('Weight of headings', 'event-toolkit-for-custom-fields'), '', 'choice'],
-            'sharepic_heading_caps'   => [__('Capitals', 'event-toolkit-for-custom-fields'), '', 'check', __('Set headings and titles in capitals', 'event-toolkit-for-custom-fields')],
-            'sharepic_heading_tracking' => [__('Letter spacing of headings', 'event-toolkit-for-custom-fields'), __('Large headings often look better a little tighter. Capitals in some fonts need a little more air.', 'event-toolkit-for-custom-fields'), 'choice'],
+            'sharepic_heading_caps'   => [__('Capitals', 'event-toolkit-for-custom-fields'), __('Headings and titles of events.', 'event-toolkit-for-custom-fields'), 'choice'],
+            'sharepic_heading_tracking' => [__('Letter spacing of headings', 'event-toolkit-for-custom-fields'), __('Taken from the headings of your website (Breakdance or theme). Large headings often look better a little tighter; capitals in some fonts need a little more air.', 'event-toolkit-for-custom-fields'), 'choice'],
             'sharepic_text_font'      => [__('Font for text', 'event-toolkit-for-custom-fields'), __('Empty = the font detected on the website. If the theme does not ship the font as .ttf or .otf file, it is downloaded once from Google Fonts. Fonts that are not available there are replaced by a neutral standard font.', 'event-toolkit-for-custom-fields'), 'font'],
             'share_reminder'    => [__('Reminder mail', 'event-toolkit-for-custom-fields'), __('At the time of the weekly preview, a mail with the text to share and a link to this page.', 'event-toolkit-for-custom-fields'), 'check', __('Send a reminder to share the weekly preview', 'event-toolkit-for-custom-fields')],
             'share_reminder_to' => [__('Reminder to', 'event-toolkit-for-custom-fields'), '', 'email'],
@@ -1184,7 +1184,7 @@ class ETCF_Admin
             $bottom = ($v['sharepic_bg'] ?? '') === 'gradient' ? $v['sharepic_paper2'] : $v['sharepic_paper'];
             $style  = sprintf('--etcf-p1:%s;--etcf-p2:%s;--etcf-ink:%s;--etcf-accent:%s', $v['sharepic_paper'], $bottom, $v['sharepic_ink'], $v['sharepic_accent']);
             echo '<button type="button" class="etcf-preset" data-preset="' . esc_attr($id) . '" style="' . esc_attr($style) . '">';
-            echo '<span class="etcf-preset-face' . (!empty($v['sharepic_heading_caps']) ? ' is-caps' : '') . '" aria-hidden="true">Aa<i></i></span>';
+            echo '<span class="etcf-preset-face' . (($v['sharepic_heading_caps'] === 'site' ? ETCF_Sharepic::site_heading()['caps'] : !empty($v['sharepic_heading_caps'])) ? ' is-caps' : '') . '" aria-hidden="true">Aa<i></i></span>';
             echo '<span class="etcf-preset-name">' . esc_html($preset['label']) . '</span></button>';
         }
         echo '</div><p class="description">' . esc_html__('A look sets colours, background and capitals. Your picture, fonts and bottom line stay.', 'event-toolkit-for-custom-fields') . '</p></td></tr>';

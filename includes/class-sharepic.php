@@ -28,9 +28,9 @@ class ETCF_Sharepic
     const MAX_SINGLE = 3;
     const DIR = 'event-toolkit/stories';
     /** Raise when the layout changes, so cached images are rendered again. */
-    const DESIGN = 6;
-    /** Letter spacing of headings in em, per choice of the setting "Letter spacing of headings". */
-    const TRACKING = ['tight' => -0.015, 'normal' => 0.0, 'wide' => 0.04];
+    const DESIGN = 7;
+    /** Letter spacing of headings in em, added to the website's spacing ("tight", "wide"). */
+    const TRACKING = ['tight' => -0.015, 'wide' => 0.04];
 
     /** Rendering needs GD with FreeType and JPEG support. */
     public static function available(): bool
@@ -245,9 +245,37 @@ class ETCF_Sharepic
             'paper2' => (string) ETCF_Settings::get('sharepic_paper2'),
             'image'  => $bg === 'image' ? $image : 0,
             'veil'   => (int) ETCF_Settings::get('sharepic_veil'),
-            'caps'   => (bool) ETCF_Settings::get('sharepic_heading_caps'),
-            'track'  => self::TRACKING[(string) ETCF_Settings::get('sharepic_heading_tracking')] ?? 0.0,
+            'caps'   => self::heading_caps(),
+            'track'  => self::heading_tracking(),
         ];
+    }
+
+    /**
+     * Style of the website's headings with defaults: capitals false, letter spacing 0 if unknown.
+     *
+     * @return array{caps: bool, tracking: float}
+     */
+    public static function site_heading(): array
+    {
+        $site = ETCF_Fonts::heading_style();
+        return ['caps' => (bool) ($site['caps'] ?? false), 'tracking' => (float) ($site['tracking'] ?? 0.0)];
+    }
+
+    /** Headings in capitals: as chosen, or as on the website. */
+    private static function heading_caps(): bool
+    {
+        $caps = (string) ETCF_Settings::get('sharepic_heading_caps');
+        return $caps === 'site' ? self::site_heading()['caps'] : (bool) (int) $caps;
+    }
+
+    /** Letter spacing of headings in em: the website's, tighter or wider than it, or none. */
+    private static function heading_tracking(): float
+    {
+        $choice = (string) ETCF_Settings::get('sharepic_heading_tracking');
+        if ($choice === 'none') {
+            return 0.0;
+        }
+        return self::site_heading()['tracking'] + (self::TRACKING[$choice] ?? 0.0);
     }
 
     /**
@@ -259,7 +287,7 @@ class ETCF_Sharepic
      */
     public static function presets(): array
     {
-        $look = function (string $label, string $bg, string $paper, string $paper2, string $ink, string $accent, int $caps): array {
+        $look = function (string $label, string $bg, string $paper, string $paper2, string $ink, string $accent, $caps): array {
             return ['label' => $label, 'values' => [
                 'sharepic_bg' => $bg, 'sharepic_paper' => $paper, 'sharepic_paper2' => $paper2,
                 'sharepic_ink' => $ink, 'sharepic_accent' => $accent, 'sharepic_heading_caps' => $caps,
@@ -268,7 +296,7 @@ class ETCF_Sharepic
         $presets = [];
         $site    = self::site_colours();
         if ($site) {
-            $presets['website'] = $look(__('Website', 'event-toolkit-for-custom-fields'), 'solid', $site['paper'], $site['paper2'], $site['ink'], $site['accent'], 0);
+            $presets['website'] = $look(__('Website', 'event-toolkit-for-custom-fields'), 'solid', $site['paper'], $site['paper2'], $site['ink'], $site['accent'], 'site');
         }
         $presets += [
             'classic' => $look(__('Classic', 'event-toolkit-for-custom-fields'), 'solid', '#ffffff', '#e9e4dc', '#1e1e1e', '#3858e9', 0),

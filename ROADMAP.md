@@ -8,10 +8,14 @@ Where the plugin stands and what comes next. Keep this file up to date when a fe
 
 ## Status
 
-- Current version: **2.6.0** (on GitHub `main`; not yet submitted to WordPress.org).
+- Current version: **2.7.0** (on GitHub `main`; not yet submitted to WordPress.org).
 - Releases: see [README.md](README.md#releasing). Deployment to WordPress.org runs from the Release workflow once the plugin is approved.
 
 ## Shipped
+
+**2.7.0**
+- Story headings follow the website's heading style: `ETCF_Fonts::heading_style()` reads weight, `text-transform` and `letter-spacing` of the h1 rules in Breakdance's `global-settings.css` (if Breakdance is there, unset means browser default, theme.json is not asked), else theme.json (`elements.heading`, then `h1`). px/rem related to a 48 px heading. Filter `etcf_site_heading_style`.
+- Capitals: choice `site` (default) / 1 / 0. Letter spacing: `site` (default), `tight` (−0.015 em) and `wide` (+0.04 em) relative to the website, `none`. One-time migration (`etcf_settings_rev` 1): saved capitals 0 and spacing `normal` become `site`. `DESIGN` 7.
 
 **2.6.0**
 - Letter spacing of headings is its own setting (`sharepic_heading_tracking`: tight −0.015 em, normal, wide +0.04 em), independent of capitals. Decision: no automatic extra spacing for capitals any more — large display type often looks better slightly tighter, and the user picks. `DESIGN` 6.

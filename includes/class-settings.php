@@ -73,7 +73,7 @@ class ETCF_Settings
                 'sharepic_fonts'    => 'choice',
                 'sharepic_heading_font'   => 'text',
                 'sharepic_heading_weight' => 'choice',
-                'sharepic_heading_caps'   => 'check',
+                'sharepic_heading_caps'   => 'choice',
                 'sharepic_heading_tracking' => 'choice',
                 'sharepic_text_font'      => 'text',
                 'share_reminder'    => 'check',
@@ -136,8 +136,8 @@ class ETCF_Settings
             'sharepic_fonts'    => 'site', // 'site' = fonts of the website, 'standard' = a neutral font already on the server.
             'sharepic_heading_font'   => '', // Empty = detected.
             'sharepic_heading_weight' => 0, // 0 = as on the website.
-            'sharepic_heading_caps'   => 0,
-            'sharepic_heading_tracking' => 'normal', // 'tight', 'normal' or 'wide'; see ETCF_Sharepic::TRACKING.
+            'sharepic_heading_caps'   => 'site', // 'site' = as on the website, 1 = capitals, 0 = upper and lower case.
+            'sharepic_heading_tracking' => 'site', // 'site', 'tight', 'wide' (relative to the website) or 'none'; see ETCF_Sharepic::TRACKING.
             'sharepic_text_font'      => '',
             'share_reminder'    => 0,
             'share_reminder_to' => get_option('admin_email'),
@@ -266,6 +266,8 @@ class ETCF_Settings
     /** Allowed values of the 'choice' settings (value => label). */
     public static function choices(): array
     {
+        $site = ETCF_Sharepic::site_heading();
+        $base = $site['tracking'];
         return [
             'sharepic_bg'             => [
                 'solid'    => __('One colour', 'event-toolkit-for-custom-fields'),
@@ -285,12 +287,69 @@ class ETCF_Settings
                 800 => __('Extra bold (800)', 'event-toolkit-for-custom-fields'),
                 900 => __('Black (900)', 'event-toolkit-for-custom-fields'),
             ],
+            'sharepic_heading_caps' => [
+                'site' => sprintf(
+                    /* translators: %s: what was found on the website, e.g. "capitals" */
+                    __('As on the website (%s)', 'event-toolkit-for-custom-fields'),
+                    $site['caps'] ? __('capitals', 'event-toolkit-for-custom-fields') : __('upper and lower case', 'event-toolkit-for-custom-fields')
+                ),
+                1 => __('Capitals', 'event-toolkit-for-custom-fields'),
+                0 => __('Upper and lower case', 'event-toolkit-for-custom-fields'),
+            ],
             'sharepic_heading_tracking' => [
-                'tight'  => __('Tighter (−1.5 %)', 'event-toolkit-for-custom-fields'),
-                'normal' => __('Normal', 'event-toolkit-for-custom-fields'),
-                'wide'   => __('Wider (+4 %)', 'event-toolkit-for-custom-fields'),
+                'site'  => sprintf(
+                    /* translators: %s: letter spacing found on the website, e.g. "0 %" */
+                    __('As on the website (%s)', 'event-toolkit-for-custom-fields'),
+                    self::percent($base)
+                ),
+                'tight' => sprintf(
+                    /* translators: %s: resulting letter spacing, e.g. "−1.5 %" */
+                    __('Tighter than the website (%s)', 'event-toolkit-for-custom-fields'),
+                    self::percent($base + ETCF_Sharepic::TRACKING['tight'])
+                ),
+                'wide'  => sprintf(
+                    /* translators: %s: resulting letter spacing, e.g. "+4 %" */
+                    __('Wider than the website (%s)', 'event-toolkit-for-custom-fields'),
+                    self::percent($base + ETCF_Sharepic::TRACKING['wide'])
+                ),
+                'none'  => __('No letter spacing (0 %)', 'event-toolkit-for-custom-fields'),
             ],
         ];
+    }
+
+    /** Letter spacing in em as signed percent, e.g. "−1.5 %". */
+    private static function percent(float $em): string
+    {
+        $v = round($em * 100, 1);
+        if (abs($v) < 0.05) {
+            return '0 %';
+        }
+        return ($v < 0 ? '−' : '+') . number_format_i18n(abs($v), floor(abs($v)) == abs($v) ? 0 : 1) . ' %';
+    }
+
+    /**
+     * One-time changes of saved settings after an update. 2.7.0: capitals and letter spacing
+     * of the story headings follow the website unless chosen otherwise. "No capitals" was the
+     * only possible default before, so it becomes "as on the website"; "normal" spacing from
+     * 2.6.0 too.
+     */
+    public static function migrate(): void
+    {
+        $rev = (int) get_option('etcf_settings_rev', 0);
+        if ($rev >= 1) {
+            return;
+        }
+        $saved = get_option(self::OPTION, null);
+        if (is_array($saved)) {
+            if (isset($saved['sharepic_heading_caps']) && (string) $saved['sharepic_heading_caps'] === '0') {
+                $saved['sharepic_heading_caps'] = 'site';
+            }
+            if (($saved['sharepic_heading_tracking'] ?? '') === 'normal') {
+                $saved['sharepic_heading_tracking'] = 'site';
+            }
+            update_option(self::OPTION, $saved);
+        }
+        update_option('etcf_settings_rev', 1);
     }
 
     public static function is_configured(): bool

@@ -101,7 +101,7 @@ msgstr "Heute teilen"
 
 #: includes/class-admin.php:172
 #: includes/class-share-kit.php:45
-#: includes/class-sharepic.php:773
+#: includes/class-sharepic.php:801
 #: includes/social/class-social.php:291
 #: includes/telegram/class-telegram.php:211
 msgid "Today"
@@ -109,7 +109,7 @@ msgstr "Heute"
 
 #: includes/class-admin.php:172
 #: includes/class-share-kit.php:46
-#: includes/class-sharepic.php:773
+#: includes/class-sharepic.php:801
 msgid "Tomorrow"
 msgstr "Morgen"
 
@@ -1519,7 +1519,7 @@ msgid "D, F j"
 msgstr "D, j. F"
 
 #: includes/class-digest.php:137
-#: includes/class-sharepic.php:819
+#: includes/class-sharepic.php:847
 msgid "all day"
 msgstr "ganztägig"
 
@@ -1531,7 +1531,7 @@ msgstr "Einlass %1$s Uhr, Beginn %2$s Uhr"
 
 #. translators: %s: start time
 #: includes/class-digest.php:151
-#: includes/class-sharepic.php:823
+#: includes/class-sharepic.php:851
 #, php-format
 msgid "at %s"
 msgstr "%s Uhr"
@@ -1612,7 +1612,7 @@ msgstr "QR-Code der Terminseite (PNG)"
 
 #: includes/class-qr.php:125
 #: includes/class-sharepic.php:156
-#: includes/class-sharepic.php:355
+#: includes/class-sharepic.php:383
 msgid "The event was not found or has no valid date."
 msgstr "Der Termin wurde nicht gefunden oder hat kein gültiges Datum."
 
@@ -1625,39 +1625,39 @@ msgstr "In den Uploads-Ordner kann nicht geschrieben werden."
 msgid "The QR code could not be saved."
 msgstr "Der QR-Code konnte nicht gespeichert werden."
 
-#: includes/class-settings.php:276
+#: includes/class-settings.php:278
 msgid "Fonts of the website"
 msgstr "Schriften der Webseite"
 
-#: includes/class-settings.php:277
+#: includes/class-settings.php:279
 msgid "Neutral standard font (from WordPress or the server)"
 msgstr "Neutrale Standardschrift (aus WordPress oder vom Server)"
 
-#: includes/class-settings.php:280
+#: includes/class-settings.php:282
 msgid "As on the website"
 msgstr "Wie auf der Website"
 
-#: includes/class-settings.php:281
+#: includes/class-settings.php:283
 msgid "Regular (400)"
 msgstr "Normal (400)"
 
-#: includes/class-settings.php:282
+#: includes/class-settings.php:284
 msgid "Medium (500)"
 msgstr "Medium (500)"
 
-#: includes/class-settings.php:283
+#: includes/class-settings.php:285
 msgid "Semibold (600)"
 msgstr "Halbfett (600)"
 
-#: includes/class-settings.php:284
+#: includes/class-settings.php:286
 msgid "Bold (700)"
 msgstr "Fett (700)"
 
-#: includes/class-settings.php:285
+#: includes/class-settings.php:287
 msgid "Extra bold (800)"
 msgstr "Extrafett (800)"
 
-#: includes/class-settings.php:286
+#: includes/class-settings.php:288
 msgid "Black (900)"
 msgstr "Schwarz (900)"
 
@@ -1750,7 +1750,7 @@ msgstr "Morgen: %s"
 #: includes/class-admin.php:1267
 #: includes/class-share.php:151
 #: includes/class-sharepic.php:149
-#: includes/class-sharepic.php:351
+#: includes/class-sharepic.php:379
 msgid "Unknown image."
 msgstr "Unbekanntes Bild."
 
@@ -1777,12 +1777,12 @@ msgid "The image could not be saved."
 msgstr "Das Bild konnte nicht gespeichert werden."
 
 #. translators: long date on story images, see https://www.php.net/manual/datetime.format.php
-#: includes/class-sharepic.php:805
+#: includes/class-sharepic.php:833
 msgid "l, F j"
 msgstr "l, j. F"
 
 #. translators: short date on story images, see https://www.php.net/manual/datetime.format.php
-#: includes/class-sharepic.php:812
+#: includes/class-sharepic.php:840
 msgid "D, n/j"
 msgstr "D, j.n."
 
@@ -2208,7 +2208,7 @@ msgid "The gradient runs from the background colour at the top to this colour at
 msgstr "Der Verlauf geht oben von der Hintergrundfarbe zu dieser Farbe unten."
 
 #: includes/class-admin.php:328
-#: includes/class-settings.php:273
+#: includes/class-settings.php:275
 msgid "Picture"
 msgstr "Bild"
 
@@ -2225,12 +2225,9 @@ msgid "How much of the background colour lies over the picture. More veil, easie
 msgstr "Wie viel Hintergrundfarbe über dem Bild liegt. Mehr Schleier, besser lesbar."
 
 #: includes/class-admin.php:336
+#: includes/class-settings.php:296
 msgid "Capitals"
 msgstr "Versalien"
-
-#: includes/class-admin.php:336
-msgid "Set headings and titles in capitals"
-msgstr "Überschriften und Titel in Großbuchstaben setzen"
 
 #: includes/class-admin.php:740
 msgid "Remove"
@@ -2256,39 +2253,39 @@ msgstr "Eine Veranstaltung"
 msgid "Preview of unsaved changes. Save to use them."
 msgstr "Vorschau ungespeicherter Änderungen. Speichere, um sie zu übernehmen."
 
-#: includes/class-settings.php:271
+#: includes/class-settings.php:273
 msgid "One colour"
 msgstr "Eine Farbe"
 
-#: includes/class-settings.php:272
+#: includes/class-settings.php:274
 msgid "Gradient"
 msgstr "Verlauf"
 
-#: includes/class-sharepic.php:271
+#: includes/class-sharepic.php:299
 msgid "Website"
 msgstr "Website"
 
-#: includes/class-sharepic.php:274
+#: includes/class-sharepic.php:302
 msgid "Classic"
 msgstr "Klassisch"
 
-#: includes/class-sharepic.php:275
+#: includes/class-sharepic.php:303
 msgid "Paper"
 msgstr "Papier"
 
-#: includes/class-sharepic.php:276
+#: includes/class-sharepic.php:304
 msgid "Night"
 msgstr "Nacht"
 
-#: includes/class-sharepic.php:277
+#: includes/class-sharepic.php:305
 msgid "Sunset"
 msgstr "Abendrot"
 
-#: includes/class-sharepic.php:278
+#: includes/class-sharepic.php:306
 msgid "Mint"
 msgstr "Minze"
 
-#: includes/class-sharepic.php:279
+#: includes/class-sharepic.php:307
 msgid "Poster"
 msgstr "Plakat"
 
@@ -2296,18 +2293,46 @@ msgstr "Plakat"
 msgid "Letter spacing of headings"
 msgstr "Buchstabenabstand der Überschriften"
 
+#: includes/class-admin.php:336
+msgid "Headings and titles of events."
+msgstr "Überschriften und Titel der Termine."
+
 #: includes/class-admin.php:337
-msgid "Large headings often look better a little tighter. Capitals in some fonts need a little more air."
-msgstr "Große Überschriften wirken oft etwas enger gesetzt besser. Versalien brauchen in manchen Schriften etwas mehr Luft."
+msgid "Taken from the headings of your website (Breakdance or theme). Large headings often look better a little tighter; capitals in some fonts need a little more air."
+msgstr "Übernommen von den Überschriften deiner Website (Breakdance oder Theme). Große Überschriften wirken oft etwas enger gesetzt besser, Versalien brauchen in manchen Schriften etwas mehr Luft."
 
-#: includes/class-settings.php:289
-msgid "Tighter (−1.5 %)"
-msgstr "Enger (−1,5 %)"
+#. translators: %s: what was found on the website, e.g. "capitals"
+#. translators: %s: letter spacing found on the website, e.g. "0 %"
+#: includes/class-settings.php:293
+#: includes/class-settings.php:302
+#, php-format
+msgid "As on the website (%s)"
+msgstr "Wie auf der Website (%s)"
 
-#: includes/class-settings.php:290
-msgid "Normal"
-msgstr "Normal"
+#: includes/class-settings.php:294
+msgid "capitals"
+msgstr "Versalien"
 
-#: includes/class-settings.php:291
-msgid "Wider (+4 %)"
-msgstr "Weiter (+4 %)"
+#: includes/class-settings.php:294
+msgid "upper and lower case"
+msgstr "Groß- und Kleinschreibung"
+
+#: includes/class-settings.php:297
+msgid "Upper and lower case"
+msgstr "Groß- und Kleinschreibung"
+
+#. translators: %s: resulting letter spacing, e.g. "−1.5 %"
+#: includes/class-settings.php:307
+#, php-format
+msgid "Tighter than the website (%s)"
+msgstr "Enger als auf der Website (%s)"
+
+#. translators: %s: resulting letter spacing, e.g. "+4 %"
+#: includes/class-settings.php:312
+#, php-format
+msgid "Wider than the website (%s)"
+msgstr "Weiter als auf der Website (%s)"
+
+#: includes/class-settings.php:315
+msgid "No letter spacing (0 %)"
+msgstr "Ohne Buchstabenabstand (0 %)"

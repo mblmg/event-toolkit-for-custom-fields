@@ -3,7 +3,8 @@
  * Fonts for the story images: by default the main fonts of the website, so the images match
  * the site's look.
  *
- * Detection: Breakdance global settings, then the global styles of the theme (theme.json).
+ * Detection: Breakdance global settings, then the global styles of the theme (theme.json); the
+ * same for the style of the headings (weight, capitals, letter spacing).
  * GD needs TrueType/OpenType files, which websites rarely ship (they use WOFF2). So the font
  * file comes from the theme if it ships a .ttf/.otf, otherwise it is downloaded once from
  * Google Fonts and kept in uploads/event-toolkit/fonts.
@@ -141,25 +142,94 @@ class ETCF_Fonts
      */
     public static function heading_weight(): int
     {
-        $weight = 0;
-        $css    = trailingslashit(wp_upload_dir()['basedir']) . 'breakdance/css/global-settings.css';
+        $weight = (int) apply_filters('etcf_site_heading_weight', self::heading_style()['weight']);
+        return $weight >= 100 && $weight <= 900 ? (int) (round($weight / 100) * 100) : 700;
+    }
+
+    /**
+     * Style of the headings on the website: weight (0 = unknown), capitals (null = unknown) and
+     * letter spacing in em (null = unknown). Breakdance global settings first, then theme.json.
+     * Filter: etcf_site_heading_style.
+     *
+     * @return array{weight: int, caps: ?bool, tracking: ?float}
+     */
+    public static function heading_style(): array
+    {
+        static $style = null;
+        if ($style !== null) {
+            return $style;
+        }
+        $style = ['weight' => 0, 'caps' => null, 'tracking' => null];
+        $css   = trailingslashit(wp_upload_dir()['basedir']) . 'breakdance/css/global-settings.css';
         if (is_readable($css)) {
-            $content = (string) file_get_contents($css); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- local file.
-            // The rule for h1 … h6 (Breakdance writes them in one selector list).
-            preg_match_all('/([^{}]+)\{([^{}]*)\}/', $content, $rules, PREG_SET_ORDER);
-            foreach ($rules as $rule) {
-                $selectors = array_map('trim', explode(',', $rule[1]));
-                if (in_array('h1', $selectors, true) && preg_match('/font-weight\s*:\s*(\d{3})/', $rule[2], $m)) {
-                    $weight = (int) $m[1];
+            $style = self::breakdance_heading_style((string) file_get_contents($css)); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- local file.
+            // Breakdance replaces the theme's styles: what it does not set is the browser default.
+            $style['caps']     = $style['caps'] ?? false;
+            $style['tracking'] = $style['tracking'] ?? 0.0;
+        }
+        if (function_exists('wp_get_global_styles')) {
+            // The heading element, then h1 for what the heading element leaves open.
+            foreach ([['elements', 'heading', 'typography'], ['elements', 'h1', 'typography']] as $path) {
+                $t = (array) wp_get_global_styles($path);
+                if (!$style['weight'] && isset($t['fontWeight']) && ctype_digit((string) $t['fontWeight'])) {
+                    $style['weight'] = (int) $t['fontWeight'];
+                }
+                if ($style['caps'] === null && is_string($t['textTransform'] ?? null) && strpos($t['textTransform'], 'var') !== 0) {
+                    $style['caps'] = $t['textTransform'] === 'uppercase';
+                }
+                if ($style['tracking'] === null && is_string($t['letterSpacing'] ?? null)) {
+                    $style['tracking'] = self::letter_spacing_em($t['letterSpacing']);
                 }
             }
         }
-        if (!$weight && function_exists('wp_get_global_styles')) {
-            $value  = (string) wp_get_global_styles(['elements', 'heading', 'typography', 'fontWeight']);
-            $weight = ctype_digit($value) ? (int) $value : 0;
+        $style = (array) apply_filters('etcf_site_heading_style', $style);
+        return $style;
+    }
+
+    /**
+     * Heading style from the global CSS of Breakdance: the rules for h1 (Breakdance writes all
+     * headings in one selector list).
+     *
+     * @return array{weight: int, caps: ?bool, tracking: ?float}
+     */
+    public static function breakdance_heading_style(string $content): array
+    {
+        $style = ['weight' => 0, 'caps' => null, 'tracking' => null];
+        preg_match_all('/([^{}]+)\{([^{}]*)\}/', $content, $rules, PREG_SET_ORDER);
+        foreach ($rules as $rule) {
+            $selectors = array_map('trim', explode(',', $rule[1]));
+            if (!in_array('h1', $selectors, true)) {
+                continue;
+            }
+            if (preg_match('/font-weight\s*:\s*(\d{3})/', $rule[2], $m)) {
+                $style['weight'] = (int) $m[1];
+            }
+            if (preg_match('/text-transform\s*:\s*([a-z-]+)/', $rule[2], $m)) {
+                $style['caps'] = $m[1] === 'uppercase';
+            }
+            if (preg_match('/letter-spacing\s*:\s*([^;}]+)/', $rule[2], $m)) {
+                $style['tracking'] = self::letter_spacing_em($m[1]);
+            }
         }
-        $weight = (int) apply_filters('etcf_site_heading_weight', $weight);
-        return $weight >= 100 && $weight <= 900 ? (int) (round($weight / 100) * 100) : 700;
+        return $style;
+    }
+
+    /**
+     * A CSS letter-spacing in em; null if it cannot be read (e.g. a variable). Absolute units are
+     * related to a heading of 48 px, as the size of the website's headings is rarely known.
+     */
+    public static function letter_spacing_em(string $value): ?float
+    {
+        $value = strtolower(trim(str_replace('!important', '', $value)));
+        if ($value === 'normal' || $value === '0') {
+            return 0.0;
+        }
+        if (!preg_match('/^(-?\d*\.?\d+)(em|rem|px)$/', $value, $m)) {
+            return null;
+        }
+        $n  = (float) $m[1];
+        $em = $m[2] === 'em' ? $n : ($m[2] === 'rem' ? $n * 16 / 48 : $n / 48);
+        return max(-0.1, min(0.3, $em));
     }
 
     /**
