@@ -8,10 +8,13 @@ Where the plugin stands and what comes next. Keep this file up to date when a fe
 
 ## Status
 
-- Current version: **2.5.1** (on GitHub `main`; not yet submitted to WordPress.org).
+- Current version: **2.6.0** (on GitHub `main`; not yet submitted to WordPress.org).
 - Releases: see [README.md](README.md#releasing). Deployment to WordPress.org runs from the Release workflow once the plugin is approved.
 
 ## Shipped
+
+**2.6.0**
+- Letter spacing of headings is its own setting (`sharepic_heading_tracking`: tight −0.015 em, normal, wide +0.04 em), independent of capitals. Decision: no automatic extra spacing for capitals any more — large display type often looks better slightly tighter, and the user picks. `DESIGN` 6.
 
 **2.5.1**
 - Cleanup: story images whose day is over (date in the file name before yesterday) go in the daily cleanup, besides the 21-day rule; QR codes replace older files of the same event and format (the hash contains the plugin version, so every update used to leave a full set behind).

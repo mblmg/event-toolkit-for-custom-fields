@@ -272,7 +272,7 @@ class ETCF_Admin
             ],
             'share'    => [
                 [__('Colours and background', 'event-toolkit-for-custom-fields'), __('Start from a look and change what you like. The preview shows your changes before you save them.', 'event-toolkit-for-custom-fields'), ['sharepic_bg', 'sharepic_paper', 'sharepic_paper2', 'sharepic_bg_image', 'sharepic_veil', 'sharepic_ink', 'sharepic_accent', 'sharepic_footer']],
-                [__('Fonts', 'event-toolkit-for-custom-fields'), '', ['sharepic_fonts', 'sharepic_heading_font', 'sharepic_heading_weight', 'sharepic_heading_caps', 'sharepic_text_font']],
+                [__('Fonts', 'event-toolkit-for-custom-fields'), '', ['sharepic_fonts', 'sharepic_heading_font', 'sharepic_heading_weight', 'sharepic_heading_caps', 'sharepic_heading_tracking', 'sharepic_text_font']],
                 [__('Reminder mail', 'event-toolkit-for-custom-fields'), '', ['share_reminder', 'share_reminder_to']],
             ],
         ];
@@ -333,7 +333,8 @@ class ETCF_Admin
             'sharepic_fonts'    => [__('Fonts', 'event-toolkit-for-custom-fields'), '', 'choice'],
             'sharepic_heading_font'   => [__('Font for headings', 'event-toolkit-for-custom-fields'), '', 'font'],
             'sharepic_heading_weight' => [__('Weight of headings', 'event-toolkit-for-custom-fields'), '', 'choice'],
-            'sharepic_heading_caps'   => [__('Capitals', 'event-toolkit-for-custom-fields'), __('With a little extra letter spacing, as capitals need it.', 'event-toolkit-for-custom-fields'), 'check', __('Set headings and titles in capitals', 'event-toolkit-for-custom-fields')],
+            'sharepic_heading_caps'   => [__('Capitals', 'event-toolkit-for-custom-fields'), '', 'check', __('Set headings and titles in capitals', 'event-toolkit-for-custom-fields')],
+            'sharepic_heading_tracking' => [__('Letter spacing of headings', 'event-toolkit-for-custom-fields'), __('Large headings often look better a little tighter. Capitals in some fonts need a little more air.', 'event-toolkit-for-custom-fields'), 'choice'],
             'sharepic_text_font'      => [__('Font for text', 'event-toolkit-for-custom-fields'), __('Empty = the font detected on the website. If the theme does not ship the font as .ttf or .otf file, it is downloaded once from Google Fonts. Fonts that are not available there are replaced by a neutral standard font.', 'event-toolkit-for-custom-fields'), 'font'],
             'share_reminder'    => [__('Reminder mail', 'event-toolkit-for-custom-fields'), __('At the time of the weekly preview, a mail with the text to share and a link to this page.', 'event-toolkit-for-custom-fields'), 'check', __('Send a reminder to share the weekly preview', 'event-toolkit-for-custom-fields')],
             'share_reminder_to' => [__('Reminder to', 'event-toolkit-for-custom-fields'), '', 'email'],

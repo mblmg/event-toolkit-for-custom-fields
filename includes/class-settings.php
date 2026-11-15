@@ -74,6 +74,7 @@ class ETCF_Settings
                 'sharepic_heading_font'   => 'text',
                 'sharepic_heading_weight' => 'choice',
                 'sharepic_heading_caps'   => 'check',
+                'sharepic_heading_tracking' => 'choice',
                 'sharepic_text_font'      => 'text',
                 'share_reminder'    => 'check',
                 'share_reminder_to' => 'email',
@@ -136,6 +137,7 @@ class ETCF_Settings
             'sharepic_heading_font'   => '', // Empty = detected.
             'sharepic_heading_weight' => 0, // 0 = as on the website.
             'sharepic_heading_caps'   => 0,
+            'sharepic_heading_tracking' => 'normal', // 'tight', 'normal' or 'wide'; see ETCF_Sharepic::TRACKING.
             'sharepic_text_font'      => '',
             'share_reminder'    => 0,
             'share_reminder_to' => get_option('admin_email'),
@@ -282,6 +284,11 @@ class ETCF_Settings
                 700 => __('Bold (700)', 'event-toolkit-for-custom-fields'),
                 800 => __('Extra bold (800)', 'event-toolkit-for-custom-fields'),
                 900 => __('Black (900)', 'event-toolkit-for-custom-fields'),
+            ],
+            'sharepic_heading_tracking' => [
+                'tight'  => __('Tighter (−1.5 %)', 'event-toolkit-for-custom-fields'),
+                'normal' => __('Normal', 'event-toolkit-for-custom-fields'),
+                'wide'   => __('Wider (+4 %)', 'event-toolkit-for-custom-fields'),
             ],
         ];
     }

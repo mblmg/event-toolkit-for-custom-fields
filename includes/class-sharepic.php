@@ -28,9 +28,9 @@ class ETCF_Sharepic
     const MAX_SINGLE = 3;
     const DIR = 'event-toolkit/stories';
     /** Raise when the layout changes, so cached images are rendered again. */
-    const DESIGN = 5;
-    /** Letter spacing of headings in capitals, in em. Capitals need air between them. */
-    const CAPS_TRACKING = 0.04;
+    const DESIGN = 6;
+    /** Letter spacing of headings in em, per choice of the setting "Letter spacing of headings". */
+    const TRACKING = ['tight' => -0.015, 'normal' => 0.0, 'wide' => 0.04];
 
     /** Rendering needs GD with FreeType and JPEG support. */
     public static function available(): bool
@@ -246,6 +246,7 @@ class ETCF_Sharepic
             'image'  => $bg === 'image' ? $image : 0,
             'veil'   => (int) ETCF_Settings::get('sharepic_veil'),
             'caps'   => (bool) ETCF_Settings::get('sharepic_heading_caps'),
+            'track'  => self::TRACKING[(string) ETCF_Settings::get('sharepic_heading_tracking')] ?? 0.0,
         ];
     }
 
@@ -375,10 +376,10 @@ class ETCF_Sharepic
         return self::caps() ? mb_strtoupper($text, 'UTF-8') : $text;
     }
 
-    /** Letter spacing of headings in em. */
+    /** Letter spacing of headings in em: negative is tighter, positive wider. */
     private static function track(): float
     {
-        return self::caps() ? self::CAPS_TRACKING : 0.0;
+        return (float) self::style()['track'];
     }
 
     /** Colours of a frame. "today" is dark, everything else light, so the two reminders look different. */
@@ -608,7 +609,7 @@ class ETCF_Sharepic
     /** Width of a text; with letter spacing ($track in em) the sum of the advances. */
     private static function width(string $font, float $px, string $text, float $track = 0.0): int
     {
-        if ($track > 0) {
+        if ($track != 0.0) {
             $w     = 0.0;
             $chars = self::chars($text);
             foreach ($chars as $c) {
@@ -750,8 +751,8 @@ class ETCF_Sharepic
                 $w  = self::width($font, $px, $line, $track);
                 $lx = $align === 'center' ? $x + (int) (($width - $w) / 2) : $x + $width - $w;
             }
-            if ($track > 0) {
-                // Letter by letter, with extra space after each.
+            if ($track != 0.0) {
+                // Letter by letter, with the spacing added to (or taken from) each advance.
                 $cx = (float) $lx;
                 foreach (self::chars($line) as $c) {
                     imagettftext($im, self::pt($px), 0, (int) round($cx), $base, $color, $font, $c);
