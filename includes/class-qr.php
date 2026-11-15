@@ -134,6 +134,12 @@ class ETCF_QR
             if (!wp_mkdir_p($dir)) {
                 return new WP_Error('etcf_qr_dir', __('The uploads folder is not writable.', 'event-toolkit-for-custom-fields'));
             }
+            // Older codes of this event (other address or plugin version) are not used any more.
+            foreach ((array) glob($dir . '/event-' . $event->id . '-*.' . $format) as $old) {
+                if ($old) {
+                    wp_delete_file($old);
+                }
+            }
             $data = $format === 'png' ? self::png($target) : self::svg($target);
             if ($data === null || file_put_contents($path, $data) === false) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- cache in uploads.
                 return new WP_Error('etcf_qr_write', __('The QR code could not be saved.', 'event-toolkit-for-custom-fields'));

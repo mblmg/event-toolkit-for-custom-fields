@@ -208,8 +208,15 @@ class ETCF_Sharepic
             return;
         }
         set_transient('etcf_sharepic_cleanup', 1, DAY_IN_SECONDS);
+        // Images of days that are over, and anything older than three weeks (e.g. rendered by an
+        // earlier version or with other settings: the name holds a fingerprint of both).
+        $yesterday = (new DateTimeImmutable('yesterday', wp_timezone()))->format('Ymd');
         foreach ((array) glob($dir . '/*.jpg') as $file) {
-            if ($file && filemtime($file) < time() - 21 * DAY_IN_SECONDS) {
+            if (!$file) {
+                continue;
+            }
+            $past = preg_match('/-(\d{8})-[0-9a-f]{12}\.jpg$/', $file, $m) && $m[1] < $yesterday;
+            if ($past || filemtime($file) < time() - 21 * DAY_IN_SECONDS) {
                 wp_delete_file($file);
             }
         }

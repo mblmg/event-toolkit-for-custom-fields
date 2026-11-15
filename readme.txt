@@ -5,7 +5,7 @@ Tags: events, calendar, newsletter, instagram, telegram
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.5.0
+Stable tag: 2.5.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -244,6 +244,10 @@ No data about visitors of your site is sent. [Terms of Use](https://help.instagr
 **PayPal (donations).** The admin pages contain a donation link to PayPal (paypal.com), provided by PayPal (Europe) S.à r.l. et Cie, S.C.A. It only opens when an administrator clicks it; the plugin sends no data to PayPal and PayPal does not report back to your site. [User Agreement](https://www.paypal.com/legalhub/paypal/useragreement-full), [Privacy Statement](https://www.paypal.com/myaccount/privacy/privacyhub)
 
 == Changelog ==
+
+= 2.5.1 =
+* Story images of days that are over are deleted once a day; before, images stayed for three weeks.
+* A new QR code of an event replaces the older files of that event instead of piling up after each update.
 
 = 2.5.0 =
 * The German translation ships with the plugin again and fills in whatever a language pack from translate.wordpress.org is missing, so the admin pages are always in one language: the one set in WordPress.
