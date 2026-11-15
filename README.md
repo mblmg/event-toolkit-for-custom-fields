@@ -40,7 +40,7 @@ includes/class-admin.php                   admin menu "Event Toolkit": overview 
 includes/class-abilities.php               abilities (WordPress Abilities API) for AI agents / MCP
 includes/shortcode.php                     [etcf_calendar_link]
 includes/breakdance*.php                   Breakdance dynamic data fields
-languages/                                 .pot template and German translation (not shipped, see Translations)
+languages/                                 .pot template and German translation (shipped, see Translations)
 ```
 
 Everything global uses the prefix `etcf` (WordPress.org requires a distinct prefix of at least four characters): classes `ETCF_*`, constants `ETCF_*`, options, hooks, filters, cron events, nonces, admin-post actions and transients `etcf_*`, shortcodes `etcf_*`, Breakdance fields `etcf_*`, abilities `etcf/*`, script and style handles, CSS classes and custom properties `etcf-*`. The iCalendar UID of an event is `etcf-{ID}@host`; it must not change once calendars subscribe, or they list the events twice.
@@ -55,7 +55,7 @@ Channels differ in how intrusive they are, so they get different rhythms (see th
 
 ### Translations
 
-English is the source language. WordPress.org delivers translations from translate.wordpress.org, so the plugin ships no language files and does not call `load_plugin_textdomain()` (`languages/` is in `.distignore`). The folder stays in the repository: the German `.po` can be imported on translate.wordpress.org, and for test sites the compiled `.mo` and `.l10n.php` go to `wp-content/languages/plugins/`. After changing strings, update the `.pot` and the German `.po`, then compile with `wp i18n make-mo languages` and `wp i18n make-php languages`.
+English is the source language. The German translation ships with the plugin in `languages/` (`.po`, compiled `.mo` and `.l10n.php`, plus the `.pot` template). `ETCF_I18n` loads it after the language pack from translate.wordpress.org: a string comes from the pack if it has it, else from the bundled file. So an installation without a pack (installed from GitHub) or with an older pack never mixes English and German. After changing strings, regenerate the `.pot` (`wp i18n make-pot . languages/event-toolkit-for-custom-fields.pot --exclude=languages,build`), merge it into the German `.po` (`wp i18n update-po`), translate every new entry, then compile with `wp i18n make-mo languages` and `wp i18n make-php languages`. The German `.po` can also be imported on translate.wordpress.org.
 
 ## Releasing
 

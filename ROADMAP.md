@@ -8,10 +8,17 @@ Where the plugin stands and what comes next. Keep this file up to date when a fe
 
 ## Status
 
-- Current version: **2.4.1** (on GitHub `main`; not yet submitted to WordPress.org).
+- Current version: **2.5.0** (on GitHub `main`; not yet submitted to WordPress.org).
 - Releases: see [README.md](README.md#releasing). Deployment to WordPress.org runs from the Release workflow once the plugin is approved.
 
 ## Shipped
+
+**2.5.0**
+- Bundled translations again (`ETCF_I18n`): loaded after the language pack, so new strings never show in English next to translated ones while translate.wordpress.org or a hand-copied pack lags behind. Reverses the 2.3.0 decision to rely on language packs only.
+- Big word on story images ("Tomorrow", "Today", date, status): one line from 200 down to 72 px, else two lines down to 56 px; no more "TOMORR…" in wide fonts. `DESIGN` 5.
+
+**2.4.1**
+- Story images settings page usable on phones (two-column grid only from 1101 px).
 
 **2.4.0**
 - Story image design without a layout editor: looks (presets, one from the theme / Breakdance colours), background as colour, gradient or picture with veil, headings in capitals (tracking 0.04 em, drawn letter by letter with real advance widths).

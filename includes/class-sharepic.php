@@ -28,7 +28,7 @@ class ETCF_Sharepic
     const MAX_SINGLE = 3;
     const DIR = 'event-toolkit/stories';
     /** Raise when the layout changes, so cached images are rendered again. */
-    const DESIGN = 4;
+    const DESIGN = 5;
     /** Letter spacing of headings in capitals, in em. Capitals need air between them. */
     const CAPS_TRACKING = 0.04;
 
@@ -682,6 +682,17 @@ class ETCF_Sharepic
         return [$min_px, $lines];
     }
 
+    /** Largest size between $max_px and $min_px at which the text fits on one line; 0 if none. */
+    private static function largest(string $font, string $text, int $width, float $max_px, float $min_px, float $track = 0.0): float
+    {
+        for ($px = $max_px; $px >= $min_px; $px -= 2) {
+            if (self::width($font, $px, $text, $track) <= $width) {
+                return $px;
+            }
+        }
+        return 0.0;
+    }
+
     /**
      * Short info line: one line if it fits at $min_one or larger, else up to two lines,
      * so that no single word ends up alone on a second line.
@@ -763,7 +774,19 @@ class ETCF_Sharepic
     {
         $font  = self::fonts()['display'];
         $track = self::track();
-        [$px, $lines] = self::fit($font, self::heading($word !== '' ? $word : self::word($variant)), self::W - 2 * self::MARGIN, 200, 120, 1, $track);
+        $text  = self::heading($word !== '' ? $word : self::word($variant));
+        $width = self::W - 2 * self::MARGIN;
+        // Wide fonts (Syne, Unbounded …) in capitals do not fit "TOMORROW" at 200 px:
+        // the word gets smaller rather than cut. Several words (a status) may take two lines.
+        $px = self::largest($font, $text, $width, 200, 72, $track);
+        if ($px > 0) {
+            $lines = [$text];
+        } else {
+            [$px, $lines] = self::fit($font, $text, $width, 120, 56, 2, $track);
+        }
+        if (count($lines) > 1) {
+            return self::lines($im, $font, $px, 0.98, self::MARGIN - 6, self::TOP, $p['fg'], $lines, 'left', 0, $track);
+        }
         return self::lines($im, $font, $px, 0.98, self::MARGIN - 6, self::TOP + (int) ((200 - $px) * 0.8), $p['fg'], $lines, 'left', 0, $track);
     }
 

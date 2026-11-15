@@ -3,7 +3,7 @@
  * Plugin Name:       Event Toolkit for Custom Fields
  * Plugin URI:        https://github.com/mblmg/event-toolkit-for-custom-fields
  * Description:       Spreads the events you keep in custom fields (ACF, ACPT or plain post meta): add-to-calendar links and .ics files, a subscribable calendar feed, schema.org markup for search engines, a weekly preview for newsletters, Telegram, Mastodon and Bluesky, Instagram stories, story images and QR codes, and cancellations everywhere at once. Extra dynamic data fields for Breakdance and abilities for AI agents.
- * Version:           2.4.1
+ * Version:           2.5.0
  * Requires at least: 6.9
  * Requires PHP:      7.4
  * Author:            i-make.media
@@ -11,14 +11,16 @@
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       event-toolkit-for-custom-fields
+ * Domain Path:       /languages
  */
 
 defined('ABSPATH') || exit;
 
-define('ETCF_VERSION', '2.4.1');
+define('ETCF_VERSION', '2.5.0');
 define('ETCF_FILE', __FILE__);
 define('ETCF_DIR', plugin_dir_path(__FILE__));
 
+require_once ETCF_DIR . 'includes/class-i18n.php';
 require_once ETCF_DIR . 'includes/class-settings.php';
 require_once ETCF_DIR . 'includes/class-event.php';
 require_once ETCF_DIR . 'includes/class-ics.php';
@@ -47,6 +49,7 @@ require_once ETCF_DIR . 'includes/class-abilities.php';
 require_once ETCF_DIR . 'includes/shortcode.php';
 require_once ETCF_DIR . 'includes/breakdance.php';
 
+ETCF_I18n::init();
 ETCF_Endpoints::init();
 ETCF_Schema::init();
 ETCF_Telegram_Scheduler::init();
