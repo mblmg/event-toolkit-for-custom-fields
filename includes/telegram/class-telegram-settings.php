@@ -61,19 +61,81 @@ class ETCF_Telegram_Settings
             $token = '';
         }
 
+        $chats = [];
+        foreach (['', '_2'] as $suffix) {
+            $parsed = self::parse_chat((string) ($input['chat_id' . $suffix] ?? ''));
+            $thread = preg_replace('/\D/', '', (string) ($input['thread_id' . $suffix] ?? ''));
+            if ($parsed === null) {
+                if (function_exists('add_settings_error')) {
+                    add_settings_error(self::OPTION, 'chat_id' . $suffix, __('Invite links (t.me/+…) do not name the chat. Enter the public link (t.me/name), @name or the chat ID instead. The chat was not changed.', 'event-toolkit-for-custom-fields'));
+                }
+                $chats['chat_id' . $suffix]   = $old['chat_id' . $suffix];
+                $chats['thread_id' . $suffix] = $thread !== '' ? $thread : $old['thread_id' . $suffix];
+                continue;
+            }
+            $chats['chat_id' . $suffix]   = $parsed['chat'];
+            // A topic in the link wins over the field, which may still hold the old topic.
+            $chats['thread_id' . $suffix] = $parsed['thread'] !== '' ? $parsed['thread'] : $thread;
+        }
+
         return [
             'enabled'      => empty($input['enabled']) ? 0 : 1,
             'token'        => $token,
-            'chat_id'      => preg_replace('/[^0-9\-@A-Za-z_]/', '', (string) ($input['chat_id'] ?? '')),
-            'thread_id'    => preg_replace('/\D/', '', (string) ($input['thread_id'] ?? '')),
-            'chat_id_2'    => preg_replace('/[^0-9\-@A-Za-z_]/', '', (string) ($input['chat_id_2'] ?? '')),
-            'thread_id_2'  => preg_replace('/\D/', '', (string) ($input['thread_id_2'] ?? '')),
+            'chat_id'      => $chats['chat_id'],
+            'thread_id'    => $chats['thread_id'],
+            'chat_id_2'    => $chats['chat_id_2'],
+            'thread_id_2'  => $chats['thread_id_2'],
             'link_preview' => in_array($input['link_preview'] ?? '', ['above', 'below', 'none'], true) ? $input['link_preview'] : 'above',
             'today'        => empty($input['today']) ? 0 : 1,
             'today_silent' => empty($input['today_silent']) ? 0 : 1,
             'notify_status' => empty($input['notify_status']) ? 0 : 1,
             'today_time'   => preg_match('/^([01]?\d|2[0-3]):([0-5]\d)$/', trim((string) ($input['today_time'] ?? '')), $m) ? sprintf('%02d:%02d', $m[1], $m[2]) : '12:00',
         ];
+    }
+
+    /**
+     * Reads what was typed into a chat field: a chat ID (-1001234567890), @name, or a link
+     * copied from Telegram (t.me/name, t.me/s/name, t.me/name/123, t.me/c/1234567890/123,
+     * tg://resolve?domain=name). Links with three parts point into a topic
+     * (t.me/c/1234567890/<topic>/<message>); the topic is taken over.
+     *
+     * @return array|null ['chat' => '', 'thread' => ''], or null for invite links, which do not name the chat.
+     */
+    public static function parse_chat(string $value): ?array
+    {
+        $value = trim($value);
+        $none  = ['chat' => '', 'thread' => ''];
+        if ($value === '') {
+            return $none;
+        }
+        if (preg_match('#^tg://resolve\?(?:.*&)?domain=([A-Za-z0-9_]+)#i', $value, $m)) {
+            return ['chat' => '@' . $m[1], 'thread' => ''];
+        }
+        if (preg_match('#^(?:https?://)?(?:www\.)?(?:t\.me|telegram\.me|telegram\.dog)/(.*)$#i', $value, $m)) {
+            $path  = preg_replace('#[?\#].*$#', '', $m[1]);
+            $parts = array_values(array_filter(explode('/', $path), 'strlen'));
+            if (!$parts || $parts[0][0] === '+' || strtolower($parts[0]) === 'joinchat') {
+                return null;
+            }
+            if (strtolower($parts[0]) === 'c' && isset($parts[1]) && ctype_digit($parts[1])) {
+                // Private chat link: the number is the chat ID without -100.
+                return ['chat' => '-100' . $parts[1], 'thread' => (isset($parts[3]) && ctype_digit($parts[2])) ? $parts[2] : ''];
+            }
+            if (strtolower($parts[0]) === 's' && isset($parts[1])) {
+                array_shift($parts); // Web preview of a channel: t.me/s/name.
+            }
+            $name = preg_replace('/[^A-Za-z0-9_]/', '', $parts[0]);
+            if ($name === '') {
+                return $none;
+            }
+            return ['chat' => '@' . $name, 'thread' => (isset($parts[2]) && ctype_digit($parts[1])) ? $parts[1] : ''];
+        }
+        $value = preg_replace('/[^0-9\-@A-Za-z_]/', '', $value);
+        // A bare name ("schreiauf") is a username; Telegram needs it with @.
+        if ($value !== '' && $value[0] !== '@' && !preg_match('/^-?\d+$/', $value)) {
+            $value = '@' . ltrim($value, '-');
+        }
+        return ['chat' => $value, 'thread' => ''];
     }
 
     /**

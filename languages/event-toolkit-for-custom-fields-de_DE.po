@@ -862,10 +862,6 @@ msgstr "Lege in Telegram mit <code>@BotFather</code> einen Bot an (Befehl <code>
 msgid "Chat ID"
 msgstr "Chat-ID"
 
-#: includes/class-admin.php:943
-msgid "ID of the group or channel, e.g. -1001234567890. Use \"Find chats\" below to look it up."
-msgstr "ID der Gruppe oder des Kanals, z. B. -1001234567890. Mit „Chats finden“ weiter unten kannst du sie nachschlagen."
-
 #: includes/class-admin.php:947
 msgid "Topic ID (optional)"
 msgstr "Themen-ID (optional)"
@@ -2341,10 +2337,6 @@ msgstr "Zweiter Chat (optional)"
 msgid "Topic ID"
 msgstr "Themen-ID"
 
-#: includes/class-admin.php:959
-msgid "Every post goes here too, e.g. to a public announcement channel next to your group. The same bot works: add it to the channel as administrator with the right to post messages. For a public channel, <code>@channelname</code> works as well as the numeric ID. Channels have no topics; leave the topic empty."
-msgstr "Jeder Beitrag geht auch hierhin, z. B. in einen öffentlichen Ankündigungskanal neben deiner Gruppe. Derselbe Bot reicht: Füge ihn dem Kanal als Administrator mit dem Recht hinzu, Nachrichten zu posten. Bei einem öffentlichen Kanal funktioniert <code>@kanalname</code> genauso wie die numerische ID. Kanäle haben keine Themen; lass die Themen-ID leer."
-
 #: includes/class-admin.php:1005
 msgid "The preview was posted to both chats."
 msgstr "Die Vorschau wurde in beide Chats gepostet."
@@ -2362,3 +2354,15 @@ msgstr "Gepostet, aber nicht in jeden Chat: %s"
 #: includes/telegram/class-telegram.php:81
 msgid "No chat ID saved."
 msgstr "Keine Chat-ID gespeichert."
+
+#: includes/class-admin.php:943
+msgid "Link, @name or ID of the group or channel, e.g. https://t.me/yourgroup or -1001234567890. Copy the link in Telegram (group or channel info, or \"Copy link\" on a message in the topic) or use \"Find chats\" below."
+msgstr "Link, @name oder ID der Gruppe oder des Kanals, z. B. https://t.me/deinegruppe oder -1001234567890. Kopiere den Link in Telegram (Info der Gruppe oder des Kanals, oder „Link kopieren“ an einer Nachricht im Thema) oder nutze „Chats finden“ weiter unten."
+
+#: includes/class-admin.php:959
+msgid "Every post goes here too, e.g. to a public announcement channel next to your group. The same bot works: add it to the channel as administrator with the right to post messages. For a public channel, its link (<code>https://t.me/channelname</code>) or <code>@channelname</code> works as well as the numeric ID. Channels have no topics; leave the topic empty."
+msgstr "Jeder Beitrag geht auch hierhin, z. B. in einen öffentlichen Ankündigungskanal neben deiner Gruppe. Derselbe Bot reicht: Füge ihn dem Kanal als Administrator mit dem Recht hinzu, Nachrichten zu posten. Bei einem öffentlichen Kanal funktioniert sein Link (<code>https://t.me/kanalname</code>) oder <code>@kanalname</code> genauso wie die numerische ID. Kanäle haben keine Themen; lass die Themen-ID leer."
+
+#: includes/telegram/class-telegram-settings.php:70
+msgid "Invite links (t.me/+…) do not name the chat. Enter the public link (t.me/name), @name or the chat ID instead. The chat was not changed."
+msgstr "Einladungslinks (t.me/+…) verraten den Chat nicht. Gib stattdessen den öffentlichen Link (t.me/name), @name oder die Chat-ID ein. Der Chat wurde nicht geändert."

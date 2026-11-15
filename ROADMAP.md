@@ -8,10 +8,13 @@ Where the plugin stands and what comes next. Keep this file up to date when a fe
 
 ## Status
 
-- Current version: **2.8.0** (on GitHub `main`; not yet submitted to WordPress.org).
+- Current version: **2.9.0** (on GitHub `main`; not yet submitted to WordPress.org).
 - Releases: see [README.md](README.md#releasing). Deployment to WordPress.org runs from the Release workflow once the plugin is approved.
 
 ## Shipped
+
+**2.9.0**
+- Telegram chat fields accept links: `ETCF_Telegram_Settings::parse_chat()` turns t.me / telegram.me / tg://resolve links into `@name`, private links `t.me/c/<id>/…` into `-100<id>`; three-part links (`…/<topic>/<message>`) set the topic, which then wins over the topic field. Bare names get `@`. Invite links are refused (settings error, old value kept) – the Bot API cannot resolve them.
 
 **2.8.0**
 - Telegram: optional second chat (`chat_id_2`, `thread_id_2`), e.g. a public announcement channel next to the group. One bot, every post goes to all targets (`ETCF_Telegram_Settings::targets()`, duplicates dropped). One failing target does not stop the others; an error with data `partial` counts as delivered (`ETCF_Telegram::delivered()`), so the weekly preview and "Today" are not posted twice, and the status names the chat that failed. Decision: two fixed fields instead of a list – covers group + channel without a repeater UI.

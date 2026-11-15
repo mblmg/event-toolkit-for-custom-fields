@@ -940,7 +940,7 @@ class ETCF_Admin
                     <th scope="row"><label for="etcf-tg-chat"><?php esc_html_e('Chat ID', 'event-toolkit-for-custom-fields'); ?></label></th>
                     <td>
                         <input type="text" class="regular-text" id="etcf-tg-chat" name="<?php echo esc_attr($field('chat_id')); ?>" value="<?php echo esc_attr($s['chat_id']); ?>">
-                        <p class="description"><?php esc_html_e('ID of the group or channel, e.g. -1001234567890. Use "Find chats" below to look it up.', 'event-toolkit-for-custom-fields'); ?></p>
+                        <p class="description"><?php esc_html_e('Link, @name or ID of the group or channel, e.g. https://t.me/yourgroup or -1001234567890. Copy the link in Telegram (group or channel info, or "Copy link" on a message in the topic) or use "Find chats" below.', 'event-toolkit-for-custom-fields'); ?></p>
                     </td>
                 </tr>
                 <tr>
@@ -956,7 +956,7 @@ class ETCF_Admin
                         <input type="text" class="regular-text" id="etcf-tg-chat-2" name="<?php echo esc_attr($field('chat_id_2')); ?>" value="<?php echo esc_attr($s['chat_id_2']); ?>">
                         <p><label for="etcf-tg-thread-2"><?php esc_html_e('Topic ID', 'event-toolkit-for-custom-fields'); ?></label>
                         <input type="text" class="small-text" id="etcf-tg-thread-2" name="<?php echo esc_attr($field('thread_id_2')); ?>" value="<?php echo esc_attr($s['thread_id_2']); ?>"></p>
-                        <p class="description"><?php echo wp_kses(__('Every post goes here too, e.g. to a public announcement channel next to your group. The same bot works: add it to the channel as administrator with the right to post messages. For a public channel, <code>@channelname</code> works as well as the numeric ID. Channels have no topics; leave the topic empty.', 'event-toolkit-for-custom-fields'), ['code' => []]); ?></p>
+                        <p class="description"><?php echo wp_kses(__('Every post goes here too, e.g. to a public announcement channel next to your group. The same bot works: add it to the channel as administrator with the right to post messages. For a public channel, its link (<code>https://t.me/channelname</code>) or <code>@channelname</code> works as well as the numeric ID. Channels have no topics; leave the topic empty.', 'event-toolkit-for-custom-fields'), ['code' => []]); ?></p>
                     </td>
                 </tr>
                 <tr>

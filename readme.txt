@@ -5,7 +5,7 @@ Tags: events, calendar, newsletter, instagram, telegram
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.8.0
+Stable tag: 2.9.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -244,6 +244,9 @@ No data about visitors of your site is sent. [Terms of Use](https://help.instagr
 **PayPal (donations).** The admin pages contain a donation link to PayPal (paypal.com), provided by PayPal (Europe) S.à r.l. et Cie, S.C.A. It only opens when an administrator clicks it; the plugin sends no data to PayPal and PayPal does not report back to your site. [User Agreement](https://www.paypal.com/legalhub/paypal/useragreement-full), [Privacy Statement](https://www.paypal.com/myaccount/privacy/privacyhub)
 
 == Changelog ==
+
+= 2.9.0 =
+* Telegram: both chat fields take the link you copy in Telegram, e.g. https://t.me/yourgroup, besides @name and the chat ID. Message links from a topic (t.me/c/…/topic/message) also fill in the topic. Invite links (t.me/+…) are refused with a hint, because they do not name the chat.
 
 = 2.8.0 =
 * Telegram: optional second chat. Every post (weekly preview, "Today", cancellations) goes there too, e.g. to a public announcement channel next to your group – with the same bot. Public channels also work with @channelname. If one chat fails, the other still gets the post and the status names the chat that failed.
