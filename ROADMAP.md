@@ -8,10 +8,13 @@ Where the plugin stands and what comes next. Keep this file up to date when a fe
 
 ## Status
 
-- Current version: **2.7.0** (on GitHub `main`; not yet submitted to WordPress.org).
+- Current version: **2.8.0** (on GitHub `main`; not yet submitted to WordPress.org).
 - Releases: see [README.md](README.md#releasing). Deployment to WordPress.org runs from the Release workflow once the plugin is approved.
 
 ## Shipped
+
+**2.8.0**
+- Telegram: optional second chat (`chat_id_2`, `thread_id_2`), e.g. a public announcement channel next to the group. One bot, every post goes to all targets (`ETCF_Telegram_Settings::targets()`, duplicates dropped). One failing target does not stop the others; an error with data `partial` counts as delivered (`ETCF_Telegram::delivered()`), so the weekly preview and "Today" are not posted twice, and the status names the chat that failed. Decision: two fixed fields instead of a list – covers group + channel without a repeater UI.
 
 **2.7.0**
 - Story headings follow the website's heading style: `ETCF_Fonts::heading_style()` reads weight, `text-transform` and `letter-spacing` of the h1 rules in Breakdance's `global-settings.css` (if Breakdance is there, unset means browser default, theme.json is not asked), else theme.json (`elements.heading`, then `h1`). px/rem related to a 48 px heading. Filter `etcf_site_heading_style`.

@@ -53,20 +53,48 @@ class ETCF_Telegram
         } else {
             $preview = ['is_disabled' => true];
         }
-        $params = [
-            'chat_id'              => ETCF_Telegram_Settings::get('chat_id'),
+        $base = [
             'text'                 => $html,
             'parse_mode'           => 'HTML',
             'link_preview_options' => wp_json_encode($preview),
         ];
         if ($silent) {
-            $params['disable_notification'] = 'true';
+            $base['disable_notification'] = 'true';
         }
-        $thread = (string) ETCF_Telegram_Settings::get('thread_id');
-        if ($thread !== '') {
-            $params['message_thread_id'] = $thread;
+
+        // Every target gets the message; one failing target does not stop the others.
+        $first  = null;
+        $errors = [];
+        foreach (ETCF_Telegram_Settings::targets() as $target) {
+            $params = $base + ['chat_id' => $target['chat_id']];
+            if ($target['thread_id'] !== '') {
+                $params['message_thread_id'] = $target['thread_id'];
+            }
+            $result = self::call('sendMessage', $params);
+            if (is_wp_error($result)) {
+                $errors[] = $target['chat_id'] . ': ' . $result->get_error_message();
+            } elseif ($first === null) {
+                $first = $result;
+            }
         }
-        return self::call('sendMessage', $params);
+        if (!$errors) {
+            return $first ?? new WP_Error('etcf_tg_no_chat', __('No chat ID saved.', 'event-toolkit-for-custom-fields'));
+        }
+        // "partial": at least one chat got the message, so it must not be posted again.
+        return new WP_Error('etcf_tg_send', implode(' · ', $errors), ['partial' => $first !== null]);
+    }
+
+    /** The message reached at least one chat (a full result or an error with "partial"). */
+    public static function delivered($result): bool
+    {
+        if (is_array($result)) {
+            return true;
+        }
+        if (is_wp_error($result)) {
+            $data = $result->get_error_data();
+            return is_array($data) && !empty($data['partial']);
+        }
+        return false;
     }
 
     /**

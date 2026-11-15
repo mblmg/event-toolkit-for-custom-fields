@@ -5,7 +5,7 @@ Tags: events, calendar, newsletter, instagram, telegram
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.7.0
+Stable tag: 2.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -244,6 +244,9 @@ No data about visitors of your site is sent. [Terms of Use](https://help.instagr
 **PayPal (donations).** The admin pages contain a donation link to PayPal (paypal.com), provided by PayPal (Europe) S.à r.l. et Cie, S.C.A. It only opens when an administrator clicks it; the plugin sends no data to PayPal and PayPal does not report back to your site. [User Agreement](https://www.paypal.com/legalhub/paypal/useragreement-full), [Privacy Statement](https://www.paypal.com/myaccount/privacy/privacyhub)
 
 == Changelog ==
+
+= 2.8.0 =
+* Telegram: optional second chat. Every post (weekly preview, "Today", cancellations) goes there too, e.g. to a public announcement channel next to your group – with the same bot. Public channels also work with @channelname. If one chat fails, the other still gets the post and the status names the chat that failed.
 
 = 2.7.0 =
 * Story images: capitals and letter spacing of the headings follow the headings of your website (Breakdance global settings or theme.json), like the weight already did. From there you can go tighter or wider, choose capitals or upper and lower case, or no letter spacing at all. Saved settings with "no capitals" now follow the website too.

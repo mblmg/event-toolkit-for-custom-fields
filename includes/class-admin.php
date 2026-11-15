@@ -951,6 +951,15 @@ class ETCF_Admin
                     </td>
                 </tr>
                 <tr>
+                    <th scope="row"><label for="etcf-tg-chat-2"><?php esc_html_e('Second chat (optional)', 'event-toolkit-for-custom-fields'); ?></label></th>
+                    <td>
+                        <input type="text" class="regular-text" id="etcf-tg-chat-2" name="<?php echo esc_attr($field('chat_id_2')); ?>" value="<?php echo esc_attr($s['chat_id_2']); ?>">
+                        <p><label for="etcf-tg-thread-2"><?php esc_html_e('Topic ID', 'event-toolkit-for-custom-fields'); ?></label>
+                        <input type="text" class="small-text" id="etcf-tg-thread-2" name="<?php echo esc_attr($field('thread_id_2')); ?>" value="<?php echo esc_attr($s['thread_id_2']); ?>"></p>
+                        <p class="description"><?php echo wp_kses(__('Every post goes here too, e.g. to a public announcement channel next to your group. The same bot works: add it to the channel as administrator with the right to post messages. For a public channel, <code>@channelname</code> works as well as the numeric ID. Channels have no topics; leave the topic empty.', 'event-toolkit-for-custom-fields'), ['code' => []]); ?></p>
+                    </td>
+                </tr>
+                <tr>
                     <th scope="row"><label for="etcf-tg-preview-pos"><?php esc_html_e('Link preview', 'event-toolkit-for-custom-fields'); ?></label></th>
                     <td>
                         <select id="etcf-tg-preview-pos" name="<?php echo esc_attr($field('link_preview')); ?>">
@@ -993,7 +1002,7 @@ class ETCF_Admin
     private static function render_telegram_notice(string $notice): void
     {
         $messages = [
-            'sent'  => ['success', __('The preview was posted to the chat.', 'event-toolkit-for-custom-fields')],
+            'sent'  => ['success', count(ETCF_Telegram_Settings::targets()) > 1 ? __('The preview was posted to both chats.', 'event-toolkit-for-custom-fields') : __('The preview was posted to the chat.', 'event-toolkit-for-custom-fields')],
             'empty' => ['warning', __('Nothing to post: no events in the coming days and nothing new.', 'event-toolkit-for-custom-fields')],
         ];
         if ($notice === 'error') {
@@ -1109,7 +1118,7 @@ class ETCF_Admin
         echo '<input type="hidden" name="action" value="etcf_tg_send_test">';
         wp_nonce_field('etcf_tg_send_test');
         submit_button(__('Post this preview to the chat now', 'event-toolkit-for-custom-fields'), 'secondary', 'submit', false);
-        echo '<p class="description">' . esc_html__('Goes to the chat and topic above. Does not change the weekly schedule.', 'event-toolkit-for-custom-fields') . '</p>';
+        echo '<p class="description">' . esc_html__('Goes to the chats and topics above. Does not change the weekly schedule.', 'event-toolkit-for-custom-fields') . '</p>';
         echo '</form>';
     }
 

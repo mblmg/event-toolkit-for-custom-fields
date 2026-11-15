@@ -76,7 +76,7 @@ msgid "Telegram is not set up: enter bot token and chat ID on the page \"Telegra
 msgstr "Telegram ist nicht eingerichtet: Bot-Token und Chat-ID auf der Seite „Telegram“ eintragen."
 
 #: includes/class-abilities.php:236
-#: includes/class-admin.php:997
+#: includes/class-admin.php:1006
 msgid "Nothing to post: no events in the coming days and nothing new."
 msgstr "Nichts zu posten: keine Termine in den nächsten Tagen und nichts Neues."
 
@@ -89,7 +89,7 @@ msgid "Share events"
 msgstr "Termine teilen"
 
 #: includes/class-admin.php:125
-#: includes/class-admin.php:1164
+#: includes/class-admin.php:1173
 #: includes/class-front.php:45
 msgid "Share"
 msgstr "Teilen"
@@ -103,7 +103,7 @@ msgstr "Heute teilen"
 #: includes/class-share-kit.php:45
 #: includes/class-sharepic.php:801
 #: includes/social/class-social.php:291
-#: includes/telegram/class-telegram.php:211
+#: includes/telegram/class-telegram.php:239
 msgid "Today"
 msgstr "Heute"
 
@@ -144,9 +144,9 @@ msgstr "Suchmaschinen"
 #: includes/class-admin.php:510
 #: includes/class-admin.php:581
 #: includes/class-admin.php:915
-#: includes/class-admin.php:1240
-#: includes/class-admin.php:1567
-#: includes/class-admin.php:1711
+#: includes/class-admin.php:1249
+#: includes/class-admin.php:1576
+#: includes/class-admin.php:1720
 #: includes/class-share-kit.php:70
 #: includes/social/class-social.php:225
 msgid "Weekly preview"
@@ -705,10 +705,10 @@ msgid "Calendar subscription address"
 msgstr "Adresse zum Abonnieren des Kalenders"
 
 #: includes/class-admin.php:677
-#: includes/class-admin.php:982
-#: includes/class-admin.php:1377
-#: includes/class-admin.php:1572
-#: includes/class-admin.php:1810
+#: includes/class-admin.php:991
+#: includes/class-admin.php:1386
+#: includes/class-admin.php:1581
+#: includes/class-admin.php:1819
 msgid "Save settings"
 msgstr "Einstellungen speichern"
 
@@ -743,11 +743,11 @@ msgstr "Wert"
 #: includes/class-admin.php:788
 #: includes/class-admin.php:844
 #: includes/class-admin.php:888
-#: includes/class-admin.php:1078
-#: includes/class-admin.php:1231
-#: includes/class-admin.php:1612
-#: includes/class-admin.php:1830
-#: includes/class-admin.php:1838
+#: includes/class-admin.php:1087
+#: includes/class-admin.php:1240
+#: includes/class-admin.php:1621
+#: includes/class-admin.php:1839
+#: includes/class-admin.php:1847
 msgid "Preview"
 msgstr "Vorschau"
 
@@ -812,9 +812,9 @@ msgid "Enter this address in an RSS campaign of your newsletter service (e.g. Br
 msgstr "Trag diese Adresse in einer RSS-Kampagne deines Newsletter-Dienstes ein (z. B. Brevo, CleverReach oder Mailchimp). Der Feed enthält pro Ausgabe einen Eintrag mit der ganzen Vorschau, der Dienst verschickt also eine Mail pro Woche. In Wochen ohne anstehende und ohne neue Termine bleibt der Feed leer, und es geht keine Mail raus."
 
 #: includes/class-admin.php:891
-#: includes/class-admin.php:1083
-#: includes/class-admin.php:1615
-#: includes/class-admin.php:1833
+#: includes/class-admin.php:1092
+#: includes/class-admin.php:1624
+#: includes/class-admin.php:1842
 #: includes/class-share-kit.php:74
 msgid "Right now there would be nothing in it: no events in the coming days and nothing new."
 msgstr "Im Moment stünde nichts darin: keine Termine in den nächsten Tagen und nichts Neues."
@@ -842,14 +842,14 @@ msgid "Bot token"
 msgstr "Bot-Token"
 
 #: includes/class-admin.php:932
-#: includes/class-admin.php:1345
-#: includes/class-admin.php:1539
-#: includes/class-admin.php:1798
+#: includes/class-admin.php:1354
+#: includes/class-admin.php:1548
+#: includes/class-admin.php:1807
 msgid "Saved. Leave empty to keep it."
 msgstr "Gespeichert. Leer lassen, um ihn zu behalten."
 
 #: includes/class-admin.php:934
-#: includes/class-admin.php:1347
+#: includes/class-admin.php:1356
 msgid "Delete token"
 msgstr "Token löschen"
 
@@ -858,7 +858,7 @@ msgid "Create a bot with <code>@BotFather</code> in Telegram (command <code>/new
 msgstr "Lege in Telegram mit <code>@BotFather</code> einen Bot an (Befehl <code>/newbot</code>) und füge den Token ein, den du bekommst. Halte den Token geheim."
 
 #: includes/class-admin.php:940
-#: includes/class-admin.php:1062
+#: includes/class-admin.php:1071
 msgid "Chat ID"
 msgstr "Chat-ID"
 
@@ -874,620 +874,616 @@ msgstr "Themen-ID (optional)"
 msgid "For groups with topics: the topic the digest goes to. Empty = the general chat."
 msgstr "Für Gruppen mit Themen: das Thema, in das die Vorschau gepostet wird. Leer = allgemeiner Chat."
 
-#: includes/class-admin.php:954
+#: includes/class-admin.php:963
 msgid "Link preview"
 msgstr "Link-Vorschau"
 
-#: includes/class-admin.php:957
+#: includes/class-admin.php:966
 msgid "Above the text"
 msgstr "Über dem Text"
 
-#: includes/class-admin.php:958
+#: includes/class-admin.php:967
 msgid "Below the text"
 msgstr "Unter dem Text"
 
-#: includes/class-admin.php:959
+#: includes/class-admin.php:968
 msgid "No preview"
 msgstr "Keine Vorschau"
 
-#: includes/class-admin.php:961
+#: includes/class-admin.php:970
 msgid "Shows the preview of the next event page with its image, as when you post a link yourself. Image, title and description come from the page (e.g. set by your SEO plugin)."
 msgstr "Zeigt die Vorschau der Seite des nächsten Termins mit Bild, wie wenn du selbst einen Link postest. Bild, Titel und Beschreibung kommen von der Seite (z. B. aus deinem SEO-Plugin)."
 
-#: includes/class-admin.php:965
-#: includes/class-admin.php:1569
+#: includes/class-admin.php:974
+#: includes/class-admin.php:1578
 msgid "Cancellations"
 msgstr "Absagen"
 
-#: includes/class-admin.php:967
-#: includes/class-admin.php:1569
+#: includes/class-admin.php:976
+#: includes/class-admin.php:1578
 msgid "Post a short notice when an upcoming event is cancelled or postponed"
 msgstr "Kurze Meldung posten, wenn ein anstehender Termin abgesagt oder verschoben wird"
 
-#: includes/class-admin.php:968
+#: includes/class-admin.php:977
 msgid "Needs the status field on the page \"Events\". Goes out once, about a minute after saving."
 msgstr "Braucht das Statusfeld auf der Seite „Termine“. Geht einmal raus, etwa eine Minute nach dem Speichern."
 
-#: includes/class-admin.php:972
-#: includes/class-admin.php:1568
+#: includes/class-admin.php:981
+#: includes/class-admin.php:1577
 msgid "On event days"
 msgstr "An Veranstaltungstagen"
 
-#: includes/class-admin.php:974
-#: includes/class-admin.php:1568
+#: includes/class-admin.php:983
+#: includes/class-admin.php:1577
 msgid "Short \"Today\" post at"
 msgstr "Kurzer „Heute“-Post um"
 
-#: includes/class-admin.php:996
+#: includes/class-admin.php:1005
 msgid "The preview was posted to the chat."
 msgstr "Die Vorschau wurde in den Chat gepostet."
 
-#: includes/class-admin.php:1015
+#: includes/class-admin.php:1024
 msgid "Next digest"
 msgstr "Nächste Vorschau"
 
-#: includes/class-admin.php:1015
+#: includes/class-admin.php:1024
 msgid "not scheduled (turn on the weekly digest and enter token and chat ID)"
 msgstr "nicht geplant (Wochenvorschau einschalten und Token und Chat-ID eintragen)"
 
-#: includes/class-admin.php:1016
+#: includes/class-admin.php:1025
 msgid "Last posted"
 msgstr "Zuletzt gepostet"
 
-#: includes/class-admin.php:1019
+#: includes/class-admin.php:1028
 msgid "Last run"
 msgstr "Letzter Lauf"
 
-#: includes/class-admin.php:1026
-#: includes/class-admin.php:1040
+#: includes/class-admin.php:1035
+#: includes/class-admin.php:1049
 msgid "Find chats"
 msgstr "Chats finden"
 
-#: includes/class-admin.php:1028
+#: includes/class-admin.php:1037
 msgid "Add the bot to your group (or as administrator to your channel) and allow it to post messages."
 msgstr "Füge den Bot zu deiner Gruppe hinzu (oder als Administrator zu deinem Kanal) und erlaube ihm, Nachrichten zu senden."
 
-#: includes/class-admin.php:1029
+#: includes/class-admin.php:1038
 msgid "In a group with topics: open the topic and send <code>/start@YourBotName</code> there. In a channel: post any message. The bot does not answer; it only reads the chat ID."
 msgstr "In einer Gruppe mit Themen: Öffne das Thema und schick dort <code>/start@DeinBotName</code>. In einem Kanal: Poste irgendeine Nachricht. Der Bot antwortet nicht, er liest nur die Chat-ID aus."
 
-#: includes/class-admin.php:1030
+#: includes/class-admin.php:1039
 msgid "Click the button. The chats and topics the bot has seen in the last 24 hours appear below."
 msgstr "Klick auf den Button. Darunter erscheinen die Chats und Themen, die der Bot in den letzten 24 Stunden gesehen hat."
 
-#: includes/class-admin.php:1034
+#: includes/class-admin.php:1043
 msgid "Save the bot token first."
 msgstr "Speichere zuerst den Bot-Token."
 
 #. translators: %s: bot username
-#: includes/class-admin.php:1056
+#: includes/class-admin.php:1065
 #, php-format
 msgid "Bot: @%s"
 msgstr "Bot: @%s"
 
-#: includes/class-admin.php:1059
+#: includes/class-admin.php:1068
 msgid "The bot has not seen any chat yet. Follow the steps above and try again."
 msgstr "Der Bot hat noch keinen Chat gesehen. Folge den Schritten oben und versuch es noch einmal."
 
-#: includes/class-admin.php:1062
+#: includes/class-admin.php:1071
 msgid "Chat"
 msgstr "Chat"
 
-#: includes/class-admin.php:1062
+#: includes/class-admin.php:1071
 msgid "Type"
 msgstr "Typ"
 
-#: includes/class-admin.php:1062
+#: includes/class-admin.php:1071
 msgid "Topics (ID: name)"
 msgstr "Themen (ID: Name)"
 
-#: includes/class-admin.php:1111
+#: includes/class-admin.php:1120
 msgid "Post this preview to the chat now"
 msgstr "Diese Vorschau jetzt in den Chat posten"
 
-#: includes/class-admin.php:1112
-msgid "Goes to the chat and topic above. Does not change the weekly schedule."
-msgstr "Geht an den Chat und das Thema oben. Der wöchentliche Zeitplan bleibt unverändert."
-
-#: includes/class-admin.php:1120
-#: includes/class-admin.php:1139
-#: includes/class-admin.php:1258
-#: includes/class-admin.php:1486
-#: includes/class-admin.php:1511
-#: includes/class-admin.php:1640
-#: includes/class-admin.php:1663
-#: includes/class-admin.php:1857
-#: includes/class-admin.php:1869
+#: includes/class-admin.php:1129
+#: includes/class-admin.php:1148
+#: includes/class-admin.php:1267
+#: includes/class-admin.php:1495
+#: includes/class-admin.php:1520
+#: includes/class-admin.php:1649
+#: includes/class-admin.php:1672
+#: includes/class-admin.php:1866
+#: includes/class-admin.php:1878
 #: includes/class-donation.php:219
 #: includes/class-donation.php:234
 #: includes/class-share.php:145
 msgid "Not allowed."
 msgstr "Nicht erlaubt."
 
-#: includes/class-admin.php:1165
+#: includes/class-admin.php:1174
 msgid "Ready-made texts and story images for WhatsApp, Signal, Instagram and everywhere else you post by hand."
 msgstr "Fertige Texte und Story-Bilder für WhatsApp, Signal, Instagram und überall, wo du von Hand postest."
 
-#: includes/class-admin.php:1167
+#: includes/class-admin.php:1176
 msgid "Change the look of the images"
 msgstr "Aussehen der Bilder ändern"
 
-#: includes/class-admin.php:1171
+#: includes/class-admin.php:1180
 msgid "The plugin does not know yet where your events are. An administrator sets this up under Event Toolkit → Events."
 msgstr "Das Plugin weiß noch nicht, wo eure Termine stehen. Das richtet ein Admin unter Event Toolkit → Termine ein."
 
-#: includes/class-admin.php:1248
+#: includes/class-admin.php:1257
 msgid "All images on the share page"
 msgstr "Alle Bilder auf der Seite „Teilen“"
 
-#: includes/class-admin.php:1304
+#: includes/class-admin.php:1313
 msgid "Stories posted through the API cannot contain link stickers. The images show your web address instead."
 msgstr "Storys über die Schnittstelle können keine Link-Sticker enthalten. Die Bilder zeigen stattdessen deine Webadresse."
 
-#: includes/class-admin.php:1313
+#: includes/class-admin.php:1322
 msgid "Account"
 msgstr "Konto"
 
-#: includes/class-admin.php:1313
+#: includes/class-admin.php:1322
 msgid "not connected"
 msgstr "nicht verbunden"
 
-#: includes/class-admin.php:1314
+#: includes/class-admin.php:1323
 msgid "Next stories"
 msgstr "Nächste Storys"
 
-#: includes/class-admin.php:1314
+#: includes/class-admin.php:1323
 msgid "not scheduled (turn on automatic stories and save an access token)"
 msgstr "nicht geplant (automatische Storys einschalten und Zugangstoken speichern)"
 
-#: includes/class-admin.php:1317
-#: includes/class-admin.php:1342
-#: includes/class-admin.php:1552
+#: includes/class-admin.php:1326
+#: includes/class-admin.php:1351
+#: includes/class-admin.php:1561
 msgid "Access token"
 msgstr "Zugangstoken"
 
 #. translators: %s: date
-#: includes/class-admin.php:1319
+#: includes/class-admin.php:1328
 #, php-format
 msgid "valid until about %s, renewed automatically every week"
 msgstr "gültig bis etwa %s, wird jede Woche automatisch verlängert"
 
-#: includes/class-admin.php:1324
+#: includes/class-admin.php:1333
 msgid "Note"
 msgstr "Hinweis"
 
-#: includes/class-admin.php:1324
+#: includes/class-admin.php:1333
 msgid "Instagram allows stories through the API only for business accounts. Switch the account type in the Instagram app (free of charge)."
 msgstr "Instagram erlaubt Storys über die Schnittstelle nur für Unternehmenskonten. Stell den Kontotyp in der Instagram-App um (kostenlos)."
 
-#: includes/class-admin.php:1335
+#: includes/class-admin.php:1344
 msgid "Connection and schedule"
 msgstr "Verbindung und Zeitplan"
 
-#: includes/class-admin.php:1338
+#: includes/class-admin.php:1347
 msgid "Automatic stories"
 msgstr "Automatische Storys"
 
-#: includes/class-admin.php:1339
+#: includes/class-admin.php:1348
 msgid "Post stories automatically"
 msgstr "Storys automatisch posten"
 
-#: includes/class-admin.php:1349
+#: includes/class-admin.php:1358
 msgid "See \"Connect Instagram\" below. Keep the token secret."
 msgstr "Siehe „Instagram verbinden“ unten. Halte den Token geheim."
 
-#: includes/class-admin.php:1360
+#: includes/class-admin.php:1369
 msgid "Time of day"
 msgstr "Uhrzeit"
 
-#: includes/class-admin.php:1363
+#: includes/class-admin.php:1372
 msgid "All stories of a day go out at this time. Stories stay visible for 24 hours, so the story of the day before ends when the one of the day begins."
 msgstr "Alle Storys eines Tages gehen zu dieser Uhrzeit raus. Storys bleiben 24 Stunden sichtbar. Die Story vom Vortag verschwindet also, wenn die vom Tag selbst erscheint."
 
-#: includes/class-admin.php:1367
+#: includes/class-admin.php:1376
 msgid "Stories"
 msgstr "Storys"
 
-#: includes/class-admin.php:1369
+#: includes/class-admin.php:1378
 msgid "Weekly overview, on the day of the weekly preview"
 msgstr "Wochenübersicht am Tag der Wochenvorschau"
 
-#: includes/class-admin.php:1370
+#: includes/class-admin.php:1379
 msgid "Every event the day before"
 msgstr "Jeden Termin am Vortag"
 
-#: includes/class-admin.php:1371
+#: includes/class-admin.php:1380
 msgid "Every event on the day"
 msgstr "Jeden Termin am Tag selbst"
 
-#: includes/class-admin.php:1372
+#: includes/class-admin.php:1381
 msgid "So that followers do not see the same event too often: on the day of the weekly overview there is no extra story for the next day, and more than three events on one day share one story."
 msgstr "Damit Follower denselben Termin nicht zu oft sehen: Am Tag der Wochenübersicht gibt es keine eigene Story für den nächsten Tag, und mehr als drei Termine an einem Tag teilen sich eine Story."
 
-#: includes/class-admin.php:1385
-#: includes/class-admin.php:1579
-#: includes/class-admin.php:1815
+#: includes/class-admin.php:1394
+#: includes/class-admin.php:1588
+#: includes/class-admin.php:1824
 msgid "Check connection"
 msgstr "Verbindung prüfen"
 
-#: includes/class-admin.php:1391
+#: includes/class-admin.php:1400
 msgid "Post today's stories now"
 msgstr "Heutige Storys jetzt posten"
 
-#: includes/class-admin.php:1396
+#: includes/class-admin.php:1405
 msgid "Posts the stories planned for today that are not online yet. Stories already posted are not posted twice."
 msgstr "Postet die für heute geplanten Storys, die noch nicht online sind. Was schon online ist, kommt nicht doppelt."
 
-#: includes/class-admin.php:1399
-#: includes/class-admin.php:1422
+#: includes/class-admin.php:1408
+#: includes/class-admin.php:1431
 msgid "Connect Instagram"
 msgstr "Instagram verbinden"
 
-#: includes/class-admin.php:1409
-#: includes/class-admin.php:1596
-#: includes/class-admin.php:1844
+#: includes/class-admin.php:1418
+#: includes/class-admin.php:1605
+#: includes/class-admin.php:1853
 msgid "Recent activity"
 msgstr "Letzte Aktivitäten"
 
-#: includes/class-admin.php:1431
+#: includes/class-admin.php:1440
 msgid "Instagram downloads the story images from your site, so the uploads folder must be publicly reachable (no maintenance mode or password protection)."
 msgstr "Instagram lädt die Story-Bilder von deiner Seite. Der Uploads-Ordner muss deshalb öffentlich erreichbar sein (kein Wartungsmodus, kein Passwortschutz)."
 
-#: includes/class-admin.php:1440
+#: includes/class-admin.php:1449
 msgid "Plan for the next 7 days"
 msgstr "Plan für die nächsten 7 Tage"
 
-#: includes/class-admin.php:1442
+#: includes/class-admin.php:1451
 msgid "This is what would go out once the stories are switched on."
 msgstr "Das ginge raus, sobald die Storys eingeschaltet sind."
 
-#: includes/class-admin.php:1464
+#: includes/class-admin.php:1473
 msgid "No stories in the next 7 days."
 msgstr "In den nächsten 7 Tagen sind keine Storys geplant."
 
-#: includes/class-admin.php:1478
-#: includes/class-admin.php:1677
+#: includes/class-admin.php:1487
+#: includes/class-admin.php:1686
 msgid "posted"
 msgstr "gepostet"
 
 #. translators: 1: Instagram username, 2: number of posts in the last 24 hours
-#: includes/class-admin.php:1498
+#: includes/class-admin.php:1507
 #, php-format
 msgid "Connected with @%1$s. Posts through the API in the last 24 hours: %2$s."
 msgstr "Verbunden mit @%1$s. Posts über die Schnittstelle in den letzten 24 Stunden: %2$s."
 
-#: includes/class-admin.php:1517
+#: includes/class-admin.php:1526
 msgid "Error"
 msgstr "Fehler"
 
 #. translators: %d: number of stories
-#: includes/class-admin.php:1520
+#: includes/class-admin.php:1529
 #, php-format
 msgid "Stories posted: %d"
 msgstr "Storys gepostet: %d"
 
-#: includes/class-admin.php:1522
+#: includes/class-admin.php:1531
 msgid "Nothing to post: no stories planned for today, or all of them are online already."
 msgstr "Nichts zu posten: Für heute ist keine Story geplant, oder alle sind schon online."
 
-#: includes/class-admin.php:1541
-#: includes/class-admin.php:1800
+#: includes/class-admin.php:1550
+#: includes/class-admin.php:1809
 msgid "Delete"
 msgstr "Löschen"
 
-#: includes/class-admin.php:1550
-#: includes/class-admin.php:1558
+#: includes/class-admin.php:1559
+#: includes/class-admin.php:1567
 msgid "Post"
 msgstr "Posten"
 
-#: includes/class-admin.php:1550
+#: includes/class-admin.php:1559
 msgid "Post to Mastodon"
 msgstr "Auf Mastodon posten"
 
-#: includes/class-admin.php:1551
-#: includes/class-admin.php:1563
+#: includes/class-admin.php:1560
+#: includes/class-admin.php:1572
 msgid "Server"
 msgstr "Server"
 
-#: includes/class-admin.php:1554
+#: includes/class-admin.php:1563
 msgid "In Mastodon: Preferences → Development → New application. Allow \"write:statuses\" and \"write:media\", save, and copy \"Your access token\"."
 msgstr "In Mastodon: Einstellungen → Entwicklung → Neue Anwendung. „write:statuses“ und „write:media“ erlauben, speichern und „Dein Zugangs-Token“ kopieren."
 
-#: includes/class-admin.php:1558
+#: includes/class-admin.php:1567
 msgid "Post to Bluesky"
 msgstr "Auf Bluesky posten"
 
-#: includes/class-admin.php:1559
+#: includes/class-admin.php:1568
 msgid "Handle"
 msgstr "Handle"
 
-#: includes/class-admin.php:1560
+#: includes/class-admin.php:1569
 msgid "App password"
 msgstr "App-Passwort"
 
-#: includes/class-admin.php:1562
+#: includes/class-admin.php:1571
 msgid "In Bluesky: Settings → Privacy and security → App passwords → Add. Not your normal password."
 msgstr "In Bluesky: Einstellungen → Privatsphäre und Sicherheit → App-Passwörter → Hinzufügen. Nicht dein normales Passwort."
 
-#: includes/class-admin.php:1563
+#: includes/class-admin.php:1572
 msgid "Only change this if your account is on its own server."
 msgstr "Nur ändern, wenn dein Konto auf einem eigenen Server liegt."
 
-#: includes/class-admin.php:1566
+#: includes/class-admin.php:1575
 msgid "What is posted"
 msgstr "Was gepostet wird"
 
-#: includes/class-admin.php:1567
+#: includes/class-admin.php:1576
 msgid "At the time of the weekly preview"
 msgstr "Zur Zeit der Wochenvorschau"
 
-#: includes/class-admin.php:1568
+#: includes/class-admin.php:1577
 msgid "Not on the day of the weekly preview, which already lists the events."
 msgstr "Nicht am Tag der Wochenvorschau, die die Termine schon nennt."
 
 #: includes/class-admin.php:81
-#: includes/class-admin.php:1570
+#: includes/class-admin.php:1579
 msgid "Images"
 msgstr "Bilder"
 
-#: includes/class-admin.php:1570
+#: includes/class-admin.php:1579
 msgid "Attach the story images (up to four, with the text as image description)"
 msgstr "Story-Bilder anhängen (bis zu vier, mit dem Text als Bildbeschreibung)"
 
-#: includes/class-admin.php:1584
+#: includes/class-admin.php:1593
 msgid "Post the weekly preview now"
 msgstr "Wochenvorschau jetzt posten"
 
 #. translators: 1: network name, 2: length of the text, 3: maximum length
-#: includes/class-admin.php:1621
+#: includes/class-admin.php:1630
 #, php-format
 msgid "%1$s (%2$d of %3$d characters)"
 msgstr "%1$s (%2$d von %3$d Zeichen)"
 
-#: includes/class-admin.php:1672
+#: includes/class-admin.php:1681
 msgid "nothing to post"
 msgstr "nichts zu posten"
 
-#: includes/class-admin.php:1700
+#: includes/class-admin.php:1709
 msgid "Two ways to send"
 msgstr "Zwei Wege zum Versand"
 
-#: includes/class-admin.php:1702
+#: includes/class-admin.php:1711
 msgid "RSS feed"
 msgstr "RSS-Feed"
 
-#: includes/class-admin.php:1702
+#: includes/class-admin.php:1711
 msgid "Your newsletter service fetches the weekly preview from the feed and sends it on its own schedule. Works with every service that has RSS-to-email, for example Brevo, Mailchimp or MailerLite."
 msgstr "Dein Newsletter-Dienst holt die Wochenvorschau aus dem Feed und verschickt sie nach eigenem Zeitplan. Geht mit jedem Dienst, der RSS-zu-E-Mail kann, etwa Brevo, Mailchimp oder MailerLite."
 
-#: includes/class-admin.php:1703
+#: includes/class-admin.php:1712
 msgid "Direct"
 msgstr "Direkt"
 
-#: includes/class-admin.php:1703
+#: includes/class-admin.php:1712
 msgid "The plugin creates the campaign at the time of the weekly preview and sends it through the interface of Brevo or Emailit. Needed for Emailit, which has no RSS-to-email."
 msgstr "Das Plugin legt zur Zeit der Wochenvorschau die Kampagne an und verschickt sie über die Schnittstelle von Brevo oder Emailit. Nötig für Emailit, das kein RSS-zu-E-Mail hat."
 
-#: includes/class-admin.php:1706
+#: includes/class-admin.php:1715
 msgid "Feed address"
 msgstr "Feed-Adresse"
 
 #. translators: %s: link to the page "Weekly preview"
-#: includes/class-admin.php:1710
+#: includes/class-admin.php:1719
 #, php-format
 msgid "Both ways send nothing in weeks without upcoming events. \"Only with news\" and the feed itself are set on the page %s."
 msgstr "Beide Wege verschicken nichts in Wochen ohne anstehende Termine. „Nur mit Neuem“ und den Feed selbst stellst du auf der Seite %s ein."
 
-#: includes/class-admin.php:1716
+#: includes/class-admin.php:1725
 msgid "Connect your service"
 msgstr "Deinen Dienst anbinden"
 
-#: includes/class-admin.php:1719
+#: includes/class-admin.php:1728
 msgid "Brevo with the RSS feed"
 msgstr "Brevo mit dem RSS-Feed"
 
-#: includes/class-admin.php:1721
+#: includes/class-admin.php:1730
 msgid "In Brevo, open Integrations and add \"RSS campaign\"."
 msgstr "In Brevo die Integrationen öffnen und „RSS-Kampagne“ hinzufügen."
 
-#: includes/class-admin.php:1722
+#: includes/class-admin.php:1731
 msgid "Paste the feed address and load the feed."
 msgstr "Feed-Adresse einfügen und den Feed laden."
 
-#: includes/class-admin.php:1723
+#: includes/class-admin.php:1732
 msgid "In the template, replace the description in the repeated block with <code>{{ item.CONTENT_ENCODED }}</code>. Without it, the mail only shows the title and the list of event names, not the whole preview."
 msgstr "In der Vorlage die Beschreibung im wiederholten Block durch <code>{{ item.CONTENT_ENCODED }}</code> ersetzen. Sonst zeigt die Mail nur den Titel und die Liste der Terminnamen, nicht die ganze Vorschau."
 
-#: includes/class-admin.php:1724
+#: includes/class-admin.php:1733
 msgid "Choose the contact list, subject and sender."
 msgstr "Kontaktliste, Betreff und Absender wählen."
 
-#: includes/class-admin.php:1725
+#: includes/class-admin.php:1734
 msgid "Schedule: weekly, on the day of the weekly preview, at least one hour after its time. Brevo creates no campaign when the feed has nothing new."
 msgstr "Zeitplan: wöchentlich, am Tag der Wochenvorschau, mindestens eine Stunde nach ihrer Uhrzeit. Brevo legt keine Kampagne an, wenn im Feed nichts Neues steht."
 
-#: includes/class-admin.php:1726
+#: includes/class-admin.php:1735
 msgid "Save and activate."
 msgstr "Speichern und aktivieren."
 
-#: includes/class-admin.php:1728
+#: includes/class-admin.php:1737
 msgid "Brevo help: RSS campaign"
 msgstr "Brevo-Hilfe: RSS-Kampagne"
 
-#: includes/class-admin.php:1731
+#: includes/class-admin.php:1740
 msgid "Brevo, sent directly"
 msgstr "Brevo, direkt verschickt"
 
-#: includes/class-admin.php:1733
+#: includes/class-admin.php:1742
 msgid "In Brevo, create an API key (account menu, \"SMTP & API\", tab \"API keys\")."
 msgstr "In Brevo einen API-Schlüssel anlegen (Kontomenü, „SMTP & API“, Reiter „API-Schlüssel“)."
 
-#: includes/class-admin.php:1734
+#: includes/class-admin.php:1743
 msgid "Note the ID of the contact list (Contacts, Lists)."
 msgstr "Die ID der Kontaktliste notieren (Kontakte, Listen)."
 
-#: includes/class-admin.php:1735
+#: includes/class-admin.php:1744
 msgid "Use a sender address that is verified in Brevo (Senders, domains)."
 msgstr "Eine Absenderadresse nehmen, die in Brevo bestätigt ist (Absender, Domains)."
 
-#: includes/class-admin.php:1736
+#: includes/class-admin.php:1745
 msgid "Enter everything below, choose \"Brevo\", send a test mail and switch on sending."
 msgstr "Alles unten eintragen, „Brevo“ wählen, eine Testmail schicken und den Versand einschalten."
 
-#: includes/class-admin.php:1741
+#: includes/class-admin.php:1750
 msgid "Emailit, sent directly"
 msgstr "Emailit, direkt verschickt"
 
-#: includes/class-admin.php:1743
+#: includes/class-admin.php:1752
 msgid "In Emailit, verify your sending domain."
 msgstr "In Emailit die Absenderdomain bestätigen."
 
-#: includes/class-admin.php:1744
+#: includes/class-admin.php:1753
 msgid "Create an audience for the newsletter and note its ID (starts with <code>aud_</code>)."
 msgstr "Eine Audience für den Newsletter anlegen und ihre ID notieren (beginnt mit <code>aud_</code>)."
 
-#: includes/class-admin.php:1745
+#: includes/class-admin.php:1754
 msgid "Create an API key with full access (scope \"full\"); campaigns need it."
 msgstr "Einen API-Schlüssel mit vollem Zugriff anlegen (Scope „full“), den brauchen Kampagnen."
 
-#: includes/class-admin.php:1746
+#: includes/class-admin.php:1755
 msgid "Enter everything below, choose \"Emailit\", send a test mail and switch on sending."
 msgstr "Alles unten eintragen, „Emailit“ wählen, eine Testmail schicken und den Versand einschalten."
 
-#: includes/class-admin.php:1748
+#: includes/class-admin.php:1757
 msgid "Emailit documentation: campaigns"
 msgstr "Emailit-Dokumentation: Kampagnen"
 
-#: includes/class-admin.php:1753
+#: includes/class-admin.php:1762
 msgid "Automations, Classic automations, \"Share blog updates\"."
 msgstr "Automatisierungen, klassische Automatisierungen, „Blog-Updates teilen“."
 
-#: includes/class-admin.php:1754
+#: includes/class-admin.php:1763
 msgid "Enter the feed address and choose weekly sending on the day of the weekly preview."
 msgstr "Feed-Adresse eintragen und wöchentlichen Versand am Tag der Wochenvorschau wählen."
 
-#: includes/class-admin.php:1755
+#: includes/class-admin.php:1764
 msgid "In the content, use <code>*|RSSITEMS:|*</code> <code>*|RSSITEM:CONTENT_FULL|*</code> <code>*|END:RSSITEMS|*</code> for the whole preview."
 msgstr "Im Inhalt <code>*|RSSITEMS:|*</code> <code>*|RSSITEM:CONTENT_FULL|*</code> <code>*|END:RSSITEMS|*</code> für die ganze Vorschau verwenden."
 
-#: includes/class-admin.php:1757
+#: includes/class-admin.php:1766
 msgid "Mailchimp help: RSS merge tags"
 msgstr "Mailchimp-Hilfe: RSS-Merge-Tags"
 
-#: includes/class-admin.php:1762
+#: includes/class-admin.php:1771
 msgid "Create a campaign of the type \"RSS campaign\" (only in paid plans)."
 msgstr "Eine Kampagne vom Typ „RSS-Kampagne“ anlegen (nur in bezahlten Tarifen)."
 
-#: includes/class-admin.php:1763
+#: includes/class-admin.php:1772
 msgid "Enter the feed address, choose weekly sending and \"only new posts\"."
 msgstr "Feed-Adresse eintragen, wöchentlichen Versand und „nur neue Beiträge“ wählen."
 
-#: includes/class-admin.php:1764
+#: includes/class-admin.php:1773
 msgid "In the design, add an RSS block and choose the full content."
 msgstr "Im Design einen RSS-Block einfügen und den ganzen Inhalt wählen."
 
-#: includes/class-admin.php:1766
+#: includes/class-admin.php:1775
 msgid "MailerLite help: RSS campaign"
 msgstr "MailerLite-Hilfe: RSS-Kampagne"
 
-#: includes/class-admin.php:1769
+#: includes/class-admin.php:1778
 msgid "Other services"
 msgstr "Andere Dienste"
 
-#: includes/class-admin.php:1771
+#: includes/class-admin.php:1780
 msgid "Look for \"RSS-to-email\" or \"RSS campaign\"."
 msgstr "Nach „RSS-zu-E-Mail“ oder „RSS-Kampagne“ suchen."
 
-#: includes/class-admin.php:1772
+#: includes/class-admin.php:1781
 msgid "Send weekly, only new entries, with the full content of the entry (field content:encoded), not just the description."
 msgstr "Wöchentlich verschicken, nur neue Einträge, mit dem ganzen Inhalt des Eintrags (Feld content:encoded), nicht nur der Beschreibung."
 
-#: includes/class-admin.php:1789
+#: includes/class-admin.php:1798
 msgid "In the EU, newsletters need a double opt-in and the legal notice of the sender. Signup forms come from your newsletter service."
 msgstr "In der EU brauchen Newsletter ein Double-Opt-in und das Impressum des Absenders. Anmeldeformulare kommen von deinem Newsletter-Dienst."
 
-#: includes/class-admin.php:1792
+#: includes/class-admin.php:1801
 msgid "Send directly"
 msgstr "Direkt verschicken"
 
-#: includes/class-admin.php:1796
+#: includes/class-admin.php:1805
 msgid "Sending"
 msgstr "Versand"
 
-#: includes/class-admin.php:1796
+#: includes/class-admin.php:1805
 msgid "Send the weekly preview to the list at its time"
 msgstr "Wochenvorschau zu ihrer Zeit an die Liste schicken"
 
-#: includes/class-admin.php:1796
+#: includes/class-admin.php:1805
 msgid "Leave this off if your service already uses the RSS feed, or subscribers get two mails."
 msgstr "Lass das aus, wenn dein Dienst schon den RSS-Feed nutzt, sonst bekommen Abonnent:innen zwei Mails."
 
-#: includes/class-admin.php:1797
+#: includes/class-admin.php:1806
 msgid "Service"
 msgstr "Dienst"
 
-#: includes/class-admin.php:1797
+#: includes/class-admin.php:1806
 msgid "Choose …"
 msgstr "Auswählen …"
 
-#: includes/class-admin.php:1798
+#: includes/class-admin.php:1807
 msgid "API key"
 msgstr "API-Schlüssel"
 
-#: includes/class-admin.php:1803
+#: includes/class-admin.php:1812
 msgid "List or audience"
 msgstr "Liste oder Audience"
 
-#: includes/class-admin.php:1803
+#: includes/class-admin.php:1812
 msgid "Brevo: number of the contact list, e.g. <code>3</code>. Emailit: audience ID, e.g. <code>aud_…</code>."
 msgstr "Brevo: Nummer der Kontaktliste, z. B. <code>3</code>. Emailit: Audience-ID, z. B. <code>aud_…</code>."
 
-#: includes/class-admin.php:1804
+#: includes/class-admin.php:1813
 msgid "Sender name"
 msgstr "Absendername"
 
-#: includes/class-admin.php:1805
+#: includes/class-admin.php:1814
 msgid "Sender address"
 msgstr "Absenderadresse"
 
-#: includes/class-admin.php:1805
+#: includes/class-admin.php:1814
 msgid "Must be verified with the service."
 msgstr "Muss beim Dienst bestätigt sein."
 
-#: includes/class-admin.php:1806
+#: includes/class-admin.php:1815
 msgid "Subject"
 msgstr "Betreff"
 
-#: includes/class-admin.php:1806
+#: includes/class-admin.php:1815
 msgid "Empty = \"Weekly preview\" with the date."
 msgstr "Leer = „Wochenvorschau“ mit Datum."
 
-#: includes/class-admin.php:1807
+#: includes/class-admin.php:1816
 msgid "Footer"
 msgstr "Fußzeile"
 
-#: includes/class-admin.php:1807
+#: includes/class-admin.php:1816
 msgid "Name and postal address of the sender (legal notice). The unsubscribe link is added automatically."
 msgstr "Name und Postanschrift des Absenders (Impressum). Der Abmeldelink kommt automatisch dazu."
 
-#: includes/class-admin.php:1808
+#: includes/class-admin.php:1817
 msgid "Test address"
 msgstr "Testadresse"
 
-#: includes/class-admin.php:1815
+#: includes/class-admin.php:1824
 msgid "Send a test mail"
 msgstr "Testmail schicken"
 
-#: includes/class-admin.php:1821
+#: includes/class-admin.php:1830
 msgid "The test mail goes only to the test address, not to the list."
 msgstr "Die Testmail geht nur an die Testadresse, nicht an die Liste."
 
-#: includes/class-admin.php:1875
+#: includes/class-admin.php:1884
 msgid "Nothing to send: no events in the coming days and nothing new."
 msgstr "Nichts zu verschicken: keine Termine in den nächsten Tagen und nichts Neues."
 
 #. translators: %s: e-mail address
-#: includes/class-admin.php:1880
+#: includes/class-admin.php:1889
 #, php-format
 msgid "Test mail sent to %s."
 msgstr "Testmail an %s geschickt."
@@ -1697,7 +1693,7 @@ msgstr "Keine weiteren Termine in den nächsten 14 Tagen."
 msgid "The day before"
 msgstr "Am Vortag"
 
-#: includes/class-admin.php:1239
+#: includes/class-admin.php:1248
 #: includes/class-share-kit.php:92
 msgid "On the day"
 msgstr "Am Tag selbst"
@@ -1747,7 +1743,7 @@ msgstr "Heute: %s"
 msgid "Tomorrow: %s"
 msgstr "Morgen: %s"
 
-#: includes/class-admin.php:1267
+#: includes/class-admin.php:1276
 #: includes/class-share.php:151
 #: includes/class-sharepic.php:149
 #: includes/class-sharepic.php:379
@@ -1919,21 +1915,21 @@ msgid "%1$s, %2$s – posted."
 msgstr "%1$s, %2$s: gepostet."
 
 #. translators: %s: error message
-#: includes/telegram/class-telegram-scheduler.php:79
-#: includes/telegram/class-telegram-scheduler.php:119
+#: includes/telegram/class-telegram-scheduler.php:80
+#: includes/telegram/class-telegram-scheduler.php:127
 #, php-format
 msgid "Error: %s"
 msgstr "Fehler: %s"
 
-#: includes/telegram/class-telegram-scheduler.php:113
+#: includes/telegram/class-telegram-scheduler.php:114
 msgid "Nothing posted: no events in the coming days and nothing new."
 msgstr "Nichts gepostet: keine Termine in den nächsten Tagen und nichts Neues."
 
-#: includes/telegram/class-telegram-scheduler.php:125
+#: includes/telegram/class-telegram-scheduler.php:133
 msgid "Posted."
 msgstr "Gepostet."
 
-#: includes/telegram/class-telegram-settings.php:54
+#: includes/telegram/class-telegram-settings.php:56
 msgid "The bot token does not look valid. It was not saved."
 msgstr "Der Bot-Token sieht nicht gültig aus und wurde nicht gespeichert."
 
@@ -1957,39 +1953,39 @@ msgstr "Telegram meldet: %s"
 msgid "The token works, but the plugin could not find the Instagram account. Enter the account ID below (in the Meta app under \"Generate access tokens\", below the account name) and save again. (Token belongs to: %s)"
 msgstr "Der Token funktioniert, aber das Plugin hat das Instagram-Konto nicht gefunden. Trag unten die Konto-ID ein (in der Meta-App unter „Zugriffstokens generieren“ unter dem Kontonamen) und speichere noch einmal. (Token gehört zu: %s)"
 
-#: includes/class-admin.php:1353
+#: includes/class-admin.php:1362
 msgid "Instagram account ID"
 msgstr "Instagram-Konto-ID"
 
-#: includes/class-admin.php:1356
+#: includes/class-admin.php:1365
 msgid "Filled in automatically. Only needed if the plugin cannot find the account: in the Meta app under \"Generate access tokens\", the number below the account name."
 msgstr "Wird automatisch ausgefüllt. Nur nötig, wenn das Plugin das Konto nicht findet: in der Meta-App unter „Zugriffstokens generieren“ die Zahl unter dem Kontonamen."
 
-#: includes/class-admin.php:1423
+#: includes/class-admin.php:1432
 msgid "In the Instagram app, switch the account to a business account (Settings → Account type and tools; free of charge) and link it to the Facebook Page of your organisation."
 msgstr "Stell das Konto in der Instagram-App auf ein Unternehmenskonto um (Einstellungen → Kontoart und Tools; kostenlos) und verknüpf es mit der Facebook-Seite deines Vereins oder Unternehmens."
 
-#: includes/class-admin.php:1424
+#: includes/class-admin.php:1433
 msgid "Your Facebook account needs access to that Page and full access to the Instagram account. In a business portfolio, check this under Settings → Instagram accounts → People."
 msgstr "Dein Facebook-Konto braucht Zugriff auf diese Seite und vollen Zugriff auf das Instagram-Konto. In einem Business-Portfolio prüfst du das unter Einstellungen → Instagram-Konten → Personen."
 
-#: includes/class-admin.php:1425
+#: includes/class-admin.php:1434
 msgid "On <a href=\"https://developers.facebook.com/apps/\" target=\"_blank\" rel=\"noopener\">developers.facebook.com</a>, create an app with the use case \"Manage messaging & content on Instagram\". In the app, open Use cases → Customize → \"API setup with Facebook login\" and click \"Add required content permissions\". The app can stay in development mode; it only posts to your own account, so Meta does not need to review it."
 msgstr "Leg auf <a href=\"https://developers.facebook.com/apps/\" target=\"_blank\" rel=\"noopener\">developers.facebook.com</a> eine App mit dem Anwendungsfall „Messaging und Content auf Instagram verwalten“ an. Öffne in der App Anwendungsfälle → Anpassen → „API-Einrichtung mit Facebook-Login“ und klick auf „Add required content permissions“. Die App kann im Entwicklungsmodus bleiben; sie postet nur auf dein eigenes Konto, deshalb muss Meta sie nicht prüfen."
 
-#: includes/class-admin.php:1426
+#: includes/class-admin.php:1435
 msgid "Open the <a href=\"https://developers.facebook.com/tools/explorer/\" target=\"_blank\" rel=\"noopener\">Graph API Explorer</a>, select your app and add the permissions instagram_basic, instagram_content_publish, pages_show_list, pages_read_engagement and business_management. Click \"Generate Access Token\" and select your Page and your Instagram account."
 msgstr "Öffne den <a href=\"https://developers.facebook.com/tools/explorer/\" target=\"_blank\" rel=\"noopener\">Graph API Explorer</a>, wähl deine App aus und füg die Berechtigungen instagram_basic, instagram_content_publish, pages_show_list, pages_read_engagement und business_management hinzu. Klick auf „Generate Access Token“ und wähl deine Seite und dein Instagram-Konto aus."
 
-#: includes/class-admin.php:1427
+#: includes/class-admin.php:1436
 msgid "Make the token long-lived: click the (i) next to the token, then \"Open in Access Token Tool\", then \"Extend Access Token\" at the bottom. Copy the extended token."
 msgstr "Mach den Token langlebig: Klick auf das (i) neben dem Token, dann auf „Im Zugriffsschlüssel-Tool öffnen“ und dort unten auf „Zugriffsschlüssel verlängern“. Kopier den verlängerten Token."
 
-#: includes/class-admin.php:1430
+#: includes/class-admin.php:1439
 msgid "Other tokens work as well: those of older apps with \"API setup with Instagram login\" (starting with IGAA, renewed every week) and system user tokens from \"API setup with Unified login\". With the latter, Meta did not always give access to the Instagram account in our tests."
 msgstr "Andere Tokens funktionieren auch: die älterer Apps mit „API-Einrichtung mit Instagram-Login“ (beginnen mit IGAA, werden jede Woche verlängert) und Systemnutzer-Tokens aus „API setup with Unified login“. Bei Letzteren hat Meta in unseren Tests nicht immer Zugriff auf das Instagram-Konto gegeben."
 
-#: includes/class-admin.php:1428
+#: includes/class-admin.php:1437
 msgid "Paste the token above and save. The plugin finds the Instagram account and keeps the token of your Page instead. The Access Token Tool says your extended token expires after 60 days; the Page token does not. It only stops working in certain cases, for example when you change your Facebook password or lose access to the Page. Then a notice appears in the admin area."
 msgstr "Füg den Token oben ein und speichere. Das Plugin findet das Instagram-Konto und speichert stattdessen den Token deiner Seite. Das Zugriffsschlüssel-Tool zeigt für deinen verlängerten Token ein Ablaufdatum in 60 Tagen; der Token der Seite läuft dagegen nicht ab. Er wird nur in bestimmten Fällen ungültig, etwa wenn du dein Facebook-Passwort änderst oder den Zugriff auf die Seite verlierst. Dann erscheint ein Hinweis im Adminbereich."
 
@@ -2112,11 +2108,11 @@ msgstr "Jeder Betrag hilft. Alle Funktionen bleiben verfügbar, ob mit oder ohne
 msgid "As a thank-you there is a badge here in the admin area: a bronze heart after the first donation, a silver one after the second, a gold one from the third."
 msgstr "Als Dankeschön gibt es eine Auszeichnung hier im Adminbereich: ein bronzenes Herz nach der ersten Spende, ein silbernes nach der zweiten, ein goldenes ab der dritten."
 
-#: includes/class-admin.php:976
+#: includes/class-admin.php:985
 msgid "One message per day with all events of the day. Not on the day of the weekly preview, which already lists them."
 msgstr "Eine Nachricht pro Tag mit allen Terminen des Tages. Am Tag der Wochenvorschau entfällt sie, weil die Vorschau die Termine schon nennt."
 
-#: includes/class-admin.php:977
+#: includes/class-admin.php:986
 msgid "Silent: members see the message in the chat, but their phone does not ring. Fewer notifications mean fewer members who mute the chat."
 msgstr "Lautlos: Die Nachricht steht im Chat, aber das Handy klingelt nicht. Wer seltener benachrichtigt wird, schaltet den Chat seltener stumm."
 
@@ -2233,23 +2229,23 @@ msgstr "Versalien"
 msgid "Remove"
 msgstr "Entfernen"
 
-#: includes/class-admin.php:1181
+#: includes/class-admin.php:1190
 msgid "Looks"
 msgstr "Looks"
 
-#: includes/class-admin.php:1190
+#: includes/class-admin.php:1199
 msgid "A look sets colours, background and capitals. Your picture, fonts and bottom line stay."
 msgstr "Ein Look setzt Farben, Hintergrund und Versalien. Dein Bild, die Schriften und die Zeile unten bleiben."
 
-#: includes/class-admin.php:1233
+#: includes/class-admin.php:1242
 msgid "The preview needs an upcoming event."
 msgstr "Für die Vorschau braucht es eine kommende Veranstaltung."
 
-#: includes/class-admin.php:1238
+#: includes/class-admin.php:1247
 msgid "One event"
 msgstr "Eine Veranstaltung"
 
-#: includes/class-admin.php:1247
+#: includes/class-admin.php:1256
 msgid "Preview of unsaved changes. Save to use them."
 msgstr "Vorschau ungespeicherter Änderungen. Speichere, um sie zu übernehmen."
 
@@ -2336,3 +2332,33 @@ msgstr "Weiter als auf der Website (%s)"
 #: includes/class-settings.php:315
 msgid "No letter spacing (0 %)"
 msgstr "Ohne Buchstabenabstand (0 %)"
+
+#: includes/class-admin.php:954
+msgid "Second chat (optional)"
+msgstr "Zweiter Chat (optional)"
+
+#: includes/class-admin.php:957
+msgid "Topic ID"
+msgstr "Themen-ID"
+
+#: includes/class-admin.php:959
+msgid "Every post goes here too, e.g. to a public announcement channel next to your group. The same bot works: add it to the channel as administrator with the right to post messages. For a public channel, <code>@channelname</code> works as well as the numeric ID. Channels have no topics; leave the topic empty."
+msgstr "Jeder Beitrag geht auch hierhin, z. B. in einen öffentlichen Ankündigungskanal neben deiner Gruppe. Derselbe Bot reicht: Füge ihn dem Kanal als Administrator mit dem Recht hinzu, Nachrichten zu posten. Bei einem öffentlichen Kanal funktioniert <code>@kanalname</code> genauso wie die numerische ID. Kanäle haben keine Themen; lass die Themen-ID leer."
+
+#: includes/class-admin.php:1005
+msgid "The preview was posted to both chats."
+msgstr "Die Vorschau wurde in beide Chats gepostet."
+
+#: includes/class-admin.php:1121
+msgid "Goes to the chats and topics above. Does not change the weekly schedule."
+msgstr "Geht an die Chats und Themen oben. Ändert den Wochenplan nicht."
+
+#. translators: %s: error message
+#: includes/telegram/class-telegram-scheduler.php:121
+#, php-format
+msgid "Posted, but not to every chat: %s"
+msgstr "Gepostet, aber nicht in jeden Chat: %s"
+
+#: includes/telegram/class-telegram.php:81
+msgid "No chat ID saved."
+msgstr "Keine Chat-ID gespeichert."

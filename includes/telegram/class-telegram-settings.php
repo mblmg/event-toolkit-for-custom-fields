@@ -18,6 +18,8 @@ class ETCF_Telegram_Settings
             'token'        => '',
             'chat_id'      => '',
             'thread_id'    => '',
+            'chat_id_2'    => '',      // Optional second chat, e.g. a public announcement channel.
+            'thread_id_2'  => '',
             'link_preview' => 'above', // Preview with image for the next event: above, below or none.
             'today'        => 0,       // "Today" post on event days.
             'today_time'   => '12:00',
@@ -64,12 +66,32 @@ class ETCF_Telegram_Settings
             'token'        => $token,
             'chat_id'      => preg_replace('/[^0-9\-@A-Za-z_]/', '', (string) ($input['chat_id'] ?? '')),
             'thread_id'    => preg_replace('/\D/', '', (string) ($input['thread_id'] ?? '')),
+            'chat_id_2'    => preg_replace('/[^0-9\-@A-Za-z_]/', '', (string) ($input['chat_id_2'] ?? '')),
+            'thread_id_2'  => preg_replace('/\D/', '', (string) ($input['thread_id_2'] ?? '')),
             'link_preview' => in_array($input['link_preview'] ?? '', ['above', 'below', 'none'], true) ? $input['link_preview'] : 'above',
             'today'        => empty($input['today']) ? 0 : 1,
             'today_silent' => empty($input['today_silent']) ? 0 : 1,
             'notify_status' => empty($input['notify_status']) ? 0 : 1,
             'today_time'   => preg_match('/^([01]?\d|2[0-3]):([0-5]\d)$/', trim((string) ($input['today_time'] ?? '')), $m) ? sprintf('%02d:%02d', $m[1], $m[2]) : '12:00',
         ];
+    }
+
+    /**
+     * Chats every post goes to: the first chat and, if set, the second one.
+     *
+     * @return array List of ['chat_id', 'thread_id'].
+     */
+    public static function targets(): array
+    {
+        $all     = self::all();
+        $targets = [];
+        foreach (['', '_2'] as $suffix) {
+            $chat = (string) $all['chat_id' . $suffix];
+            if ($chat !== '' && !isset($targets[$chat . '/' . $all['thread_id' . $suffix]])) {
+                $targets[$chat . '/' . $all['thread_id' . $suffix]] = ['chat_id' => $chat, 'thread_id' => (string) $all['thread_id' . $suffix]];
+            }
+        }
+        return array_values($targets);
     }
 
     /** Token and chat are set. */

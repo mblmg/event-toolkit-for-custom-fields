@@ -70,9 +70,10 @@ class ETCF_Telegram_Scheduler
             return;
         }
         $result = ETCF_Telegram::post_today($now);
-        if (is_array($result)) {
+        if (ETCF_Telegram::delivered($result)) {
             ETCF_Telegram_Settings::update_state(['today_sent' => $date]);
-        } elseif (is_wp_error($result)) {
+        }
+        if (is_wp_error($result)) {
             ETCF_Telegram_Settings::update_state([
                 'last_run'    => time(),
                 /* translators: %s: error message */
@@ -111,6 +112,13 @@ class ETCF_Telegram_Scheduler
             ETCF_Telegram_Settings::update_state([
                 'last_run'    => $now,
                 'last_result' => __('Nothing posted: no events in the coming days and nothing new.', 'event-toolkit-for-custom-fields'),
+            ]);
+        } elseif (is_wp_error($result) && ETCF_Telegram::delivered($result)) {
+            ETCF_Telegram_Settings::update_state([
+                'last_run'    => $now,
+                'last_sent'   => $now,
+                /* translators: %s: error message */
+                'last_result' => sprintf(__('Posted, but not to every chat: %s', 'event-toolkit-for-custom-fields'), $result->get_error_message()),
             ]);
         } elseif (is_wp_error($result)) {
             ETCF_Telegram_Settings::update_state([
