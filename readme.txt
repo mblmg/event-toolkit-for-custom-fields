@@ -5,7 +5,7 @@ Tags: events, calendar, newsletter, instagram, telegram
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.11.0
+Stable tag: 2.11.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -250,6 +250,9 @@ No data about visitors of your site is sent. [Terms of Use](https://help.instagr
 **PayPal (donations).** The admin pages contain a donation link to PayPal (paypal.com), provided by PayPal (Europe) S.à r.l. et Cie, S.C.A. It only opens when an administrator clicks it; the plugin sends no data to PayPal and PayPal does not report back to your site. [User Agreement](https://www.paypal.com/legalhub/paypal/useragreement-full), [Privacy Statement](https://www.paypal.com/myaccount/privacy/privacyhub)
 
 == Changelog ==
+
+= 2.11.1 =
+* Story images: the shadow of the polaroids is smooth, without visible steps on light backgrounds.
 
 = 2.11.0 =
 * Story images: featured images in landscape format are no longer cut off at the sides. The polaroid takes the format of the picture (wider and flatter, up to 3 : 1); square and portrait pictures stay square.

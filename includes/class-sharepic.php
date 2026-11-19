@@ -28,7 +28,7 @@ class ETCF_Sharepic
     const MAX_SINGLE = 3;
     const DIR = 'event-toolkit/stories';
     /** Raise when the layout changes, so cached images are rendered again. */
-    const DESIGN = 8;
+    const DESIGN = 9;
     /** Letter spacing of headings in em, added to the website's spacing ("tight", "wide"). */
     const TRACKING = ['tight' => -0.015, 'wide' => 0.04];
 
@@ -1008,14 +1008,25 @@ class ETCF_Sharepic
         imagecopy($patch, $sil, $pad, $pad, 0, 0, $w, $h);
         imagedestroy($sil);
 
-        $f     = max(4, (int) ($blur / 3));
-        $small = imagecreatetruecolor((int) ceil(imagesx($patch) / $f), (int) ceil(imagesy($patch) / $f));
+        // Blurred at a lower resolution (fast) in many small passes for an even falloff, then
+        // scaled up step by step, each step doubled and softened again: smooth, without the
+        // blocks a single big enlargement leaves on light backgrounds.
+        $f      = $blur >= 16 ? 4 : 2;
+        $sigma  = 1.4 * max(4, (int) ($blur / 3)) / $f; // In pixels of the small image.
+        $passes = max(4, (int) round(($sigma / 0.7) ** 2));
+        $small  = imagecreatetruecolor((int) ceil(imagesx($patch) / $f), (int) ceil(imagesy($patch) / $f));
         imagecopyresampled($small, $patch, 0, 0, 0, 0, imagesx($small), imagesy($small), imagesx($patch), imagesy($patch));
-        for ($i = 0; $i < 4; $i++) {
+        for ($i = 0; $i < $passes; $i++) {
             imagefilter($small, IMG_FILTER_GAUSSIAN_BLUR);
         }
-        imagecopyresampled($patch, $small, 0, 0, 0, 0, imagesx($patch), imagesy($patch), imagesx($small), imagesy($small));
-        imagedestroy($small);
+        for ($step = $f / 2; $step >= 1; $step /= 2) {
+            $next = $step > 1 ? imagecreatetruecolor((int) ceil(imagesx($patch) / $step), (int) ceil(imagesy($patch) / $step)) : $patch;
+            imagecopyresampled($next, $small, 0, 0, 0, 0, imagesx($next), imagesy($next), imagesx($small), imagesy($small));
+            imagedestroy($small);
+            imagefilter($next, IMG_FILTER_GAUSSIAN_BLUR);
+            imagefilter($next, IMG_FILTER_GAUSSIAN_BLUR);
+            $small = $next;
+        }
 
         if (defined('IMG_EFFECT_MULTIPLY')) {
             imagelayereffect($canvas, IMG_EFFECT_MULTIPLY);
