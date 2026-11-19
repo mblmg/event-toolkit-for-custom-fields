@@ -8,10 +8,13 @@ Where the plugin stands and what comes next. Keep this file up to date when a fe
 
 ## Status
 
-- Current version: **2.10.1** (on GitHub `main`; not yet submitted to WordPress.org).
+- Current version: **2.10.2** (on GitHub `main`; not yet submitted to WordPress.org).
 - Releases: see [README.md](README.md#releasing). Deployment to WordPress.org runs from the Release workflow once the plugin is approved.
 
 ## Shipped
+
+**2.10.2**
+- Brevo (help center, RSS default template article): placeholders `{{ item.KEY }}` only inside a repeat block, `content:encoded` → `CONTENT_ENCODED`, `| safe` for HTML; campaign name/subject take `{feed.KEY}` / `{item.KEY}` with single braces, no `time_parse`. The editor preview does not fill RSS placeholders (seen by the user 2026-11-19: the template is accepted, design right, placeholders raw). Guide extended, template subject `{item.TITLE}`.
 
 **2.10.1**
 - Mail frame with a plain background: card colour shifted 8 % towards the text colour (was the unused second colour). Google Fonts stylesheet checked once a month; without weights if Google answers 400.
@@ -81,7 +84,7 @@ Where the plugin stands and what comes next. Keep this file up to date when a fe
 ## Needs verification
 
 All API clients below are tested against mocked APIs only.
-- **Brevo template (YAML)** pasted into the developer mode with a real account: accepted without `user-hash`? Repeat block filled from the feed, `| safe` renders the HTML, Google font loaded.
+- **Brevo template (YAML)**: accepted without `user-hash` and design right (user, 2026-11-19). Still open: repeat block filled in a real RSS campaign, `| safe` renders the HTML, Google font loaded.
 - **Brevo and Emailit direct sending** with real accounts: campaign creation, recipients, sending, test mail; Emailit response shape (`id` vs. `data.id`).
 - **Mastodon and Bluesky** with real accounts: media upload, image descriptions, Bluesky facets and aspect ratio.
 - **Instagram with a real account.** The API client is tested against a mocked API only. Needs a business account and a Meta app (development mode) with a long-lived token. Check: container creation with `media_type=STORIES`, status polling, publishing, token refresh after 7 days, behaviour when Instagram cannot fetch the image.

@@ -37,7 +37,6 @@ class ETCF_Brevo_Template
         $p     = ETCF_Newsletter::palette();
         $type  = ETCF_Newsletter::type();
         $fonts = ETCF_Fonts::google_css_url([$type['heading_family'], $type['text_family']], $type['weight']);
-        $site  = (string) ETCF_Settings::get('feed_title') ?: get_bloginfo('name');
 
         $doc = [
             'author'               => '',
@@ -48,8 +47,8 @@ class ETCF_Brevo_Template
             'fonts'                => $fonts !== '' ? [$fonts] : [],
             'id'                   => self::id('document'),
             'name'                 => '',
-            /* translators: %s: name of the site or calendar */
-            'subject'              => sprintf(__('%s: weekly preview', 'event-toolkit-for-custom-fields'), $site),
+            // Title of the feed item (single braces: placeholder of RSS campaign settings).
+            'subject'              => '{item.TITLE}',
             'version'              => self::VERSION,
             'body'                 => [
                 'id'      => self::id('body'),

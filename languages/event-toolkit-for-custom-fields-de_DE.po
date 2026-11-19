@@ -157,7 +157,7 @@ msgid "Newsletter"
 msgstr "Newsletter"
 
 #: includes/class-admin.php:226
-#: includes/class-admin.php:1820
+#: includes/class-admin.php:1822
 msgid "Story images"
 msgstr "Story-Bilder"
 
@@ -709,7 +709,7 @@ msgstr "Adresse zum Abonnieren des Kalenders"
 #: includes/class-admin.php:998
 #: includes/class-admin.php:1393
 #: includes/class-admin.php:1588
-#: includes/class-admin.php:1845
+#: includes/class-admin.php:1847
 msgid "Save settings"
 msgstr "Einstellungen speichern"
 
@@ -748,8 +748,8 @@ msgstr "Wert"
 #: includes/class-admin.php:1094
 #: includes/class-admin.php:1247
 #: includes/class-admin.php:1628
-#: includes/class-admin.php:1865
-#: includes/class-admin.php:1873
+#: includes/class-admin.php:1867
+#: includes/class-admin.php:1875
 msgid "Preview"
 msgstr "Vorschau"
 
@@ -816,7 +816,7 @@ msgstr "Trag diese Adresse in einer RSS-Kampagne deines Newsletter-Dienstes ein 
 #: includes/class-admin.php:892
 #: includes/class-admin.php:1099
 #: includes/class-admin.php:1631
-#: includes/class-admin.php:1868
+#: includes/class-admin.php:1870
 #: includes/class-share-kit.php:74
 msgid "Right now there would be nothing in it: no events in the coming days and nothing new."
 msgstr "Im Moment stünde nichts darin: keine Termine in den nächsten Tagen und nichts Neues."
@@ -846,7 +846,7 @@ msgstr "Bot-Token"
 #: includes/class-admin.php:939
 #: includes/class-admin.php:1361
 #: includes/class-admin.php:1555
-#: includes/class-admin.php:1833
+#: includes/class-admin.php:1835
 msgid "Saved. Leave empty to keep it."
 msgstr "Gespeichert. Leer lassen, um ihn zu behalten."
 
@@ -990,9 +990,9 @@ msgstr "Diese Vorschau jetzt in den Chat posten"
 #: includes/class-admin.php:1527
 #: includes/class-admin.php:1656
 #: includes/class-admin.php:1679
-#: includes/class-admin.php:1893
-#: includes/class-admin.php:1906
-#: includes/class-admin.php:1918
+#: includes/class-admin.php:1895
+#: includes/class-admin.php:1908
+#: includes/class-admin.php:1920
 #: includes/class-donation.php:219
 #: includes/class-donation.php:234
 #: includes/class-share.php:145
@@ -1101,7 +1101,7 @@ msgstr "Damit Follower denselben Termin nicht zu oft sehen: Am Tag der Wochenüb
 
 #: includes/class-admin.php:1401
 #: includes/class-admin.php:1595
-#: includes/class-admin.php:1850
+#: includes/class-admin.php:1852
 msgid "Check connection"
 msgstr "Verbindung prüfen"
 
@@ -1120,7 +1120,7 @@ msgstr "Instagram verbinden"
 
 #: includes/class-admin.php:1425
 #: includes/class-admin.php:1612
-#: includes/class-admin.php:1879
+#: includes/class-admin.php:1881
 msgid "Recent activity"
 msgstr "Letzte Aktivitäten"
 
@@ -1166,7 +1166,7 @@ msgid "Nothing to post: no stories planned for today, or all of them are online 
 msgstr "Nichts zu posten: Für heute ist keine Story geplant, oder alle sind schon online."
 
 #: includes/class-admin.php:1557
-#: includes/class-admin.php:1835
+#: includes/class-admin.php:1837
 msgid "Delete"
 msgstr "Löschen"
 
@@ -1289,204 +1289,195 @@ msgstr "In Brevo die Integrationen öffnen und „RSS-Kampagne“ hinzufügen."
 msgid "Paste the feed address and load the feed."
 msgstr "Feed-Adresse einfügen und den Feed laden."
 
-#: includes/class-admin.php:1741
-msgid "Choose the contact list, subject and sender."
-msgstr "Kontaktliste, Betreff und Absender wählen."
-
-#: includes/class-admin.php:1742
-msgid "Schedule: weekly, on the day of the weekly preview, at least one hour after its time. Brevo creates no campaign when the feed has nothing new."
-msgstr "Zeitplan: wöchentlich, am Tag der Wochenvorschau, mindestens eine Stunde nach ihrer Uhrzeit. Brevo legt keine Kampagne an, wenn im Feed nichts Neues steht."
-
-#: includes/class-admin.php:1743
+#: includes/class-admin.php:1745
 msgid "Save and activate."
 msgstr "Speichern und aktivieren."
 
-#: includes/class-admin.php:1745
+#: includes/class-admin.php:1747
 msgid "Brevo help: RSS campaign"
 msgstr "Brevo-Hilfe: RSS-Kampagne"
 
-#: includes/class-admin.php:1748
+#: includes/class-admin.php:1750
 msgid "Brevo, sent directly"
 msgstr "Brevo, direkt verschickt"
 
-#: includes/class-admin.php:1750
+#: includes/class-admin.php:1752
 msgid "In Brevo, create an API key (account menu, \"SMTP & API\", tab \"API keys\")."
 msgstr "In Brevo einen API-Schlüssel anlegen (Kontomenü, „SMTP & API“, Reiter „API-Schlüssel“)."
 
-#: includes/class-admin.php:1751
+#: includes/class-admin.php:1753
 msgid "Note the ID of the contact list (Contacts, Lists)."
 msgstr "Die ID der Kontaktliste notieren (Kontakte, Listen)."
 
-#: includes/class-admin.php:1752
+#: includes/class-admin.php:1754
 msgid "Use a sender address that is verified in Brevo (Senders, domains)."
 msgstr "Eine Absenderadresse nehmen, die in Brevo bestätigt ist (Absender, Domains)."
 
-#: includes/class-admin.php:1753
+#: includes/class-admin.php:1755
 msgid "Enter everything below, choose \"Brevo\", send a test mail and switch on sending."
 msgstr "Alles unten eintragen, „Brevo“ wählen, eine Testmail schicken und den Versand einschalten."
 
-#: includes/class-admin.php:1758
+#: includes/class-admin.php:1760
 msgid "Emailit, sent directly"
 msgstr "Emailit, direkt verschickt"
 
-#: includes/class-admin.php:1760
+#: includes/class-admin.php:1762
 msgid "In Emailit, verify your sending domain."
 msgstr "In Emailit die Absenderdomain bestätigen."
 
-#: includes/class-admin.php:1761
+#: includes/class-admin.php:1763
 msgid "Create an audience for the newsletter and note its ID (starts with <code>aud_</code>)."
 msgstr "Eine Audience für den Newsletter anlegen und ihre ID notieren (beginnt mit <code>aud_</code>)."
 
-#: includes/class-admin.php:1762
+#: includes/class-admin.php:1764
 msgid "Create an API key with full access (scope \"full\"); campaigns need it."
 msgstr "Einen API-Schlüssel mit vollem Zugriff anlegen (Scope „full“), den brauchen Kampagnen."
 
-#: includes/class-admin.php:1763
+#: includes/class-admin.php:1765
 msgid "Enter everything below, choose \"Emailit\", send a test mail and switch on sending."
 msgstr "Alles unten eintragen, „Emailit“ wählen, eine Testmail schicken und den Versand einschalten."
 
-#: includes/class-admin.php:1765
+#: includes/class-admin.php:1767
 msgid "Emailit documentation: campaigns"
 msgstr "Emailit-Dokumentation: Kampagnen"
 
-#: includes/class-admin.php:1770
+#: includes/class-admin.php:1772
 msgid "Automations, Classic automations, \"Share blog updates\"."
 msgstr "Automatisierungen, klassische Automatisierungen, „Blog-Updates teilen“."
 
-#: includes/class-admin.php:1771
+#: includes/class-admin.php:1773
 msgid "Enter the feed address and choose weekly sending on the day of the weekly preview."
 msgstr "Feed-Adresse eintragen und wöchentlichen Versand am Tag der Wochenvorschau wählen."
 
-#: includes/class-admin.php:1772
+#: includes/class-admin.php:1774
 msgid "In the content, use <code>*|RSSITEMS:|*</code> <code>*|RSSITEM:CONTENT_FULL|*</code> <code>*|END:RSSITEMS|*</code> for the whole preview."
 msgstr "Im Inhalt <code>*|RSSITEMS:|*</code> <code>*|RSSITEM:CONTENT_FULL|*</code> <code>*|END:RSSITEMS|*</code> für die ganze Vorschau verwenden."
 
-#: includes/class-admin.php:1774
+#: includes/class-admin.php:1776
 msgid "Mailchimp help: RSS merge tags"
 msgstr "Mailchimp-Hilfe: RSS-Merge-Tags"
 
-#: includes/class-admin.php:1779
+#: includes/class-admin.php:1781
 msgid "Create a campaign of the type \"RSS campaign\" (only in paid plans)."
 msgstr "Eine Kampagne vom Typ „RSS-Kampagne“ anlegen (nur in bezahlten Tarifen)."
 
-#: includes/class-admin.php:1780
+#: includes/class-admin.php:1782
 msgid "Enter the feed address, choose weekly sending and \"only new posts\"."
 msgstr "Feed-Adresse eintragen, wöchentlichen Versand und „nur neue Beiträge“ wählen."
 
-#: includes/class-admin.php:1781
+#: includes/class-admin.php:1783
 msgid "In the design, add an RSS block and choose the full content."
 msgstr "Im Design einen RSS-Block einfügen und den ganzen Inhalt wählen."
 
-#: includes/class-admin.php:1783
+#: includes/class-admin.php:1785
 msgid "MailerLite help: RSS campaign"
 msgstr "MailerLite-Hilfe: RSS-Kampagne"
 
-#: includes/class-admin.php:1786
+#: includes/class-admin.php:1788
 msgid "Other services"
 msgstr "Andere Dienste"
 
-#: includes/class-admin.php:1788
+#: includes/class-admin.php:1790
 msgid "Look for \"RSS-to-email\" or \"RSS campaign\"."
 msgstr "Nach „RSS-zu-E-Mail“ oder „RSS-Kampagne“ suchen."
 
-#: includes/class-admin.php:1789
+#: includes/class-admin.php:1791
 msgid "Send weekly, only new entries, with the full content of the entry (field content:encoded), not just the description."
 msgstr "Wöchentlich verschicken, nur neue Einträge, mit dem ganzen Inhalt des Eintrags (Feld content:encoded), nicht nur der Beschreibung."
 
-#: includes/class-admin.php:1806
+#: includes/class-admin.php:1808
 msgid "In the EU, newsletters need a double opt-in and the legal notice of the sender. Signup forms come from your newsletter service."
 msgstr "In der EU brauchen Newsletter ein Double-Opt-in und das Impressum des Absenders. Anmeldeformulare kommen von deinem Newsletter-Dienst."
 
-#: includes/class-admin.php:1827
+#: includes/class-admin.php:1829
 msgid "Send directly"
 msgstr "Direkt verschicken"
 
-#: includes/class-admin.php:1831
+#: includes/class-admin.php:1833
 msgid "Sending"
 msgstr "Versand"
 
-#: includes/class-admin.php:1831
+#: includes/class-admin.php:1833
 msgid "Send the weekly preview to the list at its time"
 msgstr "Wochenvorschau zu ihrer Zeit an die Liste schicken"
 
-#: includes/class-admin.php:1831
+#: includes/class-admin.php:1833
 msgid "Leave this off if your service already uses the RSS feed, or subscribers get two mails."
 msgstr "Lass das aus, wenn dein Dienst schon den RSS-Feed nutzt, sonst bekommen Abonnent:innen zwei Mails."
 
-#: includes/class-admin.php:1832
+#: includes/class-admin.php:1834
 msgid "Service"
 msgstr "Dienst"
 
-#: includes/class-admin.php:1832
+#: includes/class-admin.php:1834
 msgid "Choose …"
 msgstr "Auswählen …"
 
-#: includes/class-admin.php:1833
+#: includes/class-admin.php:1835
 msgid "API key"
 msgstr "API-Schlüssel"
 
-#: includes/class-admin.php:1838
+#: includes/class-admin.php:1840
 msgid "List or audience"
 msgstr "Liste oder Audience"
 
-#: includes/class-admin.php:1838
+#: includes/class-admin.php:1840
 msgid "Brevo: number of the contact list, e.g. <code>3</code>. Emailit: audience ID, e.g. <code>aud_…</code>."
 msgstr "Brevo: Nummer der Kontaktliste, z. B. <code>3</code>. Emailit: Audience-ID, z. B. <code>aud_…</code>."
 
-#: includes/class-admin.php:1839
+#: includes/class-admin.php:1841
 msgid "Sender name"
 msgstr "Absendername"
 
-#: includes/class-admin.php:1840
+#: includes/class-admin.php:1842
 msgid "Sender address"
 msgstr "Absenderadresse"
 
-#: includes/class-admin.php:1840
+#: includes/class-admin.php:1842
 msgid "Must be verified with the service."
 msgstr "Muss beim Dienst bestätigt sein."
 
-#: includes/class-admin.php:1841
+#: includes/class-admin.php:1843
 msgid "Subject"
 msgstr "Betreff"
 
-#: includes/class-admin.php:1841
+#: includes/class-admin.php:1843
 msgid "Empty = \"Weekly preview\" with the date."
 msgstr "Leer = „Wochenvorschau“ mit Datum."
 
-#: includes/class-admin.php:1821
-#: includes/class-admin.php:1842
+#: includes/class-admin.php:1823
+#: includes/class-admin.php:1844
 msgid "Footer"
 msgstr "Fußzeile"
 
-#: includes/class-admin.php:1842
+#: includes/class-admin.php:1844
 msgid "Name and postal address of the sender (legal notice). The unsubscribe link is added automatically."
 msgstr "Name und Postanschrift des Absenders (Impressum). Der Abmeldelink kommt automatisch dazu."
 
-#: includes/class-admin.php:1843
+#: includes/class-admin.php:1845
 msgid "Test address"
 msgstr "Testadresse"
 
-#: includes/class-admin.php:1850
+#: includes/class-admin.php:1852
 msgid "Send a test mail"
 msgstr "Testmail schicken"
 
-#: includes/class-admin.php:1856
+#: includes/class-admin.php:1858
 msgid "The test mail goes only to the test address, not to the list."
 msgstr "Die Testmail geht nur an die Testadresse, nicht an die Liste."
 
-#: includes/class-admin.php:1924
+#: includes/class-admin.php:1926
 msgid "Nothing to send: no events in the coming days and nothing new."
 msgstr "Nichts zu verschicken: keine Termine in den nächsten Tagen und nichts Neues."
 
 #. translators: %s: e-mail address
-#: includes/class-admin.php:1929
+#: includes/class-admin.php:1931
 #, php-format
 msgid "Test mail sent to %s."
 msgstr "Testmail an %s geschickt."
 
 #. translators: %s: name of the site or calendar
 #: includes/class-digest-feed.php:62
-#: includes/newsletter/class-brevo-template.php:52
 #, php-format
 msgid "%s: weekly preview"
 msgstr "%s: Wochenvorschau"
@@ -1557,7 +1548,7 @@ msgstr "Verschoben"
 msgid "Copy text and link"
 msgstr "Text und Link kopieren"
 
-#: includes/class-admin.php:1810
+#: includes/class-admin.php:1812
 #: includes/class-front.php:64
 #: includes/class-share-kit.php:173
 msgid "Copied"
@@ -1853,50 +1844,50 @@ msgid "%1$s – sent: %2$s"
 msgstr "%1$s: verschickt (%2$s)"
 
 #. translators: link text in the newsletter footer
-#: includes/newsletter/class-brevo-template.php:183
-#: includes/newsletter/class-newsletter.php:351
+#: includes/newsletter/class-brevo-template.php:182
+#: includes/newsletter/class-newsletter.php:353
 msgid "Unsubscribe"
 msgstr "Abmelden"
 
 #. translators: %s: unsubscribe link
-#: includes/newsletter/class-newsletter.php:399
+#: includes/newsletter/class-newsletter.php:401
 #, php-format
 msgid "Unsubscribe: %s"
 msgstr "Abmelden: %s"
 
 #. translators: 1: HTTP status code, 2: error message
-#: includes/newsletter/class-newsletter.php:421
+#: includes/newsletter/class-newsletter.php:423
 #: includes/social/class-social.php:395
 #, php-format
 msgid "HTTP %1$d %2$s"
 msgstr "HTTP %1$d %2$s"
 
-#: includes/newsletter/class-newsletter.php:450
+#: includes/newsletter/class-newsletter.php:452
 msgid "Brevo did not create the campaign."
 msgstr "Brevo hat die Kampagne nicht angelegt."
 
-#: includes/newsletter/class-newsletter.php:472
+#: includes/newsletter/class-newsletter.php:474
 msgid "Emailit did not create the campaign."
 msgstr "Emailit hat die Kampagne nicht angelegt."
 
 #. translators: %s: name of the audience
-#: includes/newsletter/class-newsletter.php:498
+#: includes/newsletter/class-newsletter.php:500
 #, php-format
 msgid "Emailit: audience \"%s\" found."
 msgstr "Emailit: Audience „%s“ gefunden."
 
 #. translators: 1: list name, 2: number of subscribers
-#: includes/newsletter/class-newsletter.php:505
+#: includes/newsletter/class-newsletter.php:507
 #, php-format
 msgid "Brevo: list \"%1$s\" with %2$d contacts found."
 msgstr "Brevo: Liste „%1$s“ mit %2$d Kontakten gefunden."
 
-#: includes/newsletter/class-newsletter.php:517
+#: includes/newsletter/class-newsletter.php:519
 msgid "Enter a valid test address first."
 msgstr "Trag zuerst eine gültige Testadresse ein."
 
 #. translators: %s: subject
-#: includes/newsletter/class-newsletter.php:523
+#: includes/newsletter/class-newsletter.php:525
 #, php-format
 msgid "[Test] %s"
 msgstr "[Test] %s"
@@ -2388,33 +2379,49 @@ msgstr "Design: Öffne das RSS-Standard-Template, wechsle in den Entwicklermodus
 msgid "Or by hand: in the repeated block, replace the description with <code>{{ item.CONTENT_ENCODED | safe }}</code>. Without it, the mail only shows the title and the list of event names, not the whole preview."
 msgstr "Oder von Hand: Ersetze im wiederholten Block die Beschreibung durch <code>{{ item.CONTENT_ENCODED | safe }}</code>. Ohne das zeigt die Mail nur den Titel und die Liste der Terminnamen, nicht die ganze Vorschau."
 
-#: includes/class-admin.php:1811
 #: includes/class-admin.php:1813
+#: includes/class-admin.php:1815
 msgid "Brevo template"
 msgstr "Brevo-Vorlage"
 
-#: includes/class-admin.php:1812
+#: includes/class-admin.php:1814
 msgid "The design for the RSS campaign in Brevo, in the colours and fonts of the website: logo or name, the whole weekly preview, a button to the programme, and the footer with legal notice and unsubscribe link. Paste it in the developer mode of the Brevo editor."
 msgstr "Das Design für die RSS-Kampagne in Brevo, in den Farben und Schriften der Website: Logo oder Name, die ganze Wochenvorschau, ein Button zum Programm und die Fußzeile mit Impressum und Abmeldelink. Füge sie im Entwicklermodus des Brevo-Editors ein."
 
-#: includes/class-admin.php:1814
+#: includes/class-admin.php:1816
 msgid "Copy template"
 msgstr "Vorlage kopieren"
 
-#: includes/class-admin.php:1815
+#: includes/class-admin.php:1817
 msgid "Download as file"
 msgstr "Als Datei herunterladen"
 
 #. translators: 1: link to the page "Story images", 2: field "Footer"
-#: includes/class-admin.php:1819
+#: includes/class-admin.php:1821
 #, php-format
 msgid "Colours and fonts are set on the page %1$s, the legal notice in the field %2$s below. Copy the template again after changing them. Subject, sender and list are set in the campaign, not here."
 msgstr "Farben und Schriften stellst du auf der Seite %1$s ein, das Impressum im Feld %2$s weiter unten. Kopiere die Vorlage nach Änderungen neu. Betreff, Absender und Liste legst du in der Kampagne fest, nicht hier."
 
-#: includes/newsletter/class-brevo-template.php:114
+#: includes/newsletter/class-brevo-template.php:113
 msgid "Full programme"
 msgstr "Zum Programm"
 
-#: includes/newsletter/class-brevo-template.php:182
+#: includes/newsletter/class-brevo-template.php:181
 msgid "View in browser"
 msgstr "Im Browser ansehen"
+
+#: includes/class-admin.php:1741
+msgid "The preview of the editor shows placeholders like <code>{{ item.TITLE }}</code> unfilled. Brevo fills them only when it creates a campaign from the feed."
+msgstr "Die Vorschau im Editor zeigt Platzhalter wie <code>{{ item.TITLE }}</code> unausgefüllt. Brevo füllt sie erst, wenn es aus dem Feed eine Kampagne erstellt."
+
+#: includes/class-admin.php:1742
+msgid "Choose the contact list and sender. Subject: <code>{item.TITLE}</code> – with single braces – gives the title of the issue, e.g. \"Weekly preview, November 23\". Filters like <code>time_parse</code> do not work in the subject."
+msgstr "Kontaktliste und Absender wählen. Betreff: <code>{item.TITLE}</code> – mit einfachen Klammern – ergibt den Titel der Ausgabe, z. B. „Wochenvorschau vom 23. November“. Filter wie <code>time_parse</code> funktionieren im Betreff nicht."
+
+#: includes/class-admin.php:1743
+msgid "Schedule: weekly, on the day of the weekly preview, at least one hour after its time. Brevo creates no campaign when the feed has nothing new, so the first mail usually comes with the next issue."
+msgstr "Zeitplan: wöchentlich, am Tag der Wochenvorschau, mindestens eine Stunde nach ihrer Uhrzeit. Brevo legt keine Kampagne an, wenn im Feed nichts Neues steht – die erste Mail kommt deshalb meist mit der nächsten Ausgabe."
+
+#: includes/class-admin.php:1744
+msgid "To check the first mails, choose manual sending: Brevo then creates each campaign as a draft that you look at and send yourself."
+msgstr "Um die ersten Mails zu prüfen, wähle den manuellen Versand: Brevo legt jede Kampagne dann als Entwurf an, den du ansiehst und selbst verschickst."
