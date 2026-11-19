@@ -55,6 +55,7 @@ class ETCF_Admin
         add_action('admin_post_etcf_so_check', [self::class, 'handle_so_check']);
         add_action('admin_post_etcf_nl_check', [self::class, 'handle_nl_check']);
         add_action('admin_post_etcf_nl_test', [self::class, 'handle_nl_test']);
+        add_action('admin_post_etcf_nl_brevo_yaml', [self::class, 'handle_nl_brevo_yaml']);
         add_action('admin_post_etcf_so_post_now', [self::class, 'handle_so_post_now']);
         add_action('admin_post_etcf_sharepic_preview', [self::class, 'handle_story_preview']);
         add_action('admin_enqueue_scripts', function () {
@@ -891,7 +892,13 @@ class ETCF_Admin
                 echo '<p>' . esc_html__('Right now there would be nothing in it: no events in the coming days and nothing new.', 'event-toolkit-for-custom-fields') . '</p>';
                 return;
             }
-            echo '<div class="etcf-mail">' . wp_kses_post(ETCF_Digest::email_html($selection)) . '</div>';
+            $html = ETCF_Newsletter::html($selection, ETCF_Digest::issue_title(ETCF_Digest::current_issue()), '');
+            echo '<iframe class="etcf-mail-frame" title="' . esc_attr__('Preview', 'event-toolkit-for-custom-fields') . '" sandbox="" srcdoc="' . esc_attr($html) . '"></iframe>';
+            echo '<p class="etcf-panel-note">' . wp_kses(sprintf(
+                /* translators: %s: link to the page "Story images" */
+                __('Colours and fonts come from the %s. The newsletter feed carries them along.', 'event-toolkit-for-custom-fields'),
+                '<a href="' . esc_url(self::url('stories')) . '">' . esc_html__('story images', 'event-toolkit-for-custom-fields') . '</a>'
+            ), ['a' => ['href' => []]]) . '</p>';
         });
     }
 
@@ -1729,7 +1736,8 @@ class ETCF_Admin
                 [
                     __('In Brevo, open Integrations and add "RSS campaign".', 'event-toolkit-for-custom-fields'),
                     __('Paste the feed address and load the feed.', 'event-toolkit-for-custom-fields'),
-                    __('In the template, replace the description in the repeated block with <code>{{ item.CONTENT_ENCODED }}</code>. Without it, the mail only shows the title and the list of event names, not the whole preview.', 'event-toolkit-for-custom-fields'),
+                    __('Design: open the RSS default template, switch to the developer mode, select all, paste the template from the box "Brevo template" below and save. It has the colours and fonts of the website and shows the whole preview.', 'event-toolkit-for-custom-fields'),
+                    __('Or by hand: in the repeated block, replace the description with <code>{{ item.CONTENT_ENCODED | safe }}</code>. Without it, the mail only shows the title and the list of event names, not the whole preview.', 'event-toolkit-for-custom-fields'),
                     __('Choose the contact list, subject and sender.', 'event-toolkit-for-custom-fields'),
                     __('Schedule: weekly, on the day of the weekly preview, at least one hour after its time. Brevo creates no campaign when the feed has nothing new.', 'event-toolkit-for-custom-fields'),
                     __('Save and activate.', 'event-toolkit-for-custom-fields'),
@@ -1797,6 +1805,24 @@ class ETCF_Admin
         }
         echo '<p class="etcf-panel-note">' . esc_html__('In the EU, newsletters need a double opt-in and the legal notice of the sender. Signup forms come from your newsletter service.', 'event-toolkit-for-custom-fields') . '</p>';
 
+        // Brevo template for the RSS campaign.
+        if (ETCF_Settings::get('digest_feed_enabled') && ETCF_Settings::is_configured()) {
+            echo '<section class="etcf-panel etcf-share etcf-brevo-template" id="etcf-brevo-template" data-copied="' . esc_attr__('Copied', 'event-toolkit-for-custom-fields') . '">';
+            echo '<h2>' . esc_html__('Brevo template', 'event-toolkit-for-custom-fields') . '</h2>';
+            echo '<p>' . esc_html__('The design for the RSS campaign in Brevo, in the colours and fonts of the website: logo or name, the whole weekly preview, a button to the programme, and the footer with legal notice and unsubscribe link. Paste it in the developer mode of the Brevo editor.', 'event-toolkit-for-custom-fields') . '</p>';
+            echo '<textarea class="large-text code" rows="12" readonly spellcheck="false" aria-label="' . esc_attr__('Brevo template', 'event-toolkit-for-custom-fields') . '">' . esc_textarea(ETCF_Brevo_Template::yaml()) . '</textarea>';
+            echo '<p class="etcf-share-buttons"><button type="button" class="button button-primary" data-etcf-copy>' . esc_html__('Copy template', 'event-toolkit-for-custom-fields') . '</button> ';
+            echo '<a class="button" href="' . esc_url(wp_nonce_url(admin_url('admin-post.php?action=etcf_nl_brevo_yaml'), 'etcf_nl_brevo_yaml')) . '">' . esc_html__('Download as file', 'event-toolkit-for-custom-fields') . '</a></p>';
+            echo '<p class="etcf-share-error" role="alert" hidden></p>';
+            echo '<p class="etcf-panel-note">' . wp_kses(sprintf(
+                /* translators: 1: link to the page "Story images", 2: field "Footer" */
+                __('Colours and fonts are set on the page %1$s, the legal notice in the field %2$s below. Copy the template again after changing them. Subject, sender and list are set in the campaign, not here.', 'event-toolkit-for-custom-fields'),
+                '<a href="' . esc_url(self::url('stories')) . '">' . esc_html__('Story images', 'event-toolkit-for-custom-fields') . '</a>',
+                '<a href="#etcf-nl-footer">' . esc_html__('Footer', 'event-toolkit-for-custom-fields') . '</a>'
+            ), ['a' => ['href' => []]]) . '</p>';
+            echo '</section>';
+        }
+
         // Direct sending.
         echo '<h2 class="etcf-section-title">' . esc_html__('Send directly', 'event-toolkit-for-custom-fields') . '</h2>';
         echo '<form method="post" action="options.php">';
@@ -1858,6 +1884,20 @@ class ETCF_Admin
             });
         }
         echo '</aside></div>';
+    }
+
+    /** Brevo template as file download. */
+    public static function handle_nl_brevo_yaml(): void
+    {
+        if (!current_user_can('manage_options')) {
+            wp_die(esc_html__('Not allowed.', 'event-toolkit-for-custom-fields'));
+        }
+        check_admin_referer('etcf_nl_brevo_yaml');
+        nocache_headers();
+        header('Content-Type: application/yaml; charset=utf-8');
+        header('Content-Disposition: attachment; filename="' . ETCF_Brevo_Template::filename() . '"');
+        echo ETCF_Brevo_Template::yaml(); // phpcs:ignore WordPress.Security.EscapeOutput -- YAML file download, not HTML.
+        exit;
     }
 
     public static function handle_nl_check(): void

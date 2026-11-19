@@ -5,7 +5,7 @@ Tags: events, calendar, newsletter, instagram, telegram
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.9.0
+Stable tag: 2.10.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -43,6 +43,8 @@ Once a week, a preview of what is coming up: the events of the next days, plus t
 
 * The weekly preview as RSS feed for the RSS campaigns of Brevo, Mailchimp, MailerLite and other services, with step-by-step guides
 * Or sent directly as campaign through the API of Brevo or Emailit, at the time of the weekly preview
+* In the colours and fonts of the website (as set for the story images), in the feed, the direct mails and the previews
+* A ready Brevo template (YAML for the developer mode of the Brevo editor) with logo, the whole preview, a button to the programme and footer – copy or download
 * Optionally only in weeks in which something was added
 
 **Mastodon and Bluesky**
@@ -193,7 +195,11 @@ The first three only return what visitors can see on the website anyway. Posting
 * Filter `etcf_feed_query_args` ($args): change the query for the subscription feed and the weekly preview.
 * Filter `etcf_schema` ($data, $event, $post): change the structured data, e.g. add performers. Return an empty array to output nothing.
 * Filter `etcf_digest_events` ($selection, $issue): change the events of a weekly preview (`week` and `new`).
-* Filter `etcf_digest_email_html` ($html, $selection): change the newsletter HTML.
+* Filter `etcf_digest_email_html` ($html, $selection): change the newsletter HTML (before the website style is applied).
+* Filter `etcf_newsletter_content` ($html, $selection): change the styled newsletter HTML.
+* Filter `etcf_newsletter_palette` ($palette, $style): change the colours of the mails and the Brevo template.
+* Filter `etcf_brevo_template` ($document): change the Brevo template before it is written as YAML.
+* Filter `etcf_newsletter_logo` ($attachment_id): logo in the Brevo template (default: custom logo, else site icon).
 * Filter `etcf_tg_message` ($message, $selection): change the Telegram message (Telegram HTML).
 * Filter `etcf_tg_today_message` ($message, $events): change the "Today" message.
 * Filter `etcf_share_text` ($text): change the texts on the page "Share".
@@ -229,7 +235,7 @@ No data about visitors of your site is sent. [Terms of Service](https://telegram
 
 No data about visitors of your site is sent. [Terms of Use](https://help.instagram.com/581066165581870), [Platform Terms](https://developers.facebook.com/terms/), [Privacy Policy](https://privacycenter.instagram.com/policy)
 
-**Google Fonts (optional).** Only when the story images use the fonts of your website and the theme does not ship them as .ttf or .otf file, the plugin downloads these font files once from Google Fonts (fonts.googleapis.com, fonts.gstatic.com), provided by Google LLC, and keeps them in the uploads folder. Only the font name and weight are sent. Choose "Neutral standard font" under Event Toolkit → Story images to avoid this. [Privacy Policy](https://policies.google.com/privacy), [Google Fonts FAQ](https://developers.google.com/fonts/faq/privacy)
+**Google Fonts (optional).** Only when the story images use the fonts of your website and the theme does not ship them as .ttf or .otf file, the plugin downloads these font files once from Google Fonts (fonts.googleapis.com, fonts.gstatic.com), provided by Google LLC, and keeps them in the uploads folder. Only the font name and weight are sent. For the newsletter, the plugin asks Google Fonts once a month whether it has the website's fonts; the mails and the Brevo template then link the font stylesheet of Google Fonts, which the mail program of a recipient may load. Choose "Neutral standard font" under Event Toolkit → Story images to avoid this. [Privacy Policy](https://policies.google.com/privacy), [Google Fonts FAQ](https://developers.google.com/fonts/faq/privacy)
 
 **Mastodon (optional).** Only when you enter a server and an access token and switch it on, the plugin connects to that Mastodon server: at the time of the weekly preview, on event days (if switched on), for a cancellation notice, or when an administrator clicks "Post the weekly preview now" or "Check connection". It sends the post text (event titles, dates, times and links to your site) and the story images. The terms and privacy policy of the server you use apply; see its "About" page.
 
@@ -244,6 +250,12 @@ No data about visitors of your site is sent. [Terms of Use](https://help.instagr
 **PayPal (donations).** The admin pages contain a donation link to PayPal (paypal.com), provided by PayPal (Europe) S.à r.l. et Cie, S.C.A. It only opens when an administrator clicks it; the plugin sends no data to PayPal and PayPal does not report back to your site. [User Agreement](https://www.paypal.com/legalhub/paypal/useragreement-full), [Privacy Statement](https://www.paypal.com/myaccount/privacy/privacyhub)
 
 == Changelog ==
+
+= 2.10.0 =
+* Newsletter in the style of the website: the newsletter feed, the direct mails and the previews use the colours and fonts of the story images, with headings in capitals and letter spacing as chosen there. The feed content brings its own background, so it stays readable in any template.
+* New: Brevo template. The page "Newsletter" offers a YAML file for the developer mode of the Brevo editor – logo or site name, the whole weekly preview, a button to the programme, legal notice, browser link and unsubscribe link – to copy or download.
+* The preview on the page "Weekly preview" shows the mail as it will look.
+* Fix: dark looks no longer give light text on a white mail.
 
 = 2.9.0 =
 * Telegram: both chat fields take the link you copy in Telegram, e.g. https://t.me/yourgroup, besides @name and the chat ID. Message links from a topic (t.me/c/…/topic/message) also fill in the topic. Invite links (t.me/+…) are refused with a hint, because they do not name the chat.

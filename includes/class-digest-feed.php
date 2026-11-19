@@ -8,6 +8,8 @@
  * Its GUID changes with every issue, so an RSS-to-email campaign sends exactly one mail per
  * issue. In weeks with no upcoming and no new events the feed has no item and nothing is sent.
  * With "only when something is new", weeks without newly published events stay empty as well.
+ * The content carries inline styles in the colours and fonts of the website (ETCF_Newsletter::feed_content()),
+ * on their own background, so it stays readable in any template.
  */
 
 defined('ABSPATH') || exit;
@@ -80,7 +82,7 @@ class ETCF_Digest_Feed
             $xml[] = '<guid isPermaLink="false">' . esc_xml(home_url('/') . '#weekly-preview-' . $issue->format('Y-m-d')) . '</guid>';
             $xml[] = '<pubDate>' . esc_xml($issue->format(DATE_RSS)) . '</pubDate>';
             $xml[] = '<description>' . esc_xml(implode(' · ', $names)) . '</description>';
-            $xml[] = '<content:encoded>' . self::cdata(ETCF_Digest::email_html($selection)) . '</content:encoded>';
+            $xml[] = '<content:encoded>' . self::cdata(ETCF_Newsletter::feed_content($selection)) . '</content:encoded>';
             if ($image) {
                 $xml[] = '<media:content url="' . esc_url($image) . '" medium="image"/>';
             }

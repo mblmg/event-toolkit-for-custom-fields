@@ -8,10 +8,16 @@ Where the plugin stands and what comes next. Keep this file up to date when a fe
 
 ## Status
 
-- Current version: **2.9.0** (on GitHub `main`; not yet submitted to WordPress.org).
+- Current version: **2.10.0** (on GitHub `main`; not yet submitted to WordPress.org).
 - Releases: see [README.md](README.md#releasing). Deployment to WordPress.org runs from the Release workflow once the plugin is approved.
 
 ## Shipped
+
+**2.10.0**
+- Mail style from the story look: `ETCF_Newsletter::palette()` (card = background colour, text = text colour, around it the second background colour; accent for links if ≥ 3 : 1 on the card, else text colour; text forced to ≥ 4.5 : 1), `::type()` (fonts of the story images, capitals, letter spacing; neutral font setting = no Google Fonts), `::content()` adds inline styles to `ETCF_Digest::email_html()`. Fixes light text on white in dark looks.
+- Newsletter feed carries the styled content in a table with its own background (`feed_content()`), so it stays readable in templates that do not match.
+- Brevo template (`ETCF_Brevo_Template`): YAML for the developer mode of Brevo's drag-and-drop editor, structure taken from the YAML Brevo shows for its RSS default template (version 3.0.1: body → wrapper rows → grid-row → grid-column → text / image / text-button; repeat block = grid-row with `loop: 'item in params.items | slice:":1"'`, `isCustomBlock`, `customBlockId` 5f5a244c5b80624620552602). Shows `{{ item.TITLE }}`, `{{ item.CONTENT_ENCODED | safe }}`, button to `{{ item.LINK }}`, footer with the legal notice of the newsletter settings, `{{ mirror }}`, `{{ unsubscribe }}`. Stable element IDs (md5 of site + name). `user-hash` of the account is left out. Copy button and download on the page "Newsletter".
+- Weekly preview page shows the mail as iframe.
 
 **2.9.0**
 - Telegram chat fields accept links: `ETCF_Telegram_Settings::parse_chat()` turns t.me / telegram.me / tg://resolve links into `@name`, private links `t.me/c/<id>/…` into `-100<id>`; three-part links (`…/<topic>/<message>`) set the topic, which then wins over the topic field. Bare names get `@`. Invite links are refused (settings error, old value kept) – the Bot API cannot resolve them.
@@ -72,6 +78,7 @@ Where the plugin stands and what comes next. Keep this file up to date when a fe
 ## Needs verification
 
 All API clients below are tested against mocked APIs only.
+- **Brevo template (YAML)** pasted into the developer mode with a real account: accepted without `user-hash`? Repeat block filled from the feed, `| safe` renders the HTML, Google font loaded.
 - **Brevo and Emailit direct sending** with real accounts: campaign creation, recipients, sending, test mail; Emailit response shape (`id` vs. `data.id`).
 - **Mastodon and Bluesky** with real accounts: media upload, image descriptions, Bluesky facets and aspect ratio.
 - **Instagram with a real account.** The API client is tested against a mocked API only. Needs a business account and a Meta app (development mode) with a long-lived token. Check: container creation with `media_type=STORIES`, status polling, publishing, token refresh after 7 days, behaviour when Instagram cannot fetch the image.

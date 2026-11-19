@@ -32,7 +32,7 @@ includes/class-front.php                   shortcodes for the website: share but
 includes/telegram/                         Telegram: settings (etcf_tg_settings), Bot API, weekly and "Today" schedule
 includes/instagram/                        Instagram: settings and API (etcf_ig_settings), daily story schedule
 includes/social/                           Mastodon and Bluesky (etcf_so_settings)
-includes/newsletter/                       direct sending through Brevo or Emailit (etcf_nl_settings)
+includes/newsletter/                       direct sending through Brevo or Emailit (etcf_nl_settings), mail style, Brevo template (YAML)
 includes/class-status.php                  cancelled / postponed events, one-time notices
 includes/class-qr.php                      QR encoder (SVG, PNG, cache in uploads/event-toolkit/qr)
 assets/                                    share script, story design script (looks, picture, live preview), admin and website styles

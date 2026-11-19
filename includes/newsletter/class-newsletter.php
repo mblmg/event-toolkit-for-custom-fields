@@ -195,44 +195,198 @@ class ETCF_Newsletter
     }
 
     /**
-     * The whole newsletter as HTML document, in the colours of the story images.
+     * Colours of the mail, from the look of the story images: the card in the background colour
+     * with the text colour, around it the second background colour. Links and button in the accent
+     * colour if it is readable on the card (3 : 1), else in the text colour.
+     *
+     * @return array{outer: string, card: string, ink: string, muted: string, line: string, link: string, button: string, button_text: string}
+     */
+    public static function palette(): array
+    {
+        $style = ETCF_Sharepic::style();
+        $card  = self::hex($style['paper'], '#ffffff');
+        $ink   = self::hex($style['ink'], '#1e1e1e');
+        if (self::contrast($card, $ink) < 4.5) {
+            $ink = self::contrast($card, '#111111') >= self::contrast($card, '#ffffff') ? '#111111' : '#ffffff';
+        }
+        $outer  = self::hex($style['paper2'], $card);
+        $accent = self::hex($style['accent'], $ink);
+        $link   = self::contrast($card, $accent) >= 3 ? $accent : $ink;
+        $button = self::contrast($card, $accent) >= 1.5 ? $accent : $ink;
+        $label  = self::contrast($button, $card) >= self::contrast($button, $ink) ? $card : $ink;
+        if (self::contrast($button, $label) < 4.5) {
+            $label = self::contrast($button, '#111111') >= self::contrast($button, '#ffffff') ? '#111111' : '#ffffff';
+        }
+        $palette = [
+            'outer'       => $outer,
+            'card'        => $card,
+            'ink'         => $ink,
+            'muted'       => self::mix($ink, $card, 0.3),
+            'line'        => self::mix($ink, $card, 0.85),
+            'link'        => $link,
+            'button'      => $button,
+            'button_text' => $label,
+        ];
+        return (array) apply_filters('etcf_newsletter_palette', $palette, $style);
+    }
+
+    /**
+     * Fonts and heading style of the mail: the fonts of the story images (website or chosen),
+     * with web-safe fallbacks; capitals and letter spacing as on the story images.
+     *
+     * @return array{heading: string, text: string, heading_family: string, text_family: string, weight: int, caps: bool, tracking: float}
+     */
+    public static function type(): array
+    {
+        // "Neutral standard font" on the story images: plain mail fonts, nothing from Google Fonts.
+        $fonts = ETCF_Settings::get('sharepic_fonts') === 'site' ? ETCF_Fonts::families() : ['heading' => '', 'text' => ''];
+        $style = ETCF_Sharepic::style();
+        $stack = function (string $family): string {
+            $family = str_replace(['"', "'", ';', '<', '>'], '', $family);
+            return ($family !== '' ? "'" . $family . "', " : '') . 'Arial, Helvetica, sans-serif';
+        };
+        return [
+            'heading'        => $stack($fonts['heading']),
+            'text'           => $stack($fonts['text']),
+            'heading_family' => $fonts['heading'],
+            'text_family'    => $fonts['text'],
+            'weight'         => ETCF_Fonts::heading_weight(),
+            'caps'           => (bool) $style['caps'],
+            'tracking'       => round((float) $style['track'], 3),
+        ];
+    }
+
+    /** CSS for headings: font, colour, weight, capitals, letter spacing. */
+    public static function heading_css(string $size = ''): string
+    {
+        $type = self::type();
+        $css  = 'font-family:' . $type['heading'] . ';color:' . self::palette()['ink'] . ';font-weight:' . $type['weight'] . ';';
+        if ($size !== '') {
+            $css .= 'font-size:' . $size . ';';
+        }
+        if ($type['caps']) {
+            $css .= 'text-transform:uppercase;';
+        }
+        if (abs($type['tracking']) >= 0.001) {
+            $css .= 'letter-spacing:' . $type['tracking'] . 'em;';
+        }
+        return $css;
+    }
+
+    /**
+     * The weekly preview with inline styles in the colours and fonts of the website.
+     * Used inside the full mail, in the newsletter feed and in the previews.
+     */
+    public static function content(array $selection): string
+    {
+        $p       = self::palette();
+        $type    = self::type();
+        $content = ETCF_Digest::email_html($selection);
+        $text    = 'font-family:' . $type['text'] . ';color:' . $p['ink'] . ';font-size:16px;line-height:1.55;';
+        $rules   = [
+            'h2' => 'margin:28px 0 12px;' . self::heading_css('22px') . 'line-height:1.25;',
+            'h3' => 'margin:0 0 4px;' . self::heading_css('19px') . 'line-height:1.3;',
+            'p'  => 'margin:0 0 16px;' . $text,
+            'ul' => 'margin:0 0 16px;padding-left:20px;' . $text,
+            'li' => 'margin:0 0 6px;',
+        ];
+        foreach ($rules as $tag => $css) {
+            // Keep styles that are already there (they come after ours and win).
+            $content = (string) preg_replace_callback('/<' . $tag . '(\s+style="([^"]*)")?>/', function ($m) use ($tag, $css) {
+                return '<' . $tag . ' style="' . esc_attr($css . ($m[2] ?? '')) . '">';
+            }, $content);
+        }
+        $content = (string) preg_replace('/<a (?![^>]*style=)/', '<a style="color:' . esc_attr($p['link']) . ';text-decoration:underline;" ', $content);
+        // Links in headings take the heading colour, so titles do not look like body links.
+        $content = (string) preg_replace_callback('/(<h[23][^>]*>)<a style="[^"]*"/', function ($m) use ($p) {
+            return $m[1] . '<a style="color:' . esc_attr($p['ink']) . ';text-decoration:none;"';
+        }, $content);
+        return (string) apply_filters('etcf_newsletter_content', $content, $selection);
+    }
+
+    /**
+     * The styled preview on its own background, for the newsletter feed: readable in any
+     * template of the newsletter service, also when the look is dark and the template white.
+     */
+    public static function feed_content(array $selection): string
+    {
+        $p = self::palette();
+        return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;background:' . esc_attr($p['card']) . ';">'
+            . '<tr><td style="padding:4px 16px;background:' . esc_attr($p['card']) . ';color:' . esc_attr($p['ink']) . ';">'
+            . self::content($selection)
+            . '</td></tr></table>';
+    }
+
+    /**
+     * The whole newsletter as HTML document, in the colours and fonts of the website.
      * Simple tables and inline styles, because mail programs ignore most CSS.
      *
      * @param string $provider 'brevo', 'emailit', or '' for a preview (unsubscribe link "#").
      */
     public static function html(array $selection, string $subject, string $provider): string
     {
-        $style  = ETCF_Sharepic::style();
-        $paper  = esc_attr($style['paper']);
-        $ink    = esc_attr($style['ink']);
-        $accent = esc_attr($style['accent']);
-        $fonts  = ETCF_Fonts::families();
-        $head   = esc_attr(trim(($fonts['heading'] !== '' ? "'" . $fonts['heading'] . "', " : '') . 'Arial, Helvetica, sans-serif'));
-        $body   = esc_attr(trim(($fonts['text'] !== '' ? "'" . $fonts['text'] . "', " : '') . 'Arial, Helvetica, sans-serif'));
-
-        $content = ETCF_Digest::email_html($selection);
-        // Links in the accent colour, headings in the heading font.
-        $content = preg_replace('/<a (?![^>]*style=)/', '<a style="color:' . $accent . '" ', $content);
-        $content = preg_replace('/<h([23])(?: style="([^"]*)")?>/', '<h$1 style="font-family:' . $head . ';color:' . $ink . ';$2">', (string) $content);
+        $p    = self::palette();
+        $type = self::type();
+        $body = esc_attr($type['text']);
 
         $unsubscribe = $provider !== '' ? self::unsubscribe($provider) : '#';
         $footer      = trim((string) self::get('footer'));
         $footer      = $footer !== '' ? nl2br(esc_html($footer)) . '<br><br>' : '';
+        $fonts       = ETCF_Fonts::google_css_url([$type['heading_family'], $type['text_family']], $type['weight']);
+        // A mail is no WordPress page: the font stylesheet has to be part of the document.
+        $fonts       = $fonts !== '' ? '<link rel="stylesheet" href="' . esc_url($fonts) . '">' : ''; // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- e-mail document, not a page.
 
-        return '<!DOCTYPE html><html lang="' . esc_attr(get_bloginfo('language')) . '"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>' . esc_html($subject) . '</title></head>'
-            . '<body style="margin:0;padding:0;background:' . $paper . ';">'
-            . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:' . $paper . ';"><tr><td align="center" style="padding:24px 12px;">'
-            . '<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#ffffff;border:1px solid #e3e3e6;">'
-            . '<tr><td style="padding:28px 32px 8px;font-family:' . $body . ';font-size:15px;line-height:1.55;color:' . $ink . ';">'
-            . '<p style="margin:0 0 4px;font-size:13px;color:#65636d;">' . esc_html(get_bloginfo('name')) . '</p>'
-            . '<h1 style="margin:0 0 16px;font-family:' . $head . ';font-size:26px;line-height:1.2;color:' . $ink . ';">' . esc_html($subject) . '</h1>'
-            . $content
+        return '<!DOCTYPE html><html lang="' . esc_attr(get_bloginfo('language')) . '"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>' . esc_html($subject) . '</title>' . $fonts . '</head>'
+            . '<body style="margin:0;padding:0;background:' . esc_attr($p['outer']) . ';">'
+            . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:' . esc_attr($p['outer']) . ';"><tr><td align="center" style="padding:24px 12px;">'
+            . '<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:' . esc_attr($p['card']) . ';">'
+            . '<tr><td style="padding:28px 32px 8px;font-family:' . $body . ';font-size:16px;line-height:1.55;color:' . esc_attr($p['ink']) . ';">'
+            . '<p style="margin:0 0 4px;font-size:13px;color:' . esc_attr($p['muted']) . ';">' . esc_html(get_bloginfo('name')) . '</p>'
+            . '<h1 style="margin:0 0 16px;' . esc_attr(self::heading_css('28px')) . 'line-height:1.2;">' . esc_html($subject) . '</h1>'
+            . self::content($selection)
             . '</td></tr>'
-            . '<tr><td style="padding:16px 32px 28px;font-family:' . $body . ';font-size:12px;line-height:1.5;color:#65636d;border-top:1px solid #e3e3e6;">'
+            . '<tr><td style="padding:16px 32px 28px;font-family:' . $body . ';font-size:12px;line-height:1.5;color:' . esc_attr($p['muted']) . ';border-top:1px solid ' . esc_attr($p['line']) . ';">'
             . $footer
             /* translators: link text in the newsletter footer */
-            . '<a href="' . $unsubscribe . '" style="color:#65636d;">' . esc_html__('Unsubscribe', 'event-toolkit-for-custom-fields') . '</a>'
+            . '<a href="' . $unsubscribe . '" style="color:' . esc_attr($p['muted']) . ';">' . esc_html__('Unsubscribe', 'event-toolkit-for-custom-fields') . '</a>'
             . '</td></tr></table></td></tr></table></body></html>';
+    }
+
+    /** "#abc" or "#aabbcc" in lower case, else the fallback. */
+    private static function hex(string $value, string $fallback): string
+    {
+        $value = strtolower(trim($value));
+        if (preg_match('/^#([0-9a-f])([0-9a-f])([0-9a-f])$/', $value, $m)) {
+            return '#' . $m[1] . $m[1] . $m[2] . $m[2] . $m[3] . $m[3];
+        }
+        return preg_match('/^#[0-9a-f]{6}$/', $value) ? $value : $fallback;
+    }
+
+    /** WCAG contrast ratio of two colours. */
+    public static function contrast(string $a, string $b): float
+    {
+        $lum = function (string $hex): float {
+            $c = array_map(function ($v) {
+                $v /= 255;
+                return $v <= 0.03928 ? $v / 12.92 : (($v + 0.055) / 1.055) ** 2.4;
+            }, sscanf($hex, '#%02x%02x%02x'));
+            return 0.2126 * $c[0] + 0.7152 * $c[1] + 0.0722 * $c[2];
+        };
+        $la = $lum($a);
+        $lb = $lum($b);
+        return (max($la, $lb) + 0.05) / (min($la, $lb) + 0.05);
+    }
+
+    /** Mixes colour $a with $b; $t = share of $b. */
+    private static function mix(string $a, string $b, float $t): string
+    {
+        $ca = sscanf($a, '#%02x%02x%02x');
+        $cb = sscanf($b, '#%02x%02x%02x');
+        $out = '#';
+        foreach ([0, 1, 2] as $i) {
+            $out .= sprintf('%02x', (int) round($ca[$i] + ($cb[$i] - $ca[$i]) * $t));
+        }
+        return $out;
     }
 
     /** Plain text version (Emailit sends both). */

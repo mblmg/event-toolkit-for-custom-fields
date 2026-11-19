@@ -311,6 +311,43 @@ class ETCF_Fonts
         return $out;
     }
 
+    /**
+     * Stylesheet address of Google Fonts for the given families (regular and the heading weight),
+     * for mails and the Brevo template. Families Google does not have are left out; '' if none.
+     *
+     * @param string[] $families
+     */
+    public static function google_css_url(array $families, int $weight = 700): string
+    {
+        $parts = [];
+        foreach (array_unique(array_filter(array_map('trim', $families))) as $family) {
+            if (!self::is_google($family)) {
+                continue;
+            }
+            $weights = array_unique([400, $weight >= 100 && $weight <= 900 ? $weight : 700]);
+            sort($weights);
+            $parts[] = 'family=' . str_replace('%20', '+', rawurlencode($family)) . ':wght@' . implode(';', $weights);
+        }
+        return $parts ? 'https://fonts.googleapis.com/css2?' . implode('&', $parts) . '&display=swap' : '';
+    }
+
+    /** True if Google Fonts has this family. Asked once, remembered for a month. */
+    public static function is_google(string $family): bool
+    {
+        $key    = 'etcf_gfont_' . md5(strtolower($family));
+        $cached = get_transient($key);
+        if ($cached !== false) {
+            return $cached === 'yes';
+        }
+        $response = wp_remote_get('https://fonts.googleapis.com/css2?family=' . rawurlencode($family), ['timeout' => 10]);
+        if (is_wp_error($response)) {
+            return false; // Not remembered: maybe only offline for a moment.
+        }
+        $yes = wp_remote_retrieve_response_code($response) === 200;
+        set_transient($key, $yes ? 'yes' : 'no', $yes ? MONTH_IN_SECONDS : WEEK_IN_SECONDS);
+        return $yes;
+    }
+
     /** TrueType/OpenType file of a family in a weight, or '' if none can be found. */
     public static function file(string $family, int $weight): string
     {

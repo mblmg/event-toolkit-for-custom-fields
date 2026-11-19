@@ -1199,3 +1199,17 @@
 		top: 46px;
 	}
 }
+
+/* ---------------------------------------------------------------- Brevo template */
+
+.etcf-panel.etcf-brevo-template {
+	display: block;
+	margin: 16px 0;
+}
+
+.etcf-brevo-template textarea {
+	font-size: 12px;
+	line-height: 1.45;
+	white-space: pre;
+	overflow: auto;
+}
