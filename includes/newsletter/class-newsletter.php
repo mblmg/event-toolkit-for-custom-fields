@@ -196,7 +196,8 @@ class ETCF_Newsletter
 
     /**
      * Colours of the mail, from the look of the story images: the card in the background colour
-     * with the text colour, around it the second background colour. Links and button in the accent
+     * with the text colour, around it the second background colour (gradient, picture) or a
+     * slightly shifted tone of the background colour (plain colour). Links and button in the accent
      * colour if it is readable on the card (3 : 1), else in the text colour.
      *
      * @return array{outer: string, card: string, ink: string, muted: string, line: string, link: string, button: string, button_text: string}
@@ -209,7 +210,8 @@ class ETCF_Newsletter
         if (self::contrast($card, $ink) < 4.5) {
             $ink = self::contrast($card, '#111111') >= self::contrast($card, '#ffffff') ? '#111111' : '#ffffff';
         }
-        $outer  = self::hex($style['paper2'], $card);
+        // Around the card: the second background colour of gradients and pictures; with a plain colour a slightly shifted tone of it.
+        $outer  = $style['bg'] === 'solid' ? self::mix($card, $ink, 0.08) : self::hex($style['paper2'], $card);
         $accent = self::hex($style['accent'], $ink);
         $link   = self::contrast($card, $accent) >= 3 ? $accent : $ink;
         $button = self::contrast($card, $accent) >= 1.5 ? $accent : $ink;

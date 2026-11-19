@@ -328,7 +328,29 @@ class ETCF_Fonts
             sort($weights);
             $parts[] = 'family=' . str_replace('%20', '+', rawurlencode($family)) . ':wght@' . implode(';', $weights);
         }
-        return $parts ? 'https://fonts.googleapis.com/css2?' . implode('&', $parts) . '&display=swap' : '';
+        if (!$parts) {
+            return '';
+        }
+        $url = 'https://fonts.googleapis.com/css2?' . implode('&', $parts) . '&display=swap';
+        // Google answers 400 for the whole stylesheet if one family lacks a weight: then without weights.
+        return self::google_ok($url) ? $url : (string) preg_replace('/:wght@[0-9;]+/', '', $url);
+    }
+
+    /** True if Google Fonts delivers this stylesheet. Remembered for a month. */
+    private static function google_ok(string $url): bool
+    {
+        $key    = 'etcf_gcss_' . md5($url);
+        $cached = get_transient($key);
+        if ($cached !== false) {
+            return $cached === 'yes';
+        }
+        $response = wp_remote_get($url, ['timeout' => 10]);
+        if (is_wp_error($response)) {
+            return true; // Offline for a moment: keep the weights, ask again next time.
+        }
+        $yes = wp_remote_retrieve_response_code($response) === 200;
+        set_transient($key, $yes ? 'yes' : 'no', MONTH_IN_SECONDS);
+        return $yes;
     }
 
     /** True if Google Fonts has this family. Asked once, remembered for a month. */

@@ -8,10 +8,13 @@ Where the plugin stands and what comes next. Keep this file up to date when a fe
 
 ## Status
 
-- Current version: **2.10.0** (on GitHub `main`; not yet submitted to WordPress.org).
+- Current version: **2.10.1** (on GitHub `main`; not yet submitted to WordPress.org).
 - Releases: see [README.md](README.md#releasing). Deployment to WordPress.org runs from the Release workflow once the plugin is approved.
 
 ## Shipped
+
+**2.10.1**
+- Mail frame with a plain background: card colour shifted 8 % towards the text colour (was the unused second colour). Google Fonts stylesheet checked once a month; without weights if Google answers 400.
 
 **2.10.0**
 - Mail style from the story look: `ETCF_Newsletter::palette()` (card = background colour, text = text colour, around it the second background colour; accent for links if ≥ 3 : 1 on the card, else text colour; text forced to ≥ 4.5 : 1), `::type()` (fonts of the story images, capitals, letter spacing; neutral font setting = no Google Fonts), `::content()` adds inline styles to `ETCF_Digest::email_html()`. Fixes light text on white in dark looks.
