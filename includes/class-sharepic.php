@@ -28,7 +28,7 @@ class ETCF_Sharepic
     const MAX_SINGLE = 3;
     const DIR = 'event-toolkit/stories';
     /** Raise when the layout changes, so cached images are rendered again. */
-    const DESIGN = 7;
+    const DESIGN = 8;
     /** Letter spacing of headings in em, added to the website's spacing ("tight", "wide"). */
     const TRACKING = ['tight' => -0.015, 'wide' => 0.04];
 
@@ -872,12 +872,40 @@ class ETCF_Sharepic
         return $im;
     }
 
+    /** Most extreme landscape format shown uncut: wider pictures lose a little at the sides. */
+    const MAX_ASPECT = 3.0;
+
     /**
-     * Featured image of a post, cropped to a square of $size pixels. Null without image.
+     * Width : height of the photo on a polaroid: landscape pictures keep their format (so nothing
+     * is cut off at the sides), square and portrait pictures and events without one are square.
+     */
+    private static function aspect(int $post_id): float
+    {
+        $thumb = (int) get_post_thumbnail_id($post_id);
+        if (!$thumb) {
+            return 1.0;
+        }
+        $meta = wp_get_attachment_metadata($thumb);
+        $w    = (int) ($meta['width'] ?? 0);
+        $h    = (int) ($meta['height'] ?? 0);
+        if ($w <= 0 || $h <= 0) {
+            $file = get_attached_file($thumb);
+            $size = $file && is_readable($file) ? @getimagesize($file) : false;
+            if (!$size) {
+                return 1.0;
+            }
+            [$w, $h] = $size;
+        }
+        return max(1.0, min(self::MAX_ASPECT, $w / $h));
+    }
+
+    /**
+     * Featured image of a post, cropped to $width × $height pixels. Pictures of another format
+     * lose the sides (wider) or the bottom (taller). Null without image.
      *
      * @return resource|GdImage|null
      */
-    private static function photo(int $post_id, int $size)
+    private static function photo(int $post_id, int $width, int $height)
     {
         $thumb = get_post_thumbnail_id($post_id);
         $file  = $thumb ? get_attached_file($thumb) : '';
@@ -888,20 +916,27 @@ class ETCF_Sharepic
         if (!$src) {
             return null;
         }
-        $w    = imagesx($src);
-        $h    = imagesy($src);
-        $side = min($w, $h);
-        $sx   = (int) (($w - $side) / 2);
-        $sy   = (int) (($h - $side) * 0.3); // Portraits: keep the upper part, where faces usually are.
-        $out  = imagecreatetruecolor($size, $size);
-        imagecopyresampled($out, $src, 0, 0, $sx, $sy, $size, $size, $side, $side);
+        $w = imagesx($src);
+        $h = imagesy($src);
+        if ($w / $h > $width / $height) {
+            $cw = (int) round($h * $width / $height);
+            $ch = $h;
+        } else {
+            $cw = $w;
+            $ch = (int) round($w * $height / $width);
+        }
+        $sx  = (int) (($w - $cw) / 2);
+        $sy  = (int) (($h - $ch) * 0.3); // Portraits: keep the upper part, where faces usually are.
+        $out = imagecreatetruecolor($width, $height);
+        imagecopyresampled($out, $src, 0, 0, $sx, $sy, $width, $height, $cw, $ch);
         imagedestroy($src);
         return $out;
     }
 
     /**
-     * A polaroid: white frame, square photo, a strip below for the caption. Rendered at double size,
-     * rotated, then scaled down for smooth edges. Returns an image with alpha.
+     * A polaroid: white frame, the photo ($photo wide, in the format of the picture, see aspect()),
+     * a strip below for the caption. Rendered at double size, rotated, then scaled down for
+     * smooth edges. Returns an image with alpha.
      *
      * @param callable $caption function ($im, int $scale, int $x, int $y, int $width, array $palette) draws into the strip.
      * @return resource|GdImage
@@ -909,28 +944,29 @@ class ETCF_Sharepic
     private static function polaroid(ETCF_Event $event, int $photo, int $frame, int $strip, float $angle, array $p, callable $caption)
     {
         $s  = 2;
+        $ph = (int) round($photo / self::aspect($event->id)); // Height of the photo.
         $w  = ($photo + 2 * $frame) * $s;
-        $h  = ($frame + $photo + $strip) * $s;
+        $h  = ($frame + $ph + $strip) * $s;
         $im = imagecreatetruecolor($w, $h);
         imagealphablending($im, true);
         imagefilledrectangle($im, 0, 0, $w, $h, self::color($im, $p['white']));
 
-        $pic = self::photo($event->id, $photo * $s);
+        $pic = self::photo($event->id, $photo * $s, $ph * $s);
         if ($pic) {
             if ($event->is_off()) {
                 imagefilter($pic, IMG_FILTER_GRAYSCALE); // Cancelled or postponed: the picture fades to grey.
             }
-            imagecopy($im, $pic, $frame * $s, $frame * $s, 0, 0, $photo * $s, $photo * $s);
+            imagecopy($im, $pic, $frame * $s, $frame * $s, 0, 0, $photo * $s, $ph * $s);
             imagedestroy($pic);
         } else {
             // No picture: a blank print with the date.
-            imagefilledrectangle($im, $frame * $s, $frame * $s, ($frame + $photo) * $s - 1, ($frame + $photo) * $s - 1, self::color($im, $p['blank']));
+            imagefilledrectangle($im, $frame * $s, $frame * $s, ($frame + $photo) * $s - 1, ($frame + $ph) * $s - 1, self::color($im, $p['blank']));
             $font = self::fonts()['display'];
             $text = wp_date('j.n.', $event->start->getTimestamp(), $event->start->getTimezone());
             [$px, $lines] = self::fit($font, $text, (int) ($photo * $s * 0.8), $photo * $s * 0.34, 40, 1);
-            self::lines($im, $font, $px, 1, $frame * $s, (int) (($frame + $photo / 2) * $s - $px * 0.45), self::mix($p['blank'], $p['ink'], 0.35), $lines, 'center', $photo * $s);
+            self::lines($im, $font, $px, 1, $frame * $s, (int) (($frame + $ph / 2) * $s - $px * 0.45), self::mix($p['blank'], $p['ink'], 0.35), $lines, 'center', $photo * $s);
         }
-        $caption($im, $s, $frame * $s, ($frame + $photo) * $s, $photo * $s, $p);
+        $caption($im, $s, $frame * $s, ($frame + $ph) * $s, $photo * $s, $p);
 
         $transparent = imagecolorallocatealpha($im, 0, 0, 0, 127);
         $rot         = imagerotate($im, $angle, $transparent);
@@ -1053,13 +1089,15 @@ class ETCF_Sharepic
         $venue_y = self::BOTTOM - 29 - 72;
         $bottom  = ($venue !== '' ? $venue_y : self::BOTTOM - 29) - 44;
         $top     = $y + 56;
-        $max     = 720;
+        // Landscape pictures keep their format: a wider, flatter polaroid.
+        $aspect  = self::aspect($e->id);
+        $max     = $aspect > 1.0 ? 800 : 720;
         $track   = self::track();
         $title   = self::heading($title);
         [$tpx, $tlines] = self::fit($f['display'], $title, $max - 2 * 28, 60, 40, 3, $track);
         $strip  = 34 + (int) round($tpx * 1.08) * count($tlines) + 40;
         // Rotation by ~2.4° makes the image about 4 % of its width taller.
-        $avail  = (int) floor(($bottom - $top - $frame - $strip - 6) / 1.042);
+        $avail  = (int) floor(($bottom - $top - 6 - $frame - $strip - 0.084 * $frame) / (1 / $aspect + 0.042));
         $photo  = max(380, min($max, $avail));
         if ($photo < $max) {
             [$tpx, $tlines] = self::fit($f['display'], $title, $photo - 56, $tpx, 34, 3, $track);
@@ -1071,6 +1109,10 @@ class ETCF_Sharepic
         $angle = $today ? 2.2 : -2.4;
         $pol   = self::polaroid($e, $photo, $frame, $strip, $angle, $p, $caption);
         $px_x  = (int) ((self::W - imagesx($pol)) / 2) + ($today ? 18 : -18);
+        // A flat polaroid sits a little above the middle of the free space.
+        if ($aspect > 1.0) {
+            $top += (int) max(0, ($bottom - $top - imagesy($pol)) * 0.4);
+        }
         self::place($im, $pol, $px_x, $top, $p);
         $y = $top + imagesy($pol);
         imagedestroy($pol);
@@ -1123,7 +1165,9 @@ class ETCF_Sharepic
         foreach (array_values($events) as $i => $e) {
             $angle = $i % 2 ? 2.6 : -2.6;
             $pol   = self::polaroid($e, $photo, 12, 40, $angle, $p, $none);
-            self::place($im, $pol, self::MARGIN - 8, $y, $p, 12, 8);
+            // Landscape pictures make a flatter polaroid: centred in the height of a square one.
+            $ry    = $y + (int) round(($photo - $photo / self::aspect($e->id)) / 2);
+            self::place($im, $pol, self::MARGIN - 8, $ry, $p, 12, 8);
             $ph = imagesy($pol);
             imagedestroy($pol);
 
@@ -1131,7 +1175,7 @@ class ETCF_Sharepic
             [$wpx, $wlines] = self::fit($f['text'], $when, $text_w, 32 + 4 * $grow, 24, 2);
             [$tpx, $tlines] = self::fit($f['display'], self::heading(ETCF_Digest::title($e)), $text_w, 50 + 10 * $grow, 36, 3, self::track());
             $block = (int) round($wpx * 1.4) * count($wlines) + (int) round($tpx * 1.08) * count($tlines);
-            $ty    = $y + (int) max(0, ($ph - $block) / 2) - 6;
+            $ty    = $ry + (int) max(0, ($ph - $block) / 2) - 6;
             $ty    = self::lines($im, $f['text'], $wpx, 1.4, $text_x, $ty, $p['muted'], $wlines);
             self::lines($im, $f['display'], $tpx, 1.08, $text_x, $ty, $p['fg'], $tlines, 'left', 0, self::track());
             $y += $row;
